@@ -1,0 +1,16 @@
+.DS_Store
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Local configuration
+Config/Local.xcconfig
+
+# Distribution artifacts
+dist/

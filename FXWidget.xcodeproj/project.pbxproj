@@ -1,0 +1,845 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 71;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		010000000000000000000001 /* CalendarDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000001 /* CalendarDate.swift */; };
+		010000000000000000000002 /* CurrencyCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000002 /* CurrencyCode.swift */; };
+		010000000000000000000003 /* ProviderDataBasis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000003 /* ProviderDataBasis.swift */; };
+		010000000000000000000004 /* ProviderID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000004 /* ProviderID.swift */; };
+		010000000000000000000005 /* RateChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000005 /* RateChange.swift */; };
+		010000000000000000000006 /* RateNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000006 /* RateNormalizer.swift */; };
+		010000000000000000000007 /* RateRequestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000007 /* RateRequestKey.swift */; };
+		010000000000000000000008 /* RateQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000008 /* RateQuote.swift */; };
+		010000000000000000000009 /* RateSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000009 /* RateSnapshot.swift */; };
+		01000000000000000000000A /* CurrencyRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000A /* CurrencyRanking.swift */; };
+		01000000000000000000000B /* BISCurrencyRankingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000B /* BISCurrencyRankingSource.swift */; };
+		01000000000000000000000C /* ExchangeRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000C /* ExchangeRateProvider.swift */; };
+		01000000000000000000000D /* MockExchangeRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000D /* MockExchangeRateProvider.swift */; };
+		01000000000000000000000E /* RateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000E /* RateFormatter.swift */; };
+		01000000000000000000000F /* ReferenceCurrencyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000000F /* ReferenceCurrencyPolicy.swift */; };
+		010000000000000000000010 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000010 /* ContentView.swift */; };
+		010000000000000000000011 /* FXWidgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000011 /* FXWidgetApp.swift */; };
+		010000000000000000000012 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000013 /* WidgetLayoutPolicy.swift */; };
+		010000000000000000000013 /* RateCacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000014 /* RateCacheStore.swift */; };
+		010000000000000000000014 /* RateRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000015 /* RateRefreshCoordinator.swift */; };
+		010000000000000000000015 /* FrankfurterDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000016 /* FrankfurterDTO.swift */; };
+		010000000000000000000016 /* FrankfurterClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000017 /* FrankfurterClient.swift */; };
+		010000000000000000000017 /* FrankfurterExchangeRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */; };
+		010000000000000000000018 /* CurrencyCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000019 /* CurrencyCatalog.swift */; };
+		010000000000000000000019 /* BISSDMXCurrencyRankingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001A /* BISSDMXCurrencyRankingSource.swift */; };
+		01000000000000000000001A /* CurrencyMetadataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001B /* CurrencyMetadataStore.swift */; };
+		01000000000000000000001B /* CurrencyPresentationMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001C /* CurrencyPresentationMetadata.swift */; };
+		01000000000000000000001C /* WidgetConfigurationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001D /* WidgetConfigurationPolicy.swift */; };
+		010000000000000000000020 /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000020 /* CurrencyEntity.swift */; };
+		010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000021 /* FXBoardTimelineProvider.swift */; };
+		010000000000000000000022 /* FXBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000022 /* FXBoardView.swift */; };
+		010000000000000000000023 /* FXBoardWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000023 /* FXBoardWidget.swift */; };
+		010000000000000000000024 /* FXWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000024 /* FXWidgetBundle.swift */; };
+		010000000000000000000025 /* FXWidgetConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000025 /* FXWidgetConfigurationIntent.swift */; };
+		010000000000000000000026 /* RefreshRatesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000026 /* RefreshRatesIntent.swift */; };
+		010000000000000000000027 /* FXWidgetServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000028 /* FXWidgetServices.swift */; };
+		010000000000000000000030 /* CurrencyCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000030 /* CurrencyCodeTests.swift */; };
+		010000000000000000000031 /* ProviderDataBasisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000031 /* ProviderDataBasisTests.swift */; };
+		010000000000000000000032 /* RateChangeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000032 /* RateChangeTests.swift */; };
+		010000000000000000000033 /* RateNormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000033 /* RateNormalizerTests.swift */; };
+		010000000000000000000034 /* RateRequestKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000034 /* RateRequestKeyTests.swift */; };
+		010000000000000000000035 /* RateSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000035 /* RateSnapshotTests.swift */; };
+		010000000000000000000036 /* CurrencyRankingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000036 /* CurrencyRankingTests.swift */; };
+		010000000000000000000037 /* MockExchangeRateProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000037 /* MockExchangeRateProviderTests.swift */; };
+		010000000000000000000038 /* RateFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000038 /* RateFormatterTests.swift */; };
+		010000000000000000000039 /* ReferenceCurrencyPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000039 /* ReferenceCurrencyPolicyTests.swift */; };
+		01000000000000000000003A /* WidgetLayoutPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003A /* WidgetLayoutPolicyTests.swift */; };
+		01000000000000000000003B /* RateCacheStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003B /* RateCacheStoreTests.swift */; };
+		01000000000000000000003C /* RateRefreshCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003C /* RateRefreshCoordinatorTests.swift */; };
+		01000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */; };
+		01000000000000000000003E /* CurrencyCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003E /* CurrencyCatalogTests.swift */; };
+		01000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */; };
+		010000000000000000000040 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000040 /* Localizable.xcstrings */; };
+		010000000000000000000041 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000040 /* Localizable.xcstrings */; };
+		010000000000000000000042 /* BISCurrencyRanking-2025-final.json in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* BISCurrencyRanking-2025-final.json */; };
+		010000000000000000000043 /* BISCurrencyRanking-2025-final.json in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* BISCurrencyRanking-2025-final.json */; };
+		010000000000000000000044 /* BISCurrencyRanking-2025-final.json in Resources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000046 /* BISCurrencyRanking-2025-final.json */; };
+		010000000000000000000050 /* libFXCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* libFXCore.a */; };
+		010000000000000000000051 /* libFXCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* libFXCore.a */; };
+		010000000000000000000052 /* libFXCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 020000000000000000000050 /* libFXCore.a */; };
+		010000000000000000000053 /* FXWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 020000000000000000000052 /* FXWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		010000000000000000000060 /* CurrencyMetadataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000060 /* CurrencyMetadataStoreTests.swift */; };
+		010000000000000000000061 /* CurrencyPresentationMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000061 /* CurrencyPresentationMetadataTests.swift */; };
+		010000000000000000000062 /* WidgetConfigurationPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000062 /* WidgetConfigurationPolicyTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		030000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000001;
+			remoteInfo = FXCore;
+		};
+		030000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000003;
+			remoteInfo = FXWidgetExtension;
+		};
+		030000000000000000000003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000001;
+			remoteInfo = FXCore;
+		};
+		030000000000000000000004 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000001;
+			remoteInfo = FXCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		040000000000000000000001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				010000000000000000000053 /* FXWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		020000000000000000000001 /* CalendarDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDate.swift; sourceTree = "<group>"; };
+		020000000000000000000002 /* CurrencyCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCode.swift; sourceTree = "<group>"; };
+		020000000000000000000003 /* ProviderDataBasis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDataBasis.swift; sourceTree = "<group>"; };
+		020000000000000000000004 /* ProviderID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderID.swift; sourceTree = "<group>"; };
+		020000000000000000000005 /* RateChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateChange.swift; sourceTree = "<group>"; };
+		020000000000000000000006 /* RateNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateNormalizer.swift; sourceTree = "<group>"; };
+		020000000000000000000007 /* RateRequestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRequestKey.swift; sourceTree = "<group>"; };
+		020000000000000000000008 /* RateQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateQuote.swift; sourceTree = "<group>"; };
+		020000000000000000000009 /* RateSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateSnapshot.swift; sourceTree = "<group>"; };
+		02000000000000000000000A /* CurrencyRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRanking.swift; sourceTree = "<group>"; };
+		02000000000000000000000B /* BISCurrencyRankingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BISCurrencyRankingSource.swift; sourceTree = "<group>"; };
+		02000000000000000000000C /* ExchangeRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateProvider.swift; sourceTree = "<group>"; };
+		02000000000000000000000D /* MockExchangeRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExchangeRateProvider.swift; sourceTree = "<group>"; };
+		02000000000000000000000E /* RateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateFormatter.swift; sourceTree = "<group>"; };
+		02000000000000000000000F /* ReferenceCurrencyPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceCurrencyPolicy.swift; sourceTree = "<group>"; };
+		020000000000000000000010 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		020000000000000000000011 /* FXWidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXWidgetApp.swift; sourceTree = "<group>"; };
+		020000000000000000000012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		020000000000000000000013 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
+		020000000000000000000014 /* RateCacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCacheStore.swift; sourceTree = "<group>"; };
+		020000000000000000000015 /* RateRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRefreshCoordinator.swift; sourceTree = "<group>"; };
+		020000000000000000000016 /* FrankfurterDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterDTO.swift; sourceTree = "<group>"; };
+		020000000000000000000017 /* FrankfurterClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterClient.swift; sourceTree = "<group>"; };
+		020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterExchangeRateProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000019 /* CurrencyCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCatalog.swift; sourceTree = "<group>"; };
+		02000000000000000000001A /* BISSDMXCurrencyRankingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BISSDMXCurrencyRankingSource.swift; sourceTree = "<group>"; };
+		02000000000000000000001B /* CurrencyMetadataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyMetadataStore.swift; sourceTree = "<group>"; };
+		02000000000000000000001C /* CurrencyPresentationMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPresentationMetadata.swift; sourceTree = "<group>"; };
+		02000000000000000000001D /* WidgetConfigurationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationPolicy.swift; sourceTree = "<group>"; };
+		020000000000000000000020 /* CurrencyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyEntity.swift; sourceTree = "<group>"; };
+		020000000000000000000021 /* FXBoardTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardTimelineProvider.swift; sourceTree = "<group>"; };
+		020000000000000000000022 /* FXBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardView.swift; sourceTree = "<group>"; };
+		020000000000000000000023 /* FXBoardWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardWidget.swift; sourceTree = "<group>"; };
+		020000000000000000000024 /* FXWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXWidgetBundle.swift; sourceTree = "<group>"; };
+		020000000000000000000025 /* FXWidgetConfigurationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXWidgetConfigurationIntent.swift; sourceTree = "<group>"; };
+		020000000000000000000026 /* RefreshRatesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshRatesIntent.swift; sourceTree = "<group>"; };
+		020000000000000000000027 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		020000000000000000000028 /* FXWidgetServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXWidgetServices.swift; sourceTree = "<group>"; };
+		020000000000000000000030 /* CurrencyCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCodeTests.swift; sourceTree = "<group>"; };
+		020000000000000000000031 /* ProviderDataBasisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDataBasisTests.swift; sourceTree = "<group>"; };
+		020000000000000000000032 /* RateChangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateChangeTests.swift; sourceTree = "<group>"; };
+		020000000000000000000033 /* RateNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateNormalizerTests.swift; sourceTree = "<group>"; };
+		020000000000000000000034 /* RateRequestKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRequestKeyTests.swift; sourceTree = "<group>"; };
+		020000000000000000000035 /* RateSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateSnapshotTests.swift; sourceTree = "<group>"; };
+		020000000000000000000036 /* CurrencyRankingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRankingTests.swift; sourceTree = "<group>"; };
+		020000000000000000000037 /* MockExchangeRateProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockExchangeRateProviderTests.swift; sourceTree = "<group>"; };
+		020000000000000000000038 /* RateFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateFormatterTests.swift; sourceTree = "<group>"; };
+		020000000000000000000039 /* ReferenceCurrencyPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceCurrencyPolicyTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003A /* WidgetLayoutPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicyTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003B /* RateCacheStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCacheStoreTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003C /* RateRefreshCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRefreshCoordinatorTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterExchangeRateProviderTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003E /* CurrencyCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCatalogTests.swift; sourceTree = "<group>"; };
+		02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BISSDMXCurrencyRankingSourceTests.swift; sourceTree = "<group>"; };
+		020000000000000000000040 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		020000000000000000000041 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		020000000000000000000042 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		020000000000000000000043 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		020000000000000000000044 /* FXWidgetApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FXWidgetApp.entitlements; sourceTree = "<group>"; };
+		020000000000000000000045 /* FXWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FXWidgetExtension.entitlements; sourceTree = "<group>"; };
+		020000000000000000000046 /* BISCurrencyRanking-2025-final.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "BISCurrencyRanking-2025-final.json"; sourceTree = "<group>"; };
+		020000000000000000000050 /* libFXCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFXCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		020000000000000000000051 /* FXWidget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FXWidget.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		020000000000000000000052 /* FXWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FXWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		020000000000000000000053 /* FXCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FXCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		020000000000000000000060 /* CurrencyMetadataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyMetadataStoreTests.swift; sourceTree = "<group>"; };
+		020000000000000000000061 /* CurrencyPresentationMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPresentationMetadataTests.swift; sourceTree = "<group>"; };
+		020000000000000000000062 /* WidgetConfigurationPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationPolicyTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		050000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		050000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000050 /* libFXCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		050000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000051 /* libFXCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		050000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000052 /* libFXCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		060000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				060000000000000000000002 /* Sources */,
+				060000000000000000000006 /* Tests */,
+				060000000000000000000008 /* Resources */,
+				060000000000000000000009 /* Config */,
+				06000000000000000000000A /* Entitlements */,
+				06000000000000000000000B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		060000000000000000000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				060000000000000000000003 /* FXCore */,
+				060000000000000000000004 /* FXWidgetApp */,
+				060000000000000000000005 /* FXWidgetExtension */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		060000000000000000000003 /* FXCore */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000001 /* CalendarDate.swift */,
+				020000000000000000000002 /* CurrencyCode.swift */,
+				020000000000000000000003 /* ProviderDataBasis.swift */,
+				020000000000000000000004 /* ProviderID.swift */,
+				020000000000000000000005 /* RateChange.swift */,
+				020000000000000000000006 /* RateNormalizer.swift */,
+				020000000000000000000007 /* RateRequestKey.swift */,
+				020000000000000000000008 /* RateQuote.swift */,
+				020000000000000000000009 /* RateSnapshot.swift */,
+				02000000000000000000000A /* CurrencyRanking.swift */,
+				02000000000000000000000B /* BISCurrencyRankingSource.swift */,
+				02000000000000000000000C /* ExchangeRateProvider.swift */,
+				02000000000000000000000D /* MockExchangeRateProvider.swift */,
+				02000000000000000000000E /* RateFormatter.swift */,
+				02000000000000000000000F /* ReferenceCurrencyPolicy.swift */,
+				020000000000000000000013 /* WidgetLayoutPolicy.swift */,
+				020000000000000000000014 /* RateCacheStore.swift */,
+				020000000000000000000015 /* RateRefreshCoordinator.swift */,
+				020000000000000000000016 /* FrankfurterDTO.swift */,
+				020000000000000000000017 /* FrankfurterClient.swift */,
+				020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */,
+				020000000000000000000019 /* CurrencyCatalog.swift */,
+				02000000000000000000001A /* BISSDMXCurrencyRankingSource.swift */,
+				02000000000000000000001B /* CurrencyMetadataStore.swift */,
+				02000000000000000000001C /* CurrencyPresentationMetadata.swift */,
+				02000000000000000000001D /* WidgetConfigurationPolicy.swift */,
+				06000000000000000000000C /* Resources */,
+			);
+			path = FXCore;
+			sourceTree = "<group>";
+		};
+		060000000000000000000004 /* FXWidgetApp */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000010 /* ContentView.swift */,
+				020000000000000000000011 /* FXWidgetApp.swift */,
+				020000000000000000000012 /* Info.plist */,
+			);
+			path = FXWidgetApp;
+			sourceTree = "<group>";
+		};
+		060000000000000000000005 /* FXWidgetExtension */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000020 /* CurrencyEntity.swift */,
+				020000000000000000000021 /* FXBoardTimelineProvider.swift */,
+				020000000000000000000022 /* FXBoardView.swift */,
+				020000000000000000000023 /* FXBoardWidget.swift */,
+				020000000000000000000024 /* FXWidgetBundle.swift */,
+				020000000000000000000025 /* FXWidgetConfigurationIntent.swift */,
+				020000000000000000000026 /* RefreshRatesIntent.swift */,
+				020000000000000000000028 /* FXWidgetServices.swift */,
+				020000000000000000000027 /* Info.plist */,
+			);
+			path = FXWidgetExtension;
+			sourceTree = "<group>";
+		};
+		060000000000000000000006 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				060000000000000000000007 /* FXCoreTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		060000000000000000000007 /* FXCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000030 /* CurrencyCodeTests.swift */,
+				020000000000000000000031 /* ProviderDataBasisTests.swift */,
+				020000000000000000000032 /* RateChangeTests.swift */,
+				020000000000000000000033 /* RateNormalizerTests.swift */,
+				020000000000000000000034 /* RateRequestKeyTests.swift */,
+				020000000000000000000035 /* RateSnapshotTests.swift */,
+				020000000000000000000036 /* CurrencyRankingTests.swift */,
+				020000000000000000000037 /* MockExchangeRateProviderTests.swift */,
+				020000000000000000000038 /* RateFormatterTests.swift */,
+				020000000000000000000039 /* ReferenceCurrencyPolicyTests.swift */,
+				02000000000000000000003A /* WidgetLayoutPolicyTests.swift */,
+				02000000000000000000003B /* RateCacheStoreTests.swift */,
+				02000000000000000000003C /* RateRefreshCoordinatorTests.swift */,
+				02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */,
+				02000000000000000000003E /* CurrencyCatalogTests.swift */,
+				02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */,
+				020000000000000000000060 /* CurrencyMetadataStoreTests.swift */,
+				020000000000000000000061 /* CurrencyPresentationMetadataTests.swift */,
+				020000000000000000000062 /* WidgetConfigurationPolicyTests.swift */,
+			);
+			path = FXCoreTests;
+			sourceTree = "<group>";
+		};
+		060000000000000000000008 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000040 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		060000000000000000000009 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000041 /* Debug.xcconfig */,
+				020000000000000000000042 /* Release.xcconfig */,
+				020000000000000000000043 /* Shared.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		06000000000000000000000A /* Entitlements */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000044 /* FXWidgetApp.entitlements */,
+				020000000000000000000045 /* FXWidgetExtension.entitlements */,
+			);
+			path = Entitlements;
+			sourceTree = "<group>";
+		};
+		06000000000000000000000B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000050 /* libFXCore.a */,
+				020000000000000000000051 /* FXWidget.app */,
+				020000000000000000000052 /* FXWidgetExtension.appex */,
+				020000000000000000000053 /* FXCoreTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06000000000000000000000C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000046 /* BISCurrencyRanking-2025-final.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		070000000000000000000001 /* FXCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0000000000000000000002 /* Build configuration list for PBXNativeTarget "FXCore" */;
+			buildPhases = (
+				0A0000000000000000000001 /* Sources */,
+				050000000000000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FXCore;
+			productName = FXCore;
+			productReference = 020000000000000000000050 /* libFXCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		070000000000000000000002 /* FXWidgetApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0000000000000000000003 /* Build configuration list for PBXNativeTarget "FXWidgetApp" */;
+			buildPhases = (
+				0A0000000000000000000002 /* Sources */,
+				050000000000000000000002 /* Frameworks */,
+				0B0000000000000000000001 /* Resources */,
+				040000000000000000000001 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				090000000000000000000001 /* PBXTargetDependency */,
+				090000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = FXWidgetApp;
+			productName = FXWidget;
+			productReference = 020000000000000000000051 /* FXWidget.app */;
+			productType = "com.apple.product-type.application";
+		};
+		070000000000000000000003 /* FXWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0000000000000000000004 /* Build configuration list for PBXNativeTarget "FXWidgetExtension" */;
+			buildPhases = (
+				0A0000000000000000000003 /* Sources */,
+				050000000000000000000003 /* Frameworks */,
+				0B0000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				090000000000000000000003 /* PBXTargetDependency */,
+			);
+			name = FXWidgetExtension;
+			productName = FXWidgetExtension;
+			productReference = 020000000000000000000052 /* FXWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		070000000000000000000004 /* FXCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0000000000000000000005 /* Build configuration list for PBXNativeTarget "FXCoreTests" */;
+			buildPhases = (
+				0A0000000000000000000004 /* Sources */,
+				050000000000000000000004 /* Frameworks */,
+				0B0000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				090000000000000000000004 /* PBXTargetDependency */,
+			);
+			name = FXCoreTests;
+			productName = FXCoreTests;
+			productReference = 020000000000000000000053 /* FXCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		080000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					070000000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					070000000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					070000000000000000000003 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					070000000000000000000004 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = 0C0000000000000000000001 /* Build configuration list for PBXProject "FXWidget" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ko,
+				ja,
+				Base,
+			);
+			mainGroup = 060000000000000000000001;
+			productRefGroup = 06000000000000000000000B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				070000000000000000000001 /* FXCore */,
+				070000000000000000000002 /* FXWidgetApp */,
+				070000000000000000000003 /* FXWidgetExtension */,
+				070000000000000000000004 /* FXCoreTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0B0000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000040 /* Localizable.xcstrings in Resources */,
+				010000000000000000000042 /* BISCurrencyRanking-2025-final.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0B0000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000041 /* Localizable.xcstrings in Resources */,
+				010000000000000000000043 /* BISCurrencyRanking-2025-final.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0B0000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000044 /* BISCurrencyRanking-2025-final.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A0000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000001 /* CalendarDate.swift in Sources */,
+				010000000000000000000002 /* CurrencyCode.swift in Sources */,
+				010000000000000000000003 /* ProviderDataBasis.swift in Sources */,
+				010000000000000000000004 /* ProviderID.swift in Sources */,
+				010000000000000000000005 /* RateChange.swift in Sources */,
+				010000000000000000000006 /* RateNormalizer.swift in Sources */,
+				010000000000000000000007 /* RateRequestKey.swift in Sources */,
+				010000000000000000000008 /* RateQuote.swift in Sources */,
+				010000000000000000000009 /* RateSnapshot.swift in Sources */,
+				01000000000000000000000A /* CurrencyRanking.swift in Sources */,
+				01000000000000000000000B /* BISCurrencyRankingSource.swift in Sources */,
+				01000000000000000000000C /* ExchangeRateProvider.swift in Sources */,
+				01000000000000000000000D /* MockExchangeRateProvider.swift in Sources */,
+				01000000000000000000000E /* RateFormatter.swift in Sources */,
+				01000000000000000000000F /* ReferenceCurrencyPolicy.swift in Sources */,
+				010000000000000000000012 /* WidgetLayoutPolicy.swift in Sources */,
+				010000000000000000000013 /* RateCacheStore.swift in Sources */,
+				010000000000000000000014 /* RateRefreshCoordinator.swift in Sources */,
+				010000000000000000000015 /* FrankfurterDTO.swift in Sources */,
+				010000000000000000000016 /* FrankfurterClient.swift in Sources */,
+				010000000000000000000017 /* FrankfurterExchangeRateProvider.swift in Sources */,
+				010000000000000000000018 /* CurrencyCatalog.swift in Sources */,
+				010000000000000000000019 /* BISSDMXCurrencyRankingSource.swift in Sources */,
+				01000000000000000000001A /* CurrencyMetadataStore.swift in Sources */,
+				01000000000000000000001B /* CurrencyPresentationMetadata.swift in Sources */,
+				01000000000000000000001C /* WidgetConfigurationPolicy.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000010 /* ContentView.swift in Sources */,
+				010000000000000000000011 /* FXWidgetApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000020 /* CurrencyEntity.swift in Sources */,
+				010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */,
+				010000000000000000000022 /* FXBoardView.swift in Sources */,
+				010000000000000000000023 /* FXBoardWidget.swift in Sources */,
+				010000000000000000000024 /* FXWidgetBundle.swift in Sources */,
+				010000000000000000000025 /* FXWidgetConfigurationIntent.swift in Sources */,
+				010000000000000000000026 /* RefreshRatesIntent.swift in Sources */,
+				010000000000000000000027 /* FXWidgetServices.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A0000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000030 /* CurrencyCodeTests.swift in Sources */,
+				010000000000000000000031 /* ProviderDataBasisTests.swift in Sources */,
+				010000000000000000000032 /* RateChangeTests.swift in Sources */,
+				010000000000000000000033 /* RateNormalizerTests.swift in Sources */,
+				010000000000000000000034 /* RateRequestKeyTests.swift in Sources */,
+				010000000000000000000035 /* RateSnapshotTests.swift in Sources */,
+				010000000000000000000036 /* CurrencyRankingTests.swift in Sources */,
+				010000000000000000000037 /* MockExchangeRateProviderTests.swift in Sources */,
+				010000000000000000000038 /* RateFormatterTests.swift in Sources */,
+				010000000000000000000039 /* ReferenceCurrencyPolicyTests.swift in Sources */,
+				01000000000000000000003A /* WidgetLayoutPolicyTests.swift in Sources */,
+				01000000000000000000003B /* RateCacheStoreTests.swift in Sources */,
+				01000000000000000000003C /* RateRefreshCoordinatorTests.swift in Sources */,
+				01000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift in Sources */,
+				01000000000000000000003E /* CurrencyCatalogTests.swift in Sources */,
+				01000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift in Sources */,
+				010000000000000000000060 /* CurrencyMetadataStoreTests.swift in Sources */,
+				010000000000000000000061 /* CurrencyPresentationMetadataTests.swift in Sources */,
+				010000000000000000000062 /* WidgetConfigurationPolicyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		090000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000001 /* FXCore */;
+			targetProxy = 030000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000003 /* FXWidgetExtension */;
+			targetProxy = 030000000000000000000002 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000001 /* FXCore */;
+			targetProxy = 030000000000000000000003 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000004 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000001 /* FXCore */;
+			targetProxy = 030000000000000000000004 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0D0000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_LANGUAGE = en;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_LANGUAGE = en;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0D0000000000000000000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_MODULE_NAME = FXCore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_MODULE_NAME = FXCore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0D0000000000000000000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Entitlements/FXWidgetApp.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FXWidgetApp/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_APP_BUNDLE_ID)";
+				PRODUCT_NAME = FXWidget;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Entitlements/FXWidgetApp.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FXWidgetApp/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_APP_BUNDLE_ID)";
+				PRODUCT_NAME = FXWidget;
+			};
+			name = Release;
+		};
+		0D0000000000000000000030 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Entitlements/FXWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FXWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_WIDGET_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = Entitlements/FXWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/FXWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_WIDGET_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0D0000000000000000000040 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_TEST_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0D0000000000000000000041 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(FX_TEST_BUNDLE_ID)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C0000000000000000000001 /* Build configuration list for PBXProject "FXWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000001 /* Debug */,
+				0D0000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C0000000000000000000002 /* Build configuration list for PBXNativeTarget "FXCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000010 /* Debug */,
+				0D0000000000000000000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C0000000000000000000003 /* Build configuration list for PBXNativeTarget "FXWidgetApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000020 /* Debug */,
+				0D0000000000000000000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C0000000000000000000004 /* Build configuration list for PBXNativeTarget "FXWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000030 /* Debug */,
+				0D0000000000000000000031 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C0000000000000000000005 /* Build configuration list for PBXNativeTarget "FXCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000040 /* Debug */,
+				0D0000000000000000000041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 080000000000000000000001 /* Project object */;
+}

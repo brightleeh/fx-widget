@@ -1,0 +1,3 @@
+// Optional: copy this file to Local.xcconfig. The local file is ignored by Git.
+// No Apple Development Team or personal signing identity is used.
+FX_BUNDLE_ID_PREFIX = com.example.local

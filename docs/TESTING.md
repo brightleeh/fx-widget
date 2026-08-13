@@ -139,7 +139,7 @@ Required checks:
 14. Positive/negative/unchanged/unavailable absolute-change states remain legible without a percentage column.
 15. Rate and absolute-change values align at the locale-aware decimal separator; the direction symbol remains immediately adjacent to the change integer part.
 16. Monospaced ISO codes give every following Currency Name label the same starting position.
-17. A newly added widget recommendation persists the family's BIS-derived currencies as real rows in the standard edit list (Medium 3, Large 10, Extra Large 20), rather than showing only `Add New Item`.
+17. The verified fresh-widget configuration mechanism persists the family's BIS-derived currencies as real rows in the standard edit list (Medium 3, Large 10, Extra Large 20), rather than showing only `Add New Item`; `AppIntentRecommendation` is not accepted as evidence on macOS.
 18. Completing an edit with a different reference currency delivers that reference to the timeline provider, constructs a distinct `RateRequestKey`, and fetches/loads a snapshot normalized to it.
 19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. A missing untouched family collection reconstructs the original default membership and applies the reference-currency swap.
 20. A cold extension container can construct and return a timeline without waiting for provider-catalog discovery or a remote BIS ranking check; those metadata calls are not prerequisites for leaving the placeholder state.
@@ -328,7 +328,7 @@ Cases:
 - no always-visible selected/max count is required by domain/config state,
 - fixed family capacities are 3, 10, and 20,
 - changing Currency Name preserves capacity,
-- a fresh gallery recommendation persists the BIS-derived 3/10/20 members in the edit list rather than only `Add New Item`,
+- a fresh installed widget persists the BIS-derived 3/10/20 members in the edit list rather than only `Add New Item` (verified in the real macOS editor, not inferred from a recommendation or unit test),
 - a missing collection resolves to matching runtime defaults defensively, while an explicit empty collection remains empty,
 - an explicitly emptied collection remains empty and is not repopulated,
 - changing Reference Currency changes `RateRequestKey` identity and loads or requests rates normalized to the new reference,

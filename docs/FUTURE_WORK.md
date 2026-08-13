@@ -2,6 +2,8 @@
 
 This document records known configuration issues and follow-up investigations. It describes intended behavior only; the items below are not implemented yet.
 
+The detailed implementation handoff, diagnostic sequence, architecture gates, test matrix, and completion criteria for items 1 through 4 are in [`WIDGET_CONFIGURATION_REMEDIATION.md`](WIDGET_CONFIGURATION_REMEDIATION.md). Do not revive the previously assumed `AppIntentRecommendation` persistence mechanism as if it were validated macOS behavior; follow the observation and decision gates in that handoff first.
+
 ## 1. Apply Reference-Currency Changes to Rates and Membership
 
 Changing the reference currency must produce a new snapshot normalized to the newly selected reference currency. The widget must not continue showing rates from the previous reference.
@@ -44,4 +46,3 @@ Before implementation, verify whether macOS WidgetKit and App Intents can reliab
 - a completed edit that triggers or schedules the correctly keyed rate request.
 
 If the standard widget editor cannot support these requirements reliably, evaluate moving reference-currency and membership editing to the host app. Any host-app design must preserve independent configuration for each widget instance; it must not replace per-instance settings with one unavoidable global selection.
-

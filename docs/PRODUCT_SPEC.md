@@ -165,7 +165,7 @@ No scrolling.
 
 ### 3.6 Currency name
 
-Hidden by default. A separate country/region-name setting is not offered.
+Shown by default. A separate country/region-name setting is not offered.
 
 Example default:
 

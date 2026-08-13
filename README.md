@@ -242,6 +242,7 @@ Repository release tags use `vMAJOR.MINOR.PATCH`, preferably as annotated tags. 
 - [`AGENTS.md`](AGENTS.md): repository invariants and coding rules
 - [`docs/DECISIONS.md`](docs/DECISIONS.md): binding product and architecture decisions
 - [`docs/FUTURE_WORK.md`](docs/FUTURE_WORK.md): known configuration gaps and investigations
+- [`docs/WIDGET_CONFIGURATION_REMEDIATION.md`](docs/WIDGET_CONFIGURATION_REMEDIATION.md): detailed implementation handoff for per-widget configuration remediation
 - [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md): current milestone status
 - [`docs/PROVIDER_EVALUATION.md`](docs/PROVIDER_EVALUATION.md): provider evaluation and production gate
 - [`docs/TESTING.md`](docs/TESTING.md): required test coverage and visual checks

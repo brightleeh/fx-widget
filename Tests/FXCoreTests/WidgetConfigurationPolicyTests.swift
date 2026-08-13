@@ -99,4 +99,125 @@ struct WidgetConfigurationPolicyTests {
         #expect(swapped == [code("USD"), code("KRW"), code("EUR")])
         #expect(unchanged == swapped)
     }
+
+    @Test func resolverDistinguishesOmittedAndExplicitEmptyMembership() throws {
+        let resolver = configurationResolver()
+
+        let omitted = resolver.resolve(rawConfiguration())
+        let explicitEmpty = resolver.resolve(
+            rawConfiguration(extraLargeMembershipIdentifiers: [])
+        )
+
+        #expect(omitted.origin == .reconstructedDefault)
+        #expect(omitted.orderedMembership == [code("USD"), code("EUR"), code("JPY"), code("GBP"), code("CZK")])
+        #expect(explicitEmpty.origin == .explicitEmpty)
+        #expect(explicitEmpty.orderedMembership.isEmpty)
+    }
+
+    @Test func resolverPreservesCustomOrderAndSharesCanonicalRequestIdentity() throws {
+        let resolver = configurationResolver()
+        let first = resolver.resolve(
+            rawConfiguration(extraLargeMembershipIdentifiers: ["GBP", "USD", "EUR"])
+        )
+        let second = resolver.resolve(
+            rawConfiguration(extraLargeMembershipIdentifiers: ["EUR", "GBP", "USD"])
+        )
+        let provider = try ProviderID(validating: "mock:resolver")
+
+        #expect(first.origin == .persisted)
+        #expect(first.orderedMembership == [code("GBP"), code("USD"), code("EUR")])
+        #expect(try first.rateRequestKey(providerID: provider) == second.rateRequestKey(providerID: provider))
+    }
+
+    @Test func resolverReportsInvalidMembershipWithoutReplacingItWithDefaults() {
+        let resolved = configurationResolver().resolve(
+            rawConfiguration(extraLargeMembershipIdentifiers: ["USD", "usd", "KRW", "TOOLONG", "AUD"])
+        )
+
+        #expect(resolved.origin == .persisted)
+        #expect(resolved.orderedMembership == [code("USD")])
+        #expect(resolved.issues.contains(.duplicateMembershipCurrency(code("USD"))))
+        #expect(resolved.issues.contains(.referenceCurrencyInMembership(code("KRW"))))
+        #expect(resolved.issues.contains(.invalidMembershipCurrency("TOOLONG")))
+        #expect(resolved.issues.contains(.unsupportedMembershipCurrency(code("AUD"))))
+    }
+
+    @Test func resolverReportsOverCapacityWithoutTruncatingSavedMembership() {
+        let resolved = configurationResolver().resolve(
+            rawConfiguration(
+                mediumMembershipIdentifiers: ["USD", "EUR", "JPY", "GBP"],
+                family: .medium
+            )
+        )
+
+        #expect(resolved.orderedMembership == [code("USD"), code("EUR"), code("JPY"), code("GBP")])
+        #expect(
+            resolved.issues.contains(
+                ConfigurationResolutionIssue.capacityExceeded(configured: 4, capacity: 3)
+            )
+        )
+    }
+
+    @Test func resolverUsesLegacyDefaultSwapOnlyForOmittedMembership() throws {
+        let resolver = configurationResolver()
+        let omitted = resolver.resolve(
+            rawConfiguration(referenceCurrencyIdentifier: "JPY")
+        )
+        let custom = resolver.resolve(
+            rawConfiguration(
+                referenceCurrencyIdentifier: "JPY",
+                extraLargeMembershipIdentifiers: ["USD", "EUR", "GBP"]
+            )
+        )
+
+        #expect(omitted.orderedMembership == [code("USD"), code("EUR"), code("KRW"), code("GBP"), code("CZK")])
+        #expect(custom.orderedMembership == [code("USD"), code("EUR"), code("GBP")])
+        #expect(custom.origin == .persisted)
+    }
+
+    @Test func resolverReferenceChangesRequestIdentity() throws {
+        let resolver = configurationResolver()
+        let provider = try ProviderID(validating: "mock:resolver")
+        let krw = resolver.resolve(
+            rawConfiguration(extraLargeMembershipIdentifiers: ["USD", "EUR"])
+        )
+        let jpy = resolver.resolve(
+            rawConfiguration(
+                referenceCurrencyIdentifier: "JPY",
+                extraLargeMembershipIdentifiers: ["USD", "EUR"]
+            )
+        )
+
+        #expect(try krw.rateRequestKey(providerID: provider) != jpy.rateRequestKey(providerID: provider))
+    }
+
+    private func configurationResolver() -> WidgetConfigurationResolver {
+        WidgetConfigurationResolver(
+            originalDefaultReferenceCurrency: code("KRW"),
+            supportedCurrencies: Set(["KRW", "USD", "EUR", "JPY", "GBP", "CZK"].map(code)),
+            ranking: try! CurrencyRankingSnapshot(
+                source: "test",
+                datasetID: "test",
+                surveyYear: 2025,
+                isFinal: true,
+                rankedCurrencyCodes: ["USD", "EUR", "JPY", "GBP", "CZK"] .map(code)
+            )
+        )
+    }
+
+    private func rawConfiguration(
+        referenceCurrencyIdentifier: String? = "KRW",
+        mediumMembershipIdentifiers: [String]? = nil,
+        extraLargeMembershipIdentifiers: [String]? = nil,
+        family: WidgetFamilyCategory = .extraLarge
+    ) -> RawWidgetConfiguration {
+        RawWidgetConfiguration(
+            referenceCurrencyIdentifier: referenceCurrencyIdentifier,
+            mediumMembershipIdentifiers: mediumMembershipIdentifiers,
+            largeMembershipIdentifiers: nil,
+            extraLargeMembershipIdentifiers: extraLargeMembershipIdentifiers,
+            showsCurrencyName: true,
+            family: family
+        )
+    }
 }

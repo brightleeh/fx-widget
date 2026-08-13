@@ -21,6 +21,7 @@ Before making implementation changes, read these documents in order:
 7. `docs/PROVIDER_EVALUATION.md`
 8. `docs/TESTING.md`
 9. `docs/IMPLEMENTATION_PLAN.md`
+10. `docs/WIDGET_CONFIGURATION_REMEDIATION.md` when working on the known per-widget configuration failures or `FUTURE_WORK.md` items 1 through 4
 
 `docs/DECISIONS.md` is the source of truth when documents appear to conflict.
 

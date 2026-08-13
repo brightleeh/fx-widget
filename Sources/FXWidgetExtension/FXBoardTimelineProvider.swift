@@ -1,6 +1,105 @@
 import AppIntents
 import FXCore
+import OSLog
 import WidgetKit
+
+enum FXBoardTimelineFailure: String, Sendable {
+    case configurationInvalid
+    case requestKeyConstructionFailed
+    case serviceInitializationFailed
+    case cacheReadFailed
+    case providerRefreshFailed
+    case cacheReadAfterRefreshFailed
+}
+
+enum FXWidgetDiagnostics {
+    private static let configuration = Logger(
+        subsystem: "com.example.local.FXWidget",
+        category: "configuration"
+    )
+    private static let timeline = Logger(
+        subsystem: "com.example.local.FXWidget",
+        category: "timeline"
+    )
+    private static let requestKey = Logger(
+        subsystem: "com.example.local.FXWidget",
+        category: "request-key"
+    )
+    private static let cache = Logger(
+        subsystem: "com.example.local.FXWidget",
+        category: "cache"
+    )
+    private static let refresh = Logger(
+        subsystem: "com.example.local.FXWidget",
+        category: "refresh"
+    )
+
+    static func logConfiguration(
+        callback: String,
+        configuration intent: FXBoardConfigurationIntent,
+        family: WidgetFamilyCategory,
+        reference: CurrencyEntity,
+        selected: [CurrencyEntity],
+        resolved: ResolvedWidgetConfiguration
+    ) {
+        configuration.info(
+            "callback=\(callback, privacy: .public) family=\(family.rawValue, privacy: .public) reference=\(reference.id, privacy: .public) medium=\(collectionDescription(intent.mediumCurrencies), privacy: .public) large=\(collectionDescription(intent.largeCurrencies), privacy: .public) extraLarge=\(collectionDescription(intent.currencies), privacy: .public) active=\(selected.map(\.id).joined(separator: ","), privacy: .public) origin=\(resolved.origin.rawValue, privacy: .public) issues=\(String(describing: resolved.issues), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public)"
+        )
+    }
+
+    static func logTimelineFailure(_ failure: FXBoardTimelineFailure, requestKey: RateRequestKey? = nil) {
+        timeline.error(
+            "failure=\(failure.rawValue, privacy: .public) request=\(requestDescription(requestKey), privacy: .public)"
+        )
+    }
+
+    static func logRequestKey(_ key: RateRequestKey) {
+        requestKey.info("\(requestDescription(key), privacy: .public)")
+    }
+
+    static func logCache(_ outcome: String, key: RateRequestKey, hasSnapshot: Bool) {
+        cache.info(
+            "outcome=\(outcome, privacy: .public) request=\(requestDescription(key), privacy: .public) snapshot=\(hasSnapshot, privacy: .public)"
+        )
+    }
+
+    static func logRefresh(_ outcome: String, key: RateRequestKey) {
+        refresh.info("outcome=\(outcome, privacy: .public) request=\(requestDescription(key), privacy: .public)")
+    }
+
+    static func logCurrentConfigurations() {
+        WidgetCenter.shared.getCurrentConfigurations { result in
+            switch result {
+            case let .success(infos):
+                let matching = infos.filter { $0.kind == FXWidgetServices.widgetKind }
+                configuration.info("installedWidgets=\(matching.count, privacy: .public)")
+                for info in matching {
+                    guard let intent = info.widgetConfigurationIntent(
+                        of: FXBoardConfigurationIntent.self
+                    ) else {
+                        configuration.error("family=\(String(describing: info.family), privacy: .public) typedIntent=unavailable")
+                        continue
+                    }
+                    configuration.info(
+                        "family=\(String(describing: info.family), privacy: .public) typedReference=\(intent.referenceCurrency?.id ?? "omitted", privacy: .public) medium=\(collectionDescription(intent.mediumCurrencies), privacy: .public) large=\(collectionDescription(intent.largeCurrencies), privacy: .public) extraLarge=\(collectionDescription(intent.currencies), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public)"
+                    )
+                }
+            case .failure:
+                configuration.error("installedWidgetRead=failed")
+            }
+        }
+    }
+
+    private static func collectionDescription(_ collection: [CurrencyEntity]?) -> String {
+        guard let collection else { return "omitted" }
+        return collection.isEmpty ? "empty" : collection.map(\.id).joined(separator: ",")
+    }
+
+    private static func requestDescription(_ key: RateRequestKey?) -> String {
+        guard let key else { return "none" }
+        return "provider=\(key.providerID.rawValue);reference=\(key.referenceCurrency.rawValue);selected=\(key.selectedCurrencyCodes.map(\.rawValue).joined(separator: ","))"
+    }
+}
 
 struct FXBoardEntry: TimelineEntry {
     let date: Date
@@ -8,16 +107,17 @@ struct FXBoardEntry: TimelineEntry {
     let referenceCurrency: CurrencyEntity
     let selectedCurrencies: [CurrencyEntity]
     let requestKey: RateRequestKey?
+    let resolvedConfiguration: ResolvedWidgetConfiguration
     let snapshot: RateSnapshot?
     let refreshFailure: RateRefreshFailure?
+    let timelineFailure: FXBoardTimelineFailure?
     let nextAutoRefreshEligibleAt: Date?
 }
 
 struct FXBoardTimelineProvider: AppIntentTimelineProvider {
     func recommendations() -> [AppIntentRecommendation<FXBoardConfigurationIntent>] {
-        // A recommendation is the WidgetKit-supported way to persist dynamic,
-        // multi-value defaults into a newly added configurable widget. Merely
-        // returning fallback rows from the timeline leaves the edit list empty.
+        // Recommendations are gallery metadata, not persistence for the
+        // dedicated macOS widget editor.
         [
             AppIntentRecommendation(
                 intent: FXBoardConfigurationIntent(),
@@ -28,8 +128,13 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
 
     func placeholder(in context: Context) -> FXBoardEntry {
         let configuration = FXBoardConfigurationIntent()
-        let referenceCurrency = configuration.resolvedReferenceCurrency
-        let selectedCurrencies = configuration.resolvedCurrencies(for: context.family.layoutCategory)
+        let resolvedConfiguration = configuration.resolvedConfiguration(
+            for: context.family.layoutCategory
+        )
+        let referenceCurrency = CurrencyEntity(id: resolvedConfiguration.referenceCurrency.rawValue)
+        let selectedCurrencies = resolvedConfiguration.orderedMembership.map {
+            CurrencyEntity(id: $0.rawValue)
+        }
         let snapshot = Self.fixtureSnapshot(
             for: configuration,
             referenceCurrency: referenceCurrency,
@@ -41,8 +146,10 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
             referenceCurrency: referenceCurrency,
             selectedCurrencies: selectedCurrencies,
             requestKey: snapshot?.requestKey,
+            resolvedConfiguration: resolvedConfiguration,
             snapshot: snapshot,
             refreshFailure: nil,
+            timelineFailure: nil,
             nextAutoRefreshEligibleAt: nil
         )
     }
@@ -62,6 +169,7 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
         for configuration: FXBoardConfigurationIntent,
         in context: Context
     ) async -> Timeline<FXBoardEntry> {
+        FXWidgetDiagnostics.logCurrentConfigurations()
         let entry = await entry(
             for: configuration,
             family: context.family.layoutCategory,
@@ -89,52 +197,85 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
         family: WidgetFamilyCategory,
         automaticRefreshOpportunity: Bool
     ) async -> FXBoardEntry {
-        let referenceCurrency = configuration.resolvedReferenceCurrency
-        let selectedCurrencies = configuration.resolvedCurrencies(for: family)
-        var resolvedRequest: RateRequestKey?
+        let resolvedConfiguration = configuration.resolvedConfiguration(for: family)
+        let referenceCurrency = CurrencyEntity(id: resolvedConfiguration.referenceCurrency.rawValue)
+        let selectedCurrencies = resolvedConfiguration.orderedMembership.map {
+            CurrencyEntity(id: $0.rawValue)
+        }
+        FXWidgetDiagnostics.logConfiguration(
+            callback: automaticRefreshOpportunity ? "timeline" : "snapshot",
+            configuration: configuration,
+            family: family,
+            reference: referenceCurrency,
+            selected: selectedCurrencies,
+            resolved: resolvedConfiguration
+        )
+
+        let dependencies: FXWidgetServices.Dependencies
         do {
-            let dependencies = try FXWidgetServices.dependencies()
-            // Do not put catalog discovery or the low-frequency BIS ranking
-            // update on WidgetKit's timeline critical path. On a fresh install
-            // those network calls can consume the extension's execution window
-            // before it returns any view, leaving only the placeholder visible.
-            // The configuration query already uses the provider catalog; the
-            // provider validates configured currencies again during refresh.
-            let request = try Self.requestKey(
+            dependencies = try FXWidgetServices.dependencies()
+        } catch {
+            return unavailableEntry(
+                configuration: configuration,
                 referenceCurrency: referenceCurrency,
                 selectedCurrencies: selectedCurrencies,
+                requestKey: nil,
+                resolvedConfiguration: resolvedConfiguration,
+                failure: .serviceInitializationFailed
+            )
+        }
+
+        // Do not put catalog discovery or the low-frequency BIS ranking update
+        // on WidgetKit's timeline critical path. Provider refresh validates the
+        // concrete configured codes before committing a snapshot.
+        let request: RateRequestKey
+        do {
+            request = try resolvedConfiguration.rateRequestKey(
                 providerID: dependencies.providerID
             )
-            resolvedRequest = request
-            let cachedState = try await dependencies.store.state(for: request)
-            if let snapshot = cachedState.snapshot {
-                if automaticRefreshOpportunity {
-                    _ = try? await dependencies.coordinator.refresh(
-                        request,
-                        reason: .automatic,
-                        attemptedAt: .now
-                    )
-                    let updatedState = try await dependencies.store.state(for: request)
-                    return FXBoardEntry(
-                        date: .now,
-                        configuration: configuration,
-                        referenceCurrency: referenceCurrency,
-                        selectedCurrencies: selectedCurrencies,
-                        requestKey: request,
-                        snapshot: updatedState.snapshot ?? snapshot,
-                        refreshFailure: updatedState.refreshFailure,
-                        nextAutoRefreshEligibleAt: updatedState.refreshState?
-                            .nextAutoRefreshEligibleAt
-                    )
-                }
+            FXWidgetDiagnostics.logRequestKey(request)
+        } catch {
+            return unavailableEntry(
+                configuration: configuration,
+                referenceCurrency: referenceCurrency,
+                selectedCurrencies: selectedCurrencies,
+                requestKey: nil,
+                resolvedConfiguration: resolvedConfiguration,
+                failure: .requestKeyConstructionFailed
+            )
+        }
+
+        let cachedState: CachedRateState
+        do {
+            cachedState = try await dependencies.store.state(for: request)
+            FXWidgetDiagnostics.logCache(
+                "initial-read",
+                key: request,
+                hasSnapshot: cachedState.snapshot != nil
+            )
+        } catch {
+            return unavailableEntry(
+                configuration: configuration,
+                referenceCurrency: referenceCurrency,
+                selectedCurrencies: selectedCurrencies,
+                requestKey: request,
+                resolvedConfiguration: resolvedConfiguration,
+                failure: .cacheReadFailed
+            )
+        }
+
+        if let snapshot = cachedState.snapshot {
+            guard automaticRefreshOpportunity else {
                 return FXBoardEntry(
                     date: .now,
                     configuration: configuration,
                     referenceCurrency: referenceCurrency,
                     selectedCurrencies: selectedCurrencies,
                     requestKey: request,
+                    resolvedConfiguration: resolvedConfiguration,
                     snapshot: snapshot,
                     refreshFailure: cachedState.refreshFailure,
+                    timelineFailure: nil,
                     nextAutoRefreshEligibleAt: cachedState.refreshState?
                         .nextAutoRefreshEligibleAt
                 )
@@ -143,37 +284,114 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
             do {
                 _ = try await dependencies.coordinator.refresh(
                     request,
-                    reason: .startup,
+                    reason: .automatic,
                     attemptedAt: .now
                 )
+                FXWidgetDiagnostics.logRefresh("automatic-success", key: request)
             } catch {
-                // The coordinator records the keyed failure. Read it below so a
-                // concurrently committed successful snapshot still remains visible.
+                FXWidgetDiagnostics.logRefresh("automatic-failed", key: request)
             }
-            let refreshedState = try await dependencies.store.state(for: request)
+            let updatedState: CachedRateState
+            do {
+                updatedState = try await dependencies.store.state(for: request)
+                FXWidgetDiagnostics.logCache(
+                    "post-automatic-read",
+                    key: request,
+                    hasSnapshot: updatedState.snapshot != nil
+                )
+            } catch {
+                return unavailableEntry(
+                    configuration: configuration,
+                    referenceCurrency: referenceCurrency,
+                    selectedCurrencies: selectedCurrencies,
+                    requestKey: request,
+                    resolvedConfiguration: resolvedConfiguration,
+                    failure: .cacheReadAfterRefreshFailed
+                )
+            }
             return FXBoardEntry(
                 date: .now,
                 configuration: configuration,
                 referenceCurrency: referenceCurrency,
                 selectedCurrencies: selectedCurrencies,
                 requestKey: request,
-                snapshot: refreshedState.snapshot,
-                refreshFailure: refreshedState.refreshFailure,
-                nextAutoRefreshEligibleAt: refreshedState.refreshState?
+                resolvedConfiguration: resolvedConfiguration,
+                snapshot: updatedState.snapshot ?? snapshot,
+                refreshFailure: updatedState.refreshFailure,
+                timelineFailure: nil,
+                nextAutoRefreshEligibleAt: updatedState.refreshState?
                     .nextAutoRefreshEligibleAt
             )
+        }
+
+        do {
+            _ = try await dependencies.coordinator.refresh(
+                request,
+                reason: .startup,
+                attemptedAt: .now
+            )
+            FXWidgetDiagnostics.logRefresh("startup-success", key: request)
         } catch {
-            return FXBoardEntry(
-                date: .now,
+            // The coordinator records the keyed failure. Read it below so a
+            // concurrently committed successful snapshot still remains visible.
+            FXWidgetDiagnostics.logRefresh("startup-failed", key: request)
+        }
+
+        let refreshedState: CachedRateState
+        do {
+            refreshedState = try await dependencies.store.state(for: request)
+            FXWidgetDiagnostics.logCache(
+                "post-startup-read",
+                key: request,
+                hasSnapshot: refreshedState.snapshot != nil
+            )
+        } catch {
+            return unavailableEntry(
                 configuration: configuration,
                 referenceCurrency: referenceCurrency,
                 selectedCurrencies: selectedCurrencies,
-                requestKey: resolvedRequest,
-                snapshot: nil,
-                refreshFailure: nil,
-                nextAutoRefreshEligibleAt: nil
+                requestKey: request,
+                resolvedConfiguration: resolvedConfiguration,
+                failure: .cacheReadAfterRefreshFailed
             )
         }
+        return FXBoardEntry(
+            date: .now,
+            configuration: configuration,
+            referenceCurrency: referenceCurrency,
+            selectedCurrencies: selectedCurrencies,
+            requestKey: request,
+            resolvedConfiguration: resolvedConfiguration,
+            snapshot: refreshedState.snapshot,
+            refreshFailure: refreshedState.refreshFailure,
+            timelineFailure: refreshedState.snapshot == nil && refreshedState.refreshFailure == nil
+                ? .providerRefreshFailed
+                : nil,
+            nextAutoRefreshEligibleAt: refreshedState.refreshState?.nextAutoRefreshEligibleAt
+        )
+    }
+
+    private func unavailableEntry(
+        configuration: FXBoardConfigurationIntent,
+        referenceCurrency: CurrencyEntity,
+        selectedCurrencies: [CurrencyEntity],
+        requestKey: RateRequestKey?,
+        resolvedConfiguration: ResolvedWidgetConfiguration,
+        failure: FXBoardTimelineFailure
+    ) -> FXBoardEntry {
+        FXWidgetDiagnostics.logTimelineFailure(failure, requestKey: requestKey)
+        return FXBoardEntry(
+            date: .now,
+            configuration: configuration,
+            referenceCurrency: referenceCurrency,
+            selectedCurrencies: selectedCurrencies,
+            requestKey: requestKey,
+            resolvedConfiguration: resolvedConfiguration,
+            snapshot: nil,
+            refreshFailure: nil,
+            timelineFailure: failure,
+            nextAutoRefreshEligibleAt: nil
+        )
     }
 
     static func requestKey(
@@ -201,9 +419,12 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
     ) -> RateSnapshot? {
         do {
             let providerID = try ProviderID(validating: "mock:bundled")
-            let referenceCurrency = referenceCurrency ?? configuration.resolvedReferenceCurrency
-            let selectedCurrencies = selectedCurrencies
-                ?? configuration.resolvedCurrencies(for: family)
+            let resolvedConfiguration = configuration.resolvedConfiguration(for: family)
+            let referenceCurrency = referenceCurrency
+                ?? CurrencyEntity(id: resolvedConfiguration.referenceCurrency.rawValue)
+            let selectedCurrencies = selectedCurrencies ?? resolvedConfiguration.orderedMembership.map {
+                CurrencyEntity(id: $0.rawValue)
+            }
             let request = try requestKey(
                 referenceCurrency: referenceCurrency,
                 selectedCurrencies: selectedCurrencies,

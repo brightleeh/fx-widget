@@ -12,16 +12,11 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
     static let description = IntentDescription("Configure the currencies shown by this FX board.")
 
     @Parameter(title: "Reference Currency")
-    var referenceCurrency: CurrencyEntity? {
-        mutating didSet {
-            applyReferenceCurrencyChange(from: oldValue, to: referenceCurrency)
-        }
-    }
+    var referenceCurrency: CurrencyEntity?
 
-    // WidgetConfigurationIntent requires optional parameters. Widget gallery
-    // recommendations persist concrete BIS-derived values for new instances;
-    // nil remains a defensive runtime fallback and [] remains an intentional
-    // empty selection.
+    // WidgetConfigurationIntent requires optional parameters. Nil remains a
+    // defensive runtime fallback and [] remains an intentional empty
+    // selection; gallery recommendations are not macOS editor persistence.
     @Parameter(
         title: "Currencies",
         size: IntentCollectionSize(min: 0, max: 3),
@@ -102,117 +97,29 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
         self.showsCurrencyName = showsCurrencyName
     }
 
-    var resolvedReferenceCurrency: CurrencyEntity {
-        referenceCurrency ?? CurrencyEntityQuery.defaultReferenceCurrency
+    func rawConfiguration(for family: WidgetFamilyCategory) -> RawWidgetConfiguration {
+        RawWidgetConfiguration(
+            referenceCurrencyIdentifier: referenceCurrency?.id,
+            mediumMembershipIdentifiers: mediumCurrencies?.map(\.id),
+            largeMembershipIdentifiers: largeCurrencies?.map(\.id),
+            extraLargeMembershipIdentifiers: currencies?.map(\.id),
+            showsCurrencyName: showsCurrencyName,
+            family: family
+        )
     }
 
-    func resolvedReferenceCurrency(catalog: CurrencyCatalog) -> CurrencyEntity {
-        let configuredReference = resolvedReferenceCurrency
-        guard let code = try? CurrencyCode(validating: configuredReference.id),
-              catalog.contains(code) else {
-            let fallback = ReferenceCurrencyPolicy.defaultReferenceCurrency(
-                regionalCurrencyIdentifier: Locale.current.currency?.identifier,
-                providerSupportedCurrencies: catalog.currencyCodeSet
-            )
-            return CurrencyEntity(id: fallback.rawValue)
-        }
-        return configuredReference
+    func resolvedConfiguration(for family: WidgetFamilyCategory) -> ResolvedWidgetConfiguration {
+        WidgetConfigurationResolver(
+            originalDefaultReferenceCurrency: try! CurrencyCode(
+                validating: CurrencyEntityQuery.defaultReferenceCurrency.id
+            ),
+            supportedCurrencies: CurrencyCatalog.foundationCurrencyCodes(),
+            ranking: try? BISCurrencyRankingSource.bundled().validatedSnapshot
+        ).resolve(rawConfiguration(for: family))
     }
-
-    func resolvedCurrencies(for family: WidgetFamilyCategory) -> [CurrencyEntity] {
-        configuredCurrencies(for: family)
-    }
-
-    func resolvedCurrencies(
-        for family: WidgetFamilyCategory,
-        referenceCurrency: CurrencyEntity,
-        catalog: CurrencyCatalog,
-        ranking: CurrencyRankingSnapshot
-    ) -> [CurrencyEntity] {
-        let configured = resolvedCurrencies(for: family)
-        guard !configured.isEmpty else { return [] }
-
-        // App Intent entity resolution is deliberately Foundation-only so a
-        // transient provider/catalog failure cannot erase a saved selection.
-        // Runtime filtering still prevents unsupported/reference rows.
-        let supported = configured.filter { entity in
-            guard let code = try? CurrencyCode(validating: entity.id) else { return false }
-            return code.rawValue != referenceCurrency.id && catalog.contains(code)
-        }
-        return supported
-    }
-
-    var resolvedShowsCurrencyName: Bool { showsCurrencyName }
 
     func configurationCapacity(for family: WidgetFamilyCategory) -> Int {
         WidgetConfigurationSelectionPolicy.capacity(family: family)
-    }
-
-    private mutating func applyReferenceCurrencyChange(
-        from previousEntity: CurrencyEntity?,
-        to newEntity: CurrencyEntity?
-    ) {
-        guard let previousEntity,
-              let newEntity,
-              previousEntity != newEntity,
-              let previous = try? CurrencyCode(validating: previousEntity.id),
-              let new = try? CurrencyCode(validating: newEntity.id) else {
-            return
-        }
-
-        mediumCurrencies = Self.membershipAfterChangingReference(
-            mediumCurrencies,
-            from: previous,
-            to: new
-        )
-        largeCurrencies = Self.membershipAfterChangingReference(
-            largeCurrencies,
-            from: previous,
-            to: new
-        )
-        currencies = Self.membershipAfterChangingReference(
-            currencies,
-            from: previous,
-            to: new
-        )
-    }
-
-    private func configuredCurrencies(
-        for family: WidgetFamilyCategory
-    ) -> [CurrencyEntity] {
-        let configured: [CurrencyEntity]?
-        switch family {
-        case .medium:
-            configured = mediumCurrencies
-        case .large:
-            configured = largeCurrencies
-        case .extraLarge:
-            configured = currencies
-        }
-        if let configured {
-            return configured
-        }
-
-        // App Intents may omit untouched collection parameters from the
-        // serialized configuration. Reconstruct the original regional default
-        // membership first, then apply the same reference-currency swap used by
-        // an explicit collection. Deriving a fresh membership directly from the
-        // new reference would lose the previous reference's position.
-        let originalReference = CurrencyEntityQuery.defaultReferenceCurrency
-        let originalMembership = Self.initialDefaultCurrencies(
-            for: family,
-            referenceCurrency: originalReference
-        )
-        guard originalReference != resolvedReferenceCurrency,
-              let previous = try? CurrencyCode(validating: originalReference.id),
-              let new = try? CurrencyCode(validating: resolvedReferenceCurrency.id) else {
-            return originalMembership
-        }
-        return Self.membershipAfterChangingReference(
-            originalMembership,
-            from: previous,
-            to: new
-        ) ?? originalMembership
     }
 
     private static func initialDefaultCurrencies(
@@ -228,23 +135,6 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
             providerSupportedCurrencies: CurrencyCatalog.foundationCurrencyCodes(),
             ranking: ranking
         )
-    }
-
-    private static func membershipAfterChangingReference(
-        _ entities: [CurrencyEntity]?,
-        from previous: CurrencyCode,
-        to new: CurrencyCode
-    ) -> [CurrencyEntity]? {
-        guard let entities else { return nil }
-        let membership = entities.compactMap {
-            try? CurrencyCode(validating: $0.id)
-        }
-        guard membership.count == entities.count else { return entities }
-        return WidgetConfigurationSelectionPolicy.membershipAfterChangingReference(
-            from: previous,
-            to: new,
-            membership: membership
-        ).map { CurrencyEntity(id: $0.rawValue) }
     }
 
     private static func defaultCurrencies(

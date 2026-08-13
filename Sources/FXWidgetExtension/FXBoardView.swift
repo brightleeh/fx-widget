@@ -62,7 +62,7 @@ struct FXBoardView: View {
                 Text("FX · \(entry.referenceCurrency.id)")
                     .font(headerFont.weight(.semibold))
 
-                if entry.configuration.resolvedShowsCurrencyName,
+                if entry.resolvedConfiguration.showsCurrencyName,
                    let reference = try? CurrencyCode(
                        validating: entry.referenceCurrency.id
                    ) {
@@ -242,7 +242,7 @@ struct FXBoardView: View {
             Text(currency.rawValue)
                 .font(.system(.body, design: .monospaced).weight(.semibold))
 
-            if entry.configuration.resolvedShowsCurrencyName {
+            if entry.resolvedConfiguration.showsCurrencyName {
                 Text(
                     CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
                         for: currency,
@@ -438,8 +438,9 @@ private extension RateChange.Direction {
     FXBoardWidget()
 } timeline: {
     let configuration = FXBoardConfigurationIntent()
-    let reference = configuration.resolvedReferenceCurrency
-    let selected = configuration.resolvedCurrencies(for: .extraLarge)
+    let resolved = configuration.resolvedConfiguration(for: .extraLarge)
+    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
+    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
     FXBoardEntry(
         date: .now,
         configuration: configuration,
@@ -449,11 +450,13 @@ private extension RateChange.Direction {
             for: configuration,
             selectedCurrencies: selected
         )?.requestKey,
+        resolvedConfiguration: configuration.resolvedConfiguration(for: .extraLarge),
         snapshot: FXBoardTimelineProvider.fixtureSnapshot(
             for: configuration,
             selectedCurrencies: selected
         ),
         refreshFailure: nil,
+        timelineFailure: nil,
         nextAutoRefreshEligibleAt: nil
     )
 }
@@ -462,8 +465,9 @@ private extension RateChange.Direction {
     FXBoardWidget()
 } timeline: {
     let configuration = FXBoardConfigurationIntent()
-    let reference = configuration.resolvedReferenceCurrency
-    let selected = configuration.resolvedCurrencies(for: .large)
+    let resolved = configuration.resolvedConfiguration(for: .large)
+    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
+    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
     let snapshot = FXBoardTimelineProvider.fixtureSnapshot(
         for: configuration,
         selectedCurrencies: selected
@@ -474,8 +478,10 @@ private extension RateChange.Direction {
         referenceCurrency: reference,
         selectedCurrencies: selected,
         requestKey: snapshot?.requestKey,
+        resolvedConfiguration: configuration.resolvedConfiguration(for: .large),
         snapshot: snapshot,
         refreshFailure: nil,
+        timelineFailure: nil,
         nextAutoRefreshEligibleAt: nil
     )
 }
@@ -484,8 +490,9 @@ private extension RateChange.Direction {
     FXBoardWidget()
 } timeline: {
     let configuration = FXBoardConfigurationIntent()
-    let reference = configuration.resolvedReferenceCurrency
-    let selected = configuration.resolvedCurrencies(for: .medium)
+    let resolved = configuration.resolvedConfiguration(for: .medium)
+    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
+    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
     let snapshot = FXBoardTimelineProvider.fixtureSnapshot(
         for: configuration,
         selectedCurrencies: selected
@@ -496,8 +503,10 @@ private extension RateChange.Direction {
         referenceCurrency: reference,
         selectedCurrencies: selected,
         requestKey: snapshot?.requestKey,
+        resolvedConfiguration: configuration.resolvedConfiguration(for: .medium),
         snapshot: snapshot,
         refreshFailure: nil,
+        timelineFailure: nil,
         nextAutoRefreshEligibleAt: nil
     )
 }
@@ -522,8 +531,10 @@ private extension RateChange.Direction {
         referenceCurrency: reference,
         selectedCurrencies: selected,
         requestKey: snapshot?.requestKey,
+        resolvedConfiguration: configuration.resolvedConfiguration(for: .extraLarge),
         snapshot: snapshot,
         refreshFailure: nil,
+        timelineFailure: nil,
         nextAutoRefreshEligibleAt: nil
     )
 }

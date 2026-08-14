@@ -26,8 +26,8 @@ struct FXBoardView: View {
                 .frame(height: layout.metrics.headerHeight)
                 .layoutPriority(2)
 
-            if visibleQuotes(for: layout).isEmpty {
-                Text("Exchange-rate data is unavailable.")
+            if layout.visibleCurrencies.isEmpty {
+                Text(localized("Exchange-rate data is unavailable."))
                     .foregroundStyle(.secondary)
                     .frame(maxHeight: .infinity)
             } else {
@@ -37,8 +37,8 @@ struct FXBoardView: View {
                         id: \.offset
                     ) { _, column in
                         VStack(spacing: layout.metrics.rowSpacing) {
-                            ForEach(column, id: \.currency) { quote in
-                                rateCell(quote, rowHeight: layout.metrics.rowHeight)
+                            ForEach(column, id: \.self) { currency in
+                                rateCell(currency, rowHeight: layout.metrics.rowHeight)
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .top)
@@ -59,8 +59,15 @@ struct FXBoardView: View {
     private var header: some View {
         HStack {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text("FX · \(entry.referenceCurrency.id)")
+                // Localized so the board reads as "환율 · KRW" / "Exchange Rates ·
+                // KRW" / "為替レート · KRW". The word is longer in some languages
+                // than the original "FX", so it yields space before the ISO code
+                // and the reference label do.
+                Text(localized("FX · %@", entry.referenceCurrency.id))
                     .font(headerFont.weight(.semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .allowsTightening(true)
 
                 if entry.resolvedConfiguration.showsCurrencyName,
                    let reference = try? CurrencyCode(
@@ -69,7 +76,7 @@ struct FXBoardView: View {
                     Text(
                         CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
                             for: reference,
-                            locale: .current
+                            locale: entry.displayLocale
                         )
                     )
                         .font(supportingFont)
@@ -89,10 +96,15 @@ struct FXBoardView: View {
                     selectedCurrencies: refreshSelectedCurrencyIDs
                 )
             ) {
+                // No `invalidatableContent()`: on macOS the system applies its
+                // pending treatment to the whole widget, desaturating every row
+                // and blanking the flag emoji. A widget cannot run a continuous
+                // spin either, so the refresh gives no in-flight indicator; the
+                // reloaded timeline is the feedback.
                 Image(systemName: "arrow.clockwise")
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(Text("Refresh"))
+            .accessibilityLabel(Text(localized("Refresh")))
         }
     }
 
@@ -105,19 +117,22 @@ struct FXBoardView: View {
 
             if entry.refreshFailure != nil {
                 Image(systemName: "exclamationmark.triangle")
-                    .accessibilityLabel(Text("Refresh failed. Showing last successful rates."))
+                    .accessibilityLabel(Text(localized("Refresh failed. Showing last successful rates.")))
             }
 
             Spacer(minLength: 0)
+
+            if let refreshedText {
+                Text(refreshedText)
+                    .lineLimit(1)
+                    .layoutPriority(-1)
+            }
 
             if layout.overflowCount > 0 {
                 Text("+\(layout.overflowCount)")
                     .fontWeight(.semibold)
                     .accessibilityLabel(
-                        String.localizedStringWithFormat(
-                            String(localized: "%lld additional currencies"),
-                            layout.overflowCount
-                        )
+                        localized("%lld additional currencies", layout.overflowCount)
                     )
             }
         }
@@ -133,6 +148,21 @@ struct FXBoardView: View {
         return entry.selectedCurrencies.map(\.id).filter { $0 != reference }
     }
 
+    /// Localizes UI copy in the widget's Language rather than the system's.
+    private func localized(_ key: String.LocalizationValue) -> String {
+        String(
+            localized: key,
+            bundle: WidgetLanguage.parsed(entry.configuration.languageCode).localizationBundle,
+            locale: entry.displayLocale
+        )
+    }
+
+    private func localized(_ key: String.LocalizationValue, _ arguments: CVarArg...) -> String {
+        // `localizedStringWithFormat` takes CVarArg..., so forwarding the packed
+        // array would substitute the array itself as a single argument.
+        String(format: localized(key), locale: entry.displayLocale, arguments: arguments)
+    }
+
     private var basisText: String? {
         guard let basis = entry.snapshot?.providerDataBasis else { return nil }
 
@@ -140,39 +170,56 @@ struct FXBoardView: View {
         switch basis {
         case let .timestamp(timestamp):
             formatted = timestamp.formatted(
-                .dateTime.year().month().day().hour().minute().locale(.current)
+                .dateTime.year().month().day().hour().minute().locale(entry.displayLocale)
             )
         case let .dateOnly(date):
             guard let displayDate = displayDate(for: date) else { return nil }
             formatted = displayDate.formatted(
-                .dateTime.year().month().day().locale(.current)
+                .dateTime.year().month().day().locale(entry.displayLocale)
             )
         }
-        return String.localizedStringWithFormat(String(localized: "As of %@"), formatted)
+        return localized("As of %@", formatted)
     }
 
-    private var orderedQuotes: [RateQuote] {
+    /// When this widget last reached the provider successfully. D-028 keeps this
+    /// strictly separate from the provider's data basis: the basis says how old
+    /// the *rates* are, this says how old our *copy* is, and only both together
+    /// distinguish "the provider has not published yet" from "we cannot reach
+    /// the provider".
+    ///
+    /// Rendered as an absolute time on purpose. A widget bakes its text into a
+    /// timeline entry, so a relative "5 minutes ago" keeps claiming five minutes
+    /// long after it stops being true.
+    private var refreshedText: String? {
+        guard let refreshedAt = entry.snapshot?.lastSuccessfulRefreshAt else { return nil }
+        // Full date and time, not just a clock time: a widget can sit untouched
+        // for days, and "04:30" alone does not say which day it refers to.
+        let formatted = refreshedAt.formatted(
+            .dateTime.year().month().day().hour().minute().locale(entry.displayLocale)
+        )
+        return localized("Updated %@", formatted)
+    }
+
+    /// Currencies the board will render, in configured order. A currency the
+    /// provider no longer publishes stays in the list and renders as a dash
+    /// rather than disappearing (D-013).
+    private var orderedCurrencies: [CurrencyCode] {
         guard let snapshot = entry.snapshot else { return [] }
-        return entry.selectedCurrencies.compactMap { entity in
-            try? CurrencyCode(validating: entity.id)
-        }.compactMap { snapshot[$0] }
+        return entry.selectedCurrencies
+            .compactMap { try? CurrencyCode(validating: $0.id) }
+            .filter { snapshot[$0] != nil || snapshot.isUnavailable($0) }
     }
 
     private func layout(availableContentHeight: Double) -> WidgetLayoutResult {
         WidgetLayoutPolicy.resolve(
             family: familyOverride ?? family.layoutCategory,
-            selectedCurrencies: orderedQuotes.map(\.currency),
+            selectedCurrencies: orderedCurrencies,
             availableContentHeight: availableContentHeight
         )
     }
 
-    private func visibleQuotes(for layout: WidgetLayoutResult) -> [RateQuote] {
-        guard let snapshot = entry.snapshot else { return [] }
-        return layout.visibleCurrencies.compactMap { snapshot[$0] }
-    }
-
-    private func visibleQuoteColumns(for layout: WidgetLayoutResult) -> [[RateQuote]] {
-        let quotes = visibleQuotes(for: layout)
+    private func visibleQuoteColumns(for layout: WidgetLayoutResult) -> [[CurrencyCode]] {
+        let quotes = layout.visibleCurrencies
         let rowsPerColumn = max(1, layout.metrics.rowsPerColumn)
         var columns = stride(from: 0, to: quotes.count, by: rowsPerColumn).map { start in
             Array(quotes[start..<min(start + rowsPerColumn, quotes.count)])
@@ -181,8 +228,8 @@ struct FXBoardView: View {
         return Array(columns.prefix(layout.columnCount))
     }
 
-    private func rateCell(_ quote: RateQuote, rowHeight: Double) -> some View {
-        rateRow(quote)
+    private func rateCell(_ currency: CurrencyCode, rowHeight: Double) -> some View {
+        rateRow(currency)
             .frame(
                 maxWidth: .infinity,
                 minHeight: rowHeight,
@@ -192,33 +239,39 @@ struct FXBoardView: View {
     }
 
     @ViewBuilder
-    private func rateRow(_ quote: RateQuote) -> some View {
-        let display = rowDisplay(for: quote)
-        fullRateRow(quote, display: display)
+    private func rateRow(_ currency: CurrencyCode) -> some View {
+        if let quote = entry.snapshot?[currency] {
+            fullRateRow(currency, display: rowDisplay(for: quote), quote: quote)
+        } else {
+            // The provider does not publish this currency at all; the rest of
+            // the board still shares one basis date.
+            fullRateRow(currency, display: nil, quote: nil)
+        }
     }
 
     private func fullRateRow(
-        _ quote: RateQuote,
-        display: RateRowDisplay
+        _ currency: CurrencyCode,
+        display: RateRowDisplay?,
+        quote: RateQuote?
     ) -> some View {
         HStack(spacing: 4) {
-            Text(CurrencyPresentationMetadata.flag(for: quote.currency) ?? "¤")
+            Text(CurrencyPresentationMetadata.flag(for: currency) ?? "¤")
                 .frame(width: 18)
 
-            currencyIdentity(quote.currency)
+            currencyIdentity(currency)
                 .frame(minWidth: 36, alignment: .leading)
 
             Spacer(minLength: 2)
 
             decimalAlignedText(
-                display.rate,
+                display?.rate ?? "—",
                 integerWidth: 52,
                 fractionWidth: 35
             )
                 .layoutPriority(2)
 
             Group {
-                if let direction = display.direction {
+                if let display, let direction = display.direction {
                     decimalAlignedChangeText(
                         display.changeAmount,
                         direction: direction
@@ -228,13 +281,13 @@ struct FXBoardView: View {
                         .frame(width: 78, alignment: .trailing)
                 }
             }
-                .foregroundStyle(display.color)
+                .foregroundStyle(display?.color ?? .secondary)
                 .frame(width: 78, alignment: .trailing)
                 .layoutPriority(2)
         }
         .font(rowFont.monospacedDigit())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilityLabel(for: quote, display: display))
+        .accessibilityLabel(accessibilityLabel(for: currency, quote: quote, display: display))
     }
 
     private func currencyIdentity(_ currency: CurrencyCode) -> some View {
@@ -246,7 +299,7 @@ struct FXBoardView: View {
                 Text(
                     CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
                         for: currency,
-                        locale: .current
+                        locale: entry.displayLocale
                     )
                 )
                     .font(supportingFont)
@@ -282,12 +335,16 @@ struct FXBoardView: View {
     }
 
     private func accessibilityLabel(
-        for quote: RateQuote,
-        display: RateRowDisplay
+        for currency: CurrencyCode,
+        quote: RateQuote?,
+        display: RateRowDisplay?
     ) -> String {
         let reference = entry.referenceCurrency.id
-        return String.localizedStringWithFormat(
-            String(localized: "%@ rate %@ %@; change %@"),
+        guard let quote, let display else {
+            return localized("%@ rate unavailable", currency.rawValue)
+        }
+        return localized(
+            "%@ rate %@ %@; change %@",
             quote.currency.rawValue,
             display.rate,
             reference,

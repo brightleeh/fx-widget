@@ -11,18 +11,61 @@ struct RateFormatterTests {
         #expect(formatter.rate(Decimal(string: "8.905")!).text == "8.91")
         #expect(formatter.rate(Decimal(string: "1.1645")!).text == "1.16")
         #expect(formatter.rate(Decimal(string: "0.7100")!).text == "0.71")
-        #expect(formatter.rate(Decimal(string: "0.00634")!).text == "0.00634")
+        // 0.0001 ..< 0.01 renders exactly four digits: a glanceable board does
+        // not benefit from 0.006275 over 0.0063.
+        #expect(formatter.rate(Decimal(string: "0.00634")!).text == "0.0063")
+        #expect(formatter.rate(Decimal(string: "0.006275")!).text == "0.0063")
+        #expect(formatter.rate(Decimal(string: "0.1484")!).text == "0.1484")
     }
 
-    @Test func nonzeroRateNeverBecomesZero() {
-        let expanded = formatter.rate(Decimal(string: "0.000000000123")!)
-        #expect(expanded.text == "0.0000000001")
-        #expect(expanded.fractionDigits == 10)
+    @Test func belowTheFixedFloorSwitchesToScientificRatherThanMoreDigits() {
+        // Vietnamese dong against USD sits here.
+        let vnd = formatter.rate(Decimal(string: "0.000038")!)
+        #expect(vnd.usesScientificNotation)
+        #expect(vnd.text.contains("E"))
+        #expect(vnd.text != "0")
 
-        let scientific = formatter.rate(Decimal(string: "0.0000000000000123")!)
-        #expect(scientific.usesScientificNotation)
-        #expect(scientific.text.contains("E"))
-        #expect(scientific.text != "0")
+        let tiny = formatter.rate(Decimal(string: "0.000000000123")!)
+        #expect(tiny.usesScientificNotation)
+        #expect(tiny.text != "0")
+
+        // The floor itself still renders in fixed notation.
+        #expect(!formatter.rate(Decimal(string: "0.0001")!).usesScientificNotation)
+    }
+
+    @Test func changeWidensToTheBoardFloorBeforeGoingScientific() {
+        // A 1.15 row (2 digits) whose change is 0.0004 must still read 0.0004.
+        let rate = formatter.rate(Decimal(string: "1.1545")!)
+        #expect(rate.fractionDigits == 2)
+        #expect(
+            formatter.absoluteChange(
+                Decimal(string: "0.000413371916")!,
+                rateFractionDigits: rate.fractionDigits
+            ) == "0.0004"
+        )
+    }
+
+    @Test func scientificNotationStaysNarrowEnoughToRender() {
+        // Long mantissas were being truncated to "4.13371916…" by the layout.
+        let text = formatter.absoluteChange(
+            Decimal(string: "0.00000393744142")!,
+            rateFractionDigits: 4
+        )
+        #expect(text.contains("E"))
+        #expect(text.count <= 8)
+    }
+
+    @Test func changeTooSmallForItsRowUsesScientificNotation() {
+        let rate = formatter.rate(Decimal(string: "0.006275")!)
+        #expect(rate.fractionDigits == 4)
+
+        // Previously this widened the column until the layout truncated it.
+        let change = formatter.absoluteChange(
+            Decimal(string: "0.0000042")!,
+            rateFractionDigits: rate.fractionDigits
+        )
+        #expect(change.contains("E"))
+        #expect(change != "0.0000")
     }
 
     @Test func absoluteChangeStartsWithRowsEffectivePrecision() {

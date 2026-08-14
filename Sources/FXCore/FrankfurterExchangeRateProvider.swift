@@ -35,12 +35,38 @@ public struct FrankfurterExchangeRateProvider: ExchangeRateProvider {
         )
     }
 
+    /// How far behind the freshest `end_date` a currency may lag and still be
+    /// treated as active. Publication schedules differ by a day or two; a
+    /// retired currency falls behind permanently.
+    static let retirementToleranceDays = 10
+
     public func supportedCurrencies() async throws -> Set<CurrencyCode> {
         let records = try await client.currencies()
         guard Set(records.map(\.code)).count == records.count else {
             throw FrankfurterProviderError.invalidResponse
         }
         return Set(records.map(\.code))
+    }
+
+    /// Currencies this provider has stopped publishing. They remain listed by
+    /// `/currencies` with a stale `end_date` — `KPW` stopped in July 2026.
+    ///
+    /// They are *not* removed from the selectable catalog: that is one
+    /// provider's gap, and D-015 keeps the product provider-agnostic. Instead a
+    /// quote row for an inactive currency renders as unavailable while the rest
+    /// of the board resolves normally.
+    static func activeCurrencies(
+        in records: [FrankfurterCurrencyRecord]
+    ) -> [FrankfurterCurrencyRecord] {
+        let latest = records.compactMap(\.endDate).max()
+        guard let latest else { return records }
+        guard let cutoff = latest.adding(days: -retirementToleranceDays) else {
+            return records
+        }
+        return records.filter { record in
+            guard let endDate = record.endDate else { return true }
+            return endDate >= cutoff
+        }
     }
 
     public func fetchSnapshot(
@@ -56,13 +82,33 @@ public struct FrankfurterExchangeRateProvider: ExchangeRateProvider {
         let requestedCurrencies = Set(
             request.selectedCurrencyCodes + [request.referenceCurrency]
         )
-        for currency in requestedCurrencies.union([providerBaseCurrency])
+        // The provider base and the reference currency must be quotable; nothing
+        // can be normalized without them.
+        for currency in [providerBaseCurrency, request.referenceCurrency]
             where recordsByCode[currency] == nil {
             throw FrankfurterProviderError.unsupportedCurrency(currency)
         }
 
-        let requiredLegs = requestedCurrencies.subtracting([providerBaseCurrency])
-        guard !requiredLegs.isEmpty else {
+        // Currencies the provider no longer publishes cannot join the common-date
+        // search; they would make every date fail. The reference currency is
+        // different: nothing can be normalized without it.
+        // A quote currency this provider never lists is treated exactly like one
+        // it has stopped publishing: the row renders as unavailable and the rest
+        // of the board resolves. Only the reference currency is fatal.
+        let activeCodes = Set(Self.activeCurrencies(in: currencyRecords).map(\.code))
+        guard activeCodes.contains(request.referenceCurrency) else {
+            throw FrankfurterProviderError.unsupportedCurrency(request.referenceCurrency)
+        }
+        let unavailableCurrencies = request.selectedCurrencyCodes.filter {
+            !activeCodes.contains($0)
+        }
+        let quotedCurrencies = request.selectedCurrencyCodes.filter {
+            activeCodes.contains($0)
+        }
+
+        let requiredLegs = Set(quotedCurrencies + [request.referenceCurrency])
+            .subtracting([providerBaseCurrency])
+        guard !requiredLegs.isEmpty || !quotedCurrencies.isEmpty else {
             throw FrankfurterProviderError.noCommonCurrentDate
         }
 
@@ -102,7 +148,7 @@ public struct FrankfurterExchangeRateProvider: ExchangeRateProvider {
             expectedDate: discovery.currentDate
         )
 
-        let quotes = try request.selectedCurrencyCodes.map { currency in
+        let quotes = try quotedCurrencies.map { currency in
             let currentRate = try normalizedRate(
                 currency: currency,
                 referenceCurrency: request.referenceCurrency,
@@ -127,7 +173,8 @@ public struct FrankfurterExchangeRateProvider: ExchangeRateProvider {
             requestKey: request,
             providerDataBasis: .dateOnly(discovery.currentDate),
             lastSuccessfulRefreshAt: refreshedAt,
-            quotes: quotes
+            quotes: quotes,
+            unavailableCurrencies: unavailableCurrencies
         )
     }
 

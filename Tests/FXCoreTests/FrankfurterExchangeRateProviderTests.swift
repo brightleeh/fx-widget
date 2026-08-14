@@ -336,3 +336,69 @@ private actor ScriptedFrankfurterTransport: FrankfurterHTTPTransport {
         requests
     }
 }
+
+@Suite("Frankfurter retired currencies")
+struct FrankfurterRetiredCurrencyTests {
+    private func record(_ code: String, end: String?) -> FrankfurterCurrencyRecord {
+        FrankfurterCurrencyRecord(
+            code: try! CurrencyCode(validating: code),
+            name: code,
+            startDate: try! CalendarDate(iso8601: "1999-01-04"),
+            endDate: end.map { try! CalendarDate(iso8601: $0) }
+        )
+    }
+
+    @Test func currenciesTheProviderStoppedPublishingAreExcluded() {
+        // KPW is still listed by /currencies but its data ended in July 2026.
+        // Offering it would let a user configure a board that never resolves.
+        let records = [
+            record("KRW", end: "2026-08-13"),
+            record("USD", end: "2026-08-13"),
+            record("EUR", end: "2026-08-12"),
+            record("KPW", end: "2026-07-23")
+        ]
+
+        let active = FrankfurterExchangeRateProvider.activeCurrencies(in: records).map(\.code)
+
+        #expect(active.contains(try! CurrencyCode(validating: "KRW")))
+        #expect(active.contains(try! CurrencyCode(validating: "EUR")))
+        #expect(!active.contains(try! CurrencyCode(validating: "KPW")))
+    }
+
+    @Test func ordinaryPublishingLagIsTolerated() {
+        let records = [
+            record("USD", end: "2026-08-13"),
+            record("ISK", end: "2026-08-07")
+        ]
+
+        #expect(FrankfurterExchangeRateProvider.activeCurrencies(in: records).count == 2)
+    }
+
+    @Test func recordsWithoutAnEndDateAreKept() {
+        let records = [record("USD", end: "2026-08-13"), record("XAU", end: nil)]
+        #expect(FrankfurterExchangeRateProvider.activeCurrencies(in: records).count == 2)
+    }
+}
+
+@Suite("Frankfurter unlisted quote currencies")
+struct FrankfurterUnlistedCurrencyTests {
+    @Test func aQuoteCurrencyTheProviderNeverListsIsUnavailableNotFatal() throws {
+        // BGN left the catalog entirely when Bulgaria adopted the euro. That
+        // must dim one row, not break the whole board.
+        let request = try RateRequestKey(
+            providerID: ProviderID(validating: "mock:unlisted"),
+            referenceCurrency: CurrencyCode(validating: "KRW"),
+            selectedCurrencyCodes: ["USD", "BGN"].map { try! CurrencyCode(validating: $0) }
+        )
+        let snapshot = try RateSnapshot(
+            requestKey: request,
+            providerDataBasis: .dateOnly(CalendarDate(iso8601: "2026-08-13")),
+            lastSuccessfulRefreshAt: Date(timeIntervalSince1970: 0),
+            quotes: [try RateQuote(currency: CurrencyCode(validating: "USD"), currentRate: 1418)],
+            unavailableCurrencies: [try CurrencyCode(validating: "BGN")]
+        )
+
+        #expect(snapshot.quotes.count == 1)
+        #expect(snapshot.isUnavailable(try CurrencyCode(validating: "BGN")))
+    }
+}

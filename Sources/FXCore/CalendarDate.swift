@@ -54,6 +54,24 @@ public struct CalendarDate: Hashable, Comparable, Sendable, Codable, CustomStrin
         }
     }
 
+    /// Returns this calendar date shifted by `days`, or `nil` if the shift
+    /// cannot be represented.
+    public func adding(days: Int) -> CalendarDate? {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        guard let start = calendar.date(
+            from: DateComponents(year: year, month: month, day: day)
+        ),
+        let shifted = calendar.date(byAdding: .day, value: days, to: start) else {
+            return nil
+        }
+        let parts = calendar.dateComponents([.year, .month, .day], from: shifted)
+        guard let year = parts.year, let month = parts.month, let day = parts.day else {
+            return nil
+        }
+        return try? CalendarDate(year: year, month: month, day: day)
+    }
+
     public var description: String {
         String(format: "%04d-%02d-%02d", year, month, day)
     }

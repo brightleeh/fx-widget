@@ -27,6 +27,7 @@
 		010000000000000000000012 /* WidgetLayoutPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000013 /* WidgetLayoutPolicy.swift */; };
 		010000000000000000000013 /* RateCacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000014 /* RateCacheStore.swift */; };
 		010000000000000000000014 /* RateRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000015 /* RateRefreshCoordinator.swift */; };
+		010000000000000000000714 /* TimelineReloadPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000715 /* TimelineReloadPolicy.swift */; };
 		010000000000000000000015 /* FrankfurterDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000016 /* FrankfurterDTO.swift */; };
 		010000000000000000000016 /* FrankfurterClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000017 /* FrankfurterClient.swift */; };
 		010000000000000000000017 /* FrankfurterExchangeRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */; };
@@ -36,6 +37,7 @@
 		01000000000000000000001B /* CurrencyPresentationMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001C /* CurrencyPresentationMetadata.swift */; };
 		01000000000000000000001C /* WidgetConfigurationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000001D /* WidgetConfigurationPolicy.swift */; };
 		010000000000000000000020 /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000020 /* CurrencyEntity.swift */; };
+		010000000000000000000920 /* CurrencySelectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000920 /* CurrencySelectionOptions.swift */; };
 		010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000021 /* FXBoardTimelineProvider.swift */; };
 		010000000000000000000022 /* FXBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000022 /* FXBoardView.swift */; };
 		010000000000000000000023 /* FXBoardWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000023 /* FXBoardWidget.swift */; };
@@ -56,6 +58,7 @@
 		01000000000000000000003A /* WidgetLayoutPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003A /* WidgetLayoutPolicyTests.swift */; };
 		01000000000000000000003B /* RateCacheStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003B /* RateCacheStoreTests.swift */; };
 		01000000000000000000003C /* RateRefreshCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003C /* RateRefreshCoordinatorTests.swift */; };
+		01000000000000000000073C /* TimelineReloadPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000073C /* TimelineReloadPolicyTests.swift */; };
 		01000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */; };
 		01000000000000000000003E /* CurrencyCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003E /* CurrencyCatalogTests.swift */; };
 		01000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */; };
@@ -140,6 +143,7 @@
 		020000000000000000000013 /* WidgetLayoutPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicy.swift; sourceTree = "<group>"; };
 		020000000000000000000014 /* RateCacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCacheStore.swift; sourceTree = "<group>"; };
 		020000000000000000000015 /* RateRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRefreshCoordinator.swift; sourceTree = "<group>"; };
+		020000000000000000000715 /* TimelineReloadPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineReloadPolicy.swift; sourceTree = "<group>"; };
 		020000000000000000000016 /* FrankfurterDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterDTO.swift; sourceTree = "<group>"; };
 		020000000000000000000017 /* FrankfurterClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterClient.swift; sourceTree = "<group>"; };
 		020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterExchangeRateProvider.swift; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 		02000000000000000000001C /* CurrencyPresentationMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPresentationMetadata.swift; sourceTree = "<group>"; };
 		02000000000000000000001D /* WidgetConfigurationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationPolicy.swift; sourceTree = "<group>"; };
 		020000000000000000000020 /* CurrencyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyEntity.swift; sourceTree = "<group>"; };
+		020000000000000000000920 /* CurrencySelectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionOptions.swift; sourceTree = "<group>"; };
 		020000000000000000000021 /* FXBoardTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardTimelineProvider.swift; sourceTree = "<group>"; };
 		020000000000000000000022 /* FXBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardView.swift; sourceTree = "<group>"; };
 		020000000000000000000023 /* FXBoardWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardWidget.swift; sourceTree = "<group>"; };
@@ -170,6 +175,7 @@
 		02000000000000000000003A /* WidgetLayoutPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLayoutPolicyTests.swift; sourceTree = "<group>"; };
 		02000000000000000000003B /* RateCacheStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCacheStoreTests.swift; sourceTree = "<group>"; };
 		02000000000000000000003C /* RateRefreshCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateRefreshCoordinatorTests.swift; sourceTree = "<group>"; };
+		02000000000000000000073C /* TimelineReloadPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineReloadPolicyTests.swift; sourceTree = "<group>"; };
 		02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterExchangeRateProviderTests.swift; sourceTree = "<group>"; };
 		02000000000000000000003E /* CurrencyCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCatalogTests.swift; sourceTree = "<group>"; };
 		02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BISSDMXCurrencyRankingSourceTests.swift; sourceTree = "<group>"; };
@@ -267,6 +273,7 @@
 				020000000000000000000013 /* WidgetLayoutPolicy.swift */,
 				020000000000000000000014 /* RateCacheStore.swift */,
 				020000000000000000000015 /* RateRefreshCoordinator.swift */,
+				020000000000000000000715 /* TimelineReloadPolicy.swift */,
 				020000000000000000000016 /* FrankfurterDTO.swift */,
 				020000000000000000000017 /* FrankfurterClient.swift */,
 				020000000000000000000018 /* FrankfurterExchangeRateProvider.swift */,
@@ -294,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000020 /* CurrencyEntity.swift */,
+				020000000000000000000920 /* CurrencySelectionOptions.swift */,
 				020000000000000000000021 /* FXBoardTimelineProvider.swift */,
 				020000000000000000000022 /* FXBoardView.swift */,
 				020000000000000000000023 /* FXBoardWidget.swift */,
@@ -330,6 +338,7 @@
 				02000000000000000000003A /* WidgetLayoutPolicyTests.swift */,
 				02000000000000000000003B /* RateCacheStoreTests.swift */,
 				02000000000000000000003C /* RateRefreshCoordinatorTests.swift */,
+				02000000000000000000073C /* TimelineReloadPolicyTests.swift */,
 				02000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift */,
 				02000000000000000000003E /* CurrencyCatalogTests.swift */,
 				02000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift */,
@@ -560,6 +569,7 @@
 				010000000000000000000012 /* WidgetLayoutPolicy.swift in Sources */,
 				010000000000000000000013 /* RateCacheStore.swift in Sources */,
 				010000000000000000000014 /* RateRefreshCoordinator.swift in Sources */,
+				010000000000000000000714 /* TimelineReloadPolicy.swift in Sources */,
 				010000000000000000000015 /* FrankfurterDTO.swift in Sources */,
 				010000000000000000000016 /* FrankfurterClient.swift in Sources */,
 				010000000000000000000017 /* FrankfurterExchangeRateProvider.swift in Sources */,
@@ -585,6 +595,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				010000000000000000000020 /* CurrencyEntity.swift in Sources */,
+				010000000000000000000920 /* CurrencySelectionOptions.swift in Sources */,
 				010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */,
 				010000000000000000000022 /* FXBoardView.swift in Sources */,
 				010000000000000000000023 /* FXBoardWidget.swift in Sources */,
@@ -612,6 +623,7 @@
 				01000000000000000000003A /* WidgetLayoutPolicyTests.swift in Sources */,
 				01000000000000000000003B /* RateCacheStoreTests.swift in Sources */,
 				01000000000000000000003C /* RateRefreshCoordinatorTests.swift in Sources */,
+				01000000000000000000073C /* TimelineReloadPolicyTests.swift in Sources */,
 				01000000000000000000003D /* FrankfurterExchangeRateProviderTests.swift in Sources */,
 				01000000000000000000003E /* CurrencyCatalogTests.swift in Sources */,
 				01000000000000000000003F /* BISSDMXCurrencyRankingSourceTests.swift in Sources */,

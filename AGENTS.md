@@ -21,9 +21,10 @@ Before making implementation changes, read these documents in order:
 7. `docs/PROVIDER_EVALUATION.md`
 8. `docs/TESTING.md`
 9. `docs/IMPLEMENTATION_PLAN.md`
-10. `docs/WIDGET_CONFIGURATION_REMEDIATION.md` when working on the known per-widget configuration failures or `FUTURE_WORK.md` items 1 through 4
 
 `docs/DECISIONS.md` is the source of truth when documents appear to conflict.
+
+The verified persistence and visibility rules for widget configuration are D-039; the reload policy after a failed cold start is D-040.
 
 ## Product Invariants
 
@@ -31,7 +32,7 @@ Do not change these without an explicit product decision:
 
 - Native macOS app.
 - Swift + SwiftUI + WidgetKit + App Intents + Foundation.
-- macOS 14 or later is the minimum target because manual refresh is an interactive widget action.
+- macOS 15 or later is the minimum target: interactive widgets need 14, and the runtime collection `@Parameter(default:)` overload needs 15 (D-001, D-039).
 - Layout is fixed by family: Medium is 3 rows by 1 column, Large is 10 rows by 1 column, and Extra Large is 10 rows by 2 columns.
 - **Default Order** is derived from the latest validated final BIS `OTC foreign exchange turnover by currency` ranking.
 - Do not hardcode a fixed currency list as Default Order.
@@ -61,7 +62,8 @@ Do not change these without an explicit product decision:
 - `nextAutoRefreshEligibleAt` is best-effort eligibility, not an exact WidgetKit execution promise.
 - Primary widget UI must remain provider-neutral and must not display provider/API/app versions.
 - Keep the last successful data visible if a refresh fails.
-- Commit refreshes as coherent all-selected-currency snapshots. A partial provider response is a refresh failure and must not produce a mixed old/new snapshot.
+- Commit refreshes as coherent snapshots: every quoted row shares one provider basis date. A partial response for a currency the provider does publish is a refresh failure and must not produce a mixed old/new snapshot.
+- A currency the active provider does not publish at all is recorded in `unavailableCurrencies` and rendered as a dash. Never drop such a currency from the selectable catalog; another provider may quote it (D-013, D-015).
 - Key snapshots, refresh state, errors, and in-flight refresh work by `providerID + referenceCurrency + sorted unique selected currencies`. Never let differently configured widget instances overwrite one another.
 - Treat `providerID` as the identity of the configured data source, so distinct public/self-hosted endpoints do not share cache entries. Persist widget runtime state in the widget extension's own Application Support container using atomic, cross-process-safe updates; an actor alone does not coordinate separate extension processes.
 - Do not promise exact real-time behavior. WidgetKit controls timeline refresh scheduling.
@@ -174,7 +176,7 @@ Do not silently invert only some currencies.
 
 If the reference currency is in the selected list, exclude/disable it from normal display by default rather than showing a useless `1.0000` row.
 
-When a newly chosen reference currency already occupies a saved membership position, replace it in place with the previous reference currency. If the new reference currency was not in membership, do not insert the old reference currency or otherwise mutate membership.
+The previous reference currency is never inserted into membership (D-010, D-039: WidgetKit supplies no previous-reference value). A derived membership is re-derived from the active reference, BIS Default Order, provider-supported catalog, and family capacity. A user-edited membership keeps its saved value untouched; the active reference is dropped from rendering only, and nothing is inserted or reordered.
 
 ## Widget Family and Capacity Rules
 
@@ -188,7 +190,7 @@ When a newly chosen reference currency already occupies a saved membership posit
 - Normal configuration prevents adding currencies beyond validated capacity.
 - Do not require an always-visible `selected / max` counter.
 - Use standard macOS `Edit fx-widget` configuration rather than permanent Add Currency controls in the widget.
-- Currency search supports ISO code and localized name.
+- Currency pickers list ISO code plus localized name in one title; free-text search is unavailable because it requires `AppEntity` (D-039).
 - Never mutate existing selection/order because capacity decreases.
 - `+N` is a non-interactive fallback only for existing over-capacity states.
 - Widgets do not scroll and render complete rows only.
@@ -199,14 +201,15 @@ When a newly chosen reference currency already occupies a saved membership posit
 ## Widget Configuration Rules
 
 - Configure via the standard macOS widget edit flow.
-- Parameters include Reference Currency, family-specific Currencies, and Currency Name.
+- Configuration parameters must be `Bool` or `String` + `DynamicOptionsProvider`. `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are **not committed** on Done (D-039). Do not reintroduce them.
+- Parameters are Language, Currency Name, Reference Currency, Quote Currency Count, and per-row Quote Currency slots (3/10/20 by family).
 - Currencies come from the dynamic provider-supported catalog.
-- Search by ISO code and localized currency name.
+- Picker titles carry the ISO code first so ordering and menu type-ahead stay stable across UI languages.
 - Currency Name is default-on and renders a safe localized representative region plus compact currency-unit name inline after the ISO code on every supported family. Country/region names are not a separate setting.
 - With Currency Name enabled, the header also appends the reference currency's combined label in the same supporting font and size as row labels.
 - Users may remove default currencies and add other supported currencies.
 - Do not expose permanent `Add Currency` controls or a permanent `N / Max` label in the widget.
-- At capacity, reject/prevent additional selection or show a concise edit-time limit indication.
+- Capacity needs no enforcement: one configuration slot per row means a selection cannot exceed it. `Quote Currency Count` may reduce the rendered rows but never raise them above the family capacity.
 - Preserve an existing over-capacity saved membership and use overflow fallback until the user edits it.
 
 ## Widget Rules
@@ -258,18 +261,17 @@ Only the presentation formatter rounds values.
 Default V1 rate display policy by absolute normalized rate:
 
 ```text
->= 100                 exactly 2 fraction digits
->= 1 and < 100         exactly 2 fraction digits
+>= 1                   exactly 2 fraction digits
 >= 0.01 and < 1        2...4 fraction digits
->= 0.0001 and < 0.01   2...6 fraction digits
-< 0.0001               2...8 fraction digits
+>= 0.0001 and < 0.01   exactly 4 fraction digits
+< 0.0001               compact scientific notation
 ```
 
-For variable ranges, trim unnecessary trailing zeros but preserve at least two fractional digits.
+Four fraction digits is the fixed-notation floor. Trim unnecessary trailing zeros in variable ranges but preserve at least two fractional digits.
 
-A nonzero value must never be displayed as zero. If the normal band would round a nonzero rate/change to zero, increase precision as needed (up to 12 fractional digits); if a value is still impractical to display in fixed notation, use compact scientific notation rather than `0`.
+A nonzero value must never be displayed as zero. Fix that with scientific notation, never by adding fraction digits — a wider column gets truncated by the layout, which is worse than `4.2E-6`.
 
-Absolute change normally uses the same effective fractional precision as its row's displayed rate, with the same nonzero guard.
+Absolute change uses its row's effective precision, capped at the same four digits, and falls back to scientific notation when it would round away.
 
 Percentage change normally uses 2 fraction digits. If a nonzero percentage would round to `0.00%`, increase precision only as needed, up to 4 fraction digits.
 
@@ -337,3 +339,13 @@ Widget layout changes require previews or snapshot-style visual checks for:
 - If a requirement is unclear, prefer an explicit TODO or a focused question over inventing product behavior.
 - Record any unavoidable new product/architecture decision in `docs/DECISIONS.md`.
 - Keep implementation phases in `docs/IMPLEMENTATION_PLAN.md` up to date as milestones complete.
+
+These are cheap to honour and prevent expensive stalls:
+
+- Before freezing a requirement, check that the platform can express it. An unachievable requirement held as non-negotiable makes every attempt fail its own gate, and the failure looks like a debugging problem when it is a specification problem.
+- Name the API. A proposed mechanism must come with the specific type or method that implements it, verified in the SDK interface or Apple's documentation. "There is probably a way" is not a mechanism.
+- Read the file rather than recalling it, including for things that seem obvious.
+- Delete wrong code; do not annotate it. A comment saying "this does not work" is a defect that compiles.
+- Suspect the fallback. When the system looks healthy but behaves wrong, find what is masking the real state before theorising.
+- Diagnostics only count once read. Building an instrument and never basing a conclusion on its output is not measurement.
+- Change one variable at a time when isolating a cause. Several at once yields no rule.

@@ -1,394 +1,868 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@ rate %@ %@; change %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ rate %@ %@; change %@"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ rate %@ %@; change %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ rate %@ %@; change %@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@、レート %@ %@、変動 %@"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@、レート %@ %@、変動 %@"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 환율 %@ %@, 변동 %@"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 환율 %@ %@, 변동 %@"
           }
         }
       }
     },
-    "%lld additional currencies" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld additional currencies"
+    "%lld additional currencies": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld additional currencies"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ほか %lld 通貨"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ほか %lld 通貨"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "추가 통화 %lld개"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "추가 통화 %lld개"
           }
         }
       }
     },
-    "+%@" : {
-
-    },
-    "A glanceable exchange-rate board." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A glanceable exchange-rate board."
+    "+%@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ひと目で確認できる為替レートボードです。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "한눈에 확인하는 환율 보드입니다."
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@"
           }
         }
       }
     },
-    "As of %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "As of %@"
+    "A glanceable exchange-rate board.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A glanceable exchange-rate board."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 時点"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ひと目で確認できる為替レートボードです。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ 기준"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한눈에 확인하는 환율 보드입니다."
           }
         }
       }
     },
-    "Configure each widget from the desktop’s Edit Widget menu." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure each widget from the desktop’s Edit Widget menu."
+    "As of %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As of %@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "デスクトップの「ウィジェットを編集」から各ウィジェットを設定できます。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 時点"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "데스크톱의 위젯 편집 메뉴에서 각 위젯을 설정할 수 있습니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 기준"
           }
         }
       }
     },
-    "Configure the currencies shown by this FX board." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure the currencies shown by this FX board."
+    "Configure each widget from the desktop’s Edit Widget menu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure each widget from the desktop’s Edit Widget menu."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このFXボードに表示する通貨を設定します。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デスクトップの「ウィジェットを編集」から各ウィジェットを設定できます。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 FX 보드에 표시할 통화를 설정합니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "데스크톱의 위젯 편집 메뉴에서 각 위젯을 설정할 수 있습니다."
           }
         }
       }
     },
-    "Currencies" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Currencies"
+    "Configure the currencies shown by this FX board.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure the currencies shown by this FX board."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通貨"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このFXボードに表示する通貨を設定します。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "통화"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이 FX 보드에 표시할 통화를 설정합니다."
           }
         }
       }
     },
-    "Currency" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Currency"
+    "Currencies": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Currencies"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通貨"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通貨"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "통화"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "통화"
           }
         }
       }
     },
-    "Currency Name" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Currency Name"
+    "Currency": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Currency"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通貨名"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通貨"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "통화명"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "통화"
           }
         }
       }
     },
-    "Default Order" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default Order"
+    "Currency Name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Currency Name"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "デフォルト順"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通貨名"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "기본 순서"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "통화명"
           }
         }
       }
     },
-    "Exchange-rate data is unavailable." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exchange-rate data is unavailable."
+    "Default Order": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default Order"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "為替レートデータを利用できません。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デフォルト順"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "환율 데이터를 사용할 수 없습니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기본 순서"
           }
         }
       }
     },
-    "Fetch the latest available exchange-rate snapshot." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fetch the latest available exchange-rate snapshot."
+    "Exchange-rate data is unavailable.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exchange-rate data is unavailable."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "利用可能な最新の為替レートを取得します。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "為替レートデータを利用できません。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "현재 제공되는 최신 환율 스냅샷을 가져옵니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "환율 데이터를 사용할 수 없습니다."
           }
         }
       }
     },
-    "FX · %@" : {
-
-    },
-    "FX board settings are stored per widget instance." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FX board settings are stored per widget instance."
+    "Fetch the latest available exchange-rate snapshot.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fetch the latest available exchange-rate snapshot."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FX ボードの設定はウィジェットごとに保存されます。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能な最新の為替レートを取得します。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FX 보드 설정은 위젯 인스턴스별로 저장됩니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "현재 제공되는 최신 환율 스냅샷을 가져옵니다."
           }
         }
       }
     },
-    "fx-widget" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "fx-widget"
+    "FX · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exchange Rates · %@"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "fx-widget"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "환율 · %@"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "fx-widget"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "為替レート · %@"
           }
         }
       }
     },
-    "Reference Currency" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reference Currency"
+    "FX board settings are stored per widget instance.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FX board settings are stored per widget instance."
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "基準通貨"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FX ボードの設定はウィジェットごとに保存されます。"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "기준 통화"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FX 보드 설정은 위젯 인스턴스별로 저장됩니다."
           }
         }
       }
     },
-    "Refresh" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh"
+    "fx-widget": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fx-widget"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更新"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fx-widget"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로고침"
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fx-widget"
           }
         }
       }
     },
-    "Refresh failed. Showing last successful rates." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh failed. Showing last successful rates."
+    "Reference Currency": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reference Currency"
           }
         },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "更新できませんでした。最後に取得できたレートを表示しています。"
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "基準通貨"
           }
         },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "새로고침에 실패했습니다. 마지막으로 가져온 환율을 표시합니다."
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기준 통화"
+          }
+        }
+      }
+    },
+    "Refresh": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새로고침"
+          }
+        }
+      }
+    },
+    "Refresh failed. Showing last successful rates.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh failed. Showing last successful rates."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新できませんでした。最後に取得できたレートを表示しています。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새로고침에 실패했습니다. 마지막으로 가져온 환율을 표시합니다."
+          }
+        }
+      }
+    },
+    "Updated %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 갱신"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 更新"
+          }
+        }
+      }
+    },
+    "%@ rate unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 환율 없음"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ レートなし"
+          }
+        }
+      }
+    },
+    "Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언어"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語"
+          }
+        }
+      }
+    },
+    "Quote Currency Count": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 수"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨の数"
+          }
+        }
+      }
+    },
+    "Quote Currency 1": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 1"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 1"
+          }
+        }
+      }
+    },
+    "Quote Currency 2": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 2"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 2"
+          }
+        }
+      }
+    },
+    "Quote Currency 3": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 3"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 3"
+          }
+        }
+      }
+    },
+    "Quote Currency 4": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 4"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 4"
+          }
+        }
+      }
+    },
+    "Quote Currency 5": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 5"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 5"
+          }
+        }
+      }
+    },
+    "Quote Currency 6": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 6"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 6"
+          }
+        }
+      }
+    },
+    "Quote Currency 7": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 7"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 7"
+          }
+        }
+      }
+    },
+    "Quote Currency 8": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 8"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 8"
+          }
+        }
+      }
+    },
+    "Quote Currency 9": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 9"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 9"
+          }
+        }
+      }
+    },
+    "Quote Currency 10": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 10"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 10"
+          }
+        }
+      }
+    },
+    "Quote Currency 11": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 11"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 11"
+          }
+        }
+      }
+    },
+    "Quote Currency 12": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 12"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 12"
+          }
+        }
+      }
+    },
+    "Quote Currency 13": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 13"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 13"
+          }
+        }
+      }
+    },
+    "Quote Currency 14": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 14"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 14"
+          }
+        }
+      }
+    },
+    "Quote Currency 15": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 15"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 15"
+          }
+        }
+      }
+    },
+    "Quote Currency 16": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 16"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 16"
+          }
+        }
+      }
+    },
+    "Quote Currency 17": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 17"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 17"
+          }
+        }
+      }
+    },
+    "Quote Currency 18": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 18"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 18"
+          }
+        }
+      }
+    },
+    "Quote Currency 19": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 19"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 19"
+          }
+        }
+      }
+    },
+    "Quote Currency 20": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 20"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "相手通貨 20"
+          }
+        }
+      }
+    },
+    "Auto": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "자동"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自動"
+          }
+        }
+      }
+    },
+    "System": {
+      "extractionState": "manual",
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시스템"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "システム"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

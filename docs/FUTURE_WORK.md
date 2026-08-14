@@ -1,48 +1,97 @@
 # Future Work
 
-This document records known configuration issues and follow-up investigations. It describes intended behavior only; the items below are not implemented yet.
+Pending work only. Verified platform rules are in D-039/D-040 and coding constraints in `AGENTS.md`.
 
-The detailed implementation handoff, diagnostic sequence, architecture gates, test matrix, and completion criteria for items 1 through 4 are in [`WIDGET_CONFIGURATION_REMEDIATION.md`](WIDGET_CONFIGURATION_REMEDIATION.md). Do not revive the previously assumed `AppIntentRecommendation` persistence mechanism as if it were validated macOS behavior; follow the observation and decision gates in that handoff first.
+## 1. Additional UI languages
 
-## 1. Apply Reference-Currency Changes to Rates and Membership
+The widget ships English, Korean, and Japanese. `WidgetLanguage` and the String Catalog take a new
+language without structural change: add the case, its `displayLocale`, and the translations.
 
-Changing the reference currency must produce a new snapshot normalized to the newly selected reference currency. The widget must not continue showing rates from the previous reference.
+The widget editor itself always follows the system language. The Language setting governs the
+widget's own content only, because the editor is system UI.
 
-For example, when the reference changes from South Korean won (`KRW`) to Japanese yen (`JPY`):
+## 2. Host app as a widget companion
 
-- if `JPY` already occupies a position in the saved membership, replace it in place with `KRW`;
-- request or load rates keyed by `JPY` as the reference currency; and
-- render every row as `1 selected currency = X JPY`.
+`ContentView` is still a placeholder that only says where to configure widgets. Target shape:
 
-If a USD row previously showed approximately `1 USD = 1,415.22 KRW`, it might show approximately `1 USD = 159.36 JPY` after the change. These values are examples only and must never be hardcoded. Live/provider values vary over time. The quote direction and expected order of magnitude remain stable: one US dollar is normally worth more than 1,000 KRW and more than 100 JPY.
+```text
+┌──────────────────────────────────────────────┐
+│ fx-widget                                    │
+│ Exchange rates at a glance on your desktop.  │
+│                                              │
+│ ┌──────────────────────────────────────────┐ │
+│ │ Exchange Rates · KRW               ↻     │ │
+│ │ 🇺🇸 USD  United States · Dollar           │ │
+│ │                          1,418.10 ▲ 8.60 │ │
+│ │ 🇪🇺 EUR  European Union · Euro            │ │
+│ │                          1,643.20 ▲ 4.20 │ │
+│ │ 🇯🇵 JPY  Japan · Yen                      │ │
+│ │                              8.93 ▼ 0.06 │ │
+│ └──────────────────────────────────────────┘ │
+│                                              │
+│ Widget Setup                                 │
+│ Right-click the desktop → Edit Widget        │
+│                                              │
+│ Your Widgets                             >   │
+│ 2 installed · Large, Extra Large             │
+│                                              │
+│ Supported Currencies                     >   │
+│ About                                    >   │
+└──────────────────────────────────────────────┘
+```
 
-Current problem: completing a reference-currency edit does not reliably change the rendered reference, membership, and normalized rates together.
+The preview carries most of the value: launching the app shows what the product actually is instead
+of a title and a sentence.
 
-## 2. Show Existing Default Membership in the Widget Editor
+### What is achievable now
 
-A newly added widget displays currencies selected from the 2025 final BIS-based Default Order up to the capacity of its widget family.
+- **Preview** — render `FXBoardView` with a fixture snapshot. `FXBoardTimelineProvider.fixtureSnapshot`
+  already exists for exactly this and needs no network. It illustrates the product; it is not a
+  mirror of any particular widget.
+- **Widget Setup** — static copy plus Medium / Large / Extra Large examples.
+- **Your Widgets** — `WidgetCenter.getCurrentConfigurations()` returns installed widgets and their
+  typed configuration with no extra entitlement. Reference currency, quote slots, row count, and
+  language per instance are all readable, which is genuinely useful when several widgets are placed.
+- **Supported Currencies** — the provider catalog, searchable. Free-text search is impossible inside
+  the widget editor (D-039) but trivial here, so this is where a user who does not know an ISO code
+  looks one up. Needs either the network entitlement below or a Foundation-only listing.
+- **About** — version from the bundle, repository link, data source and attribution. D-026 keeps
+  provider identity out of the widget but explicitly allows it here.
 
-When the user opens `Edit fx-widget`, the `Currencies` collection must contain every currency currently displayed by that widget, in the same saved order. It must not appear empty or show only `Add New Item` while the widget itself displays BIS-derived default currencies.
+### What needs a decision first
 
-Current problem: the rendered default membership and the collection shown in the standard WidgetKit editor are not synchronized.
+- **Live rates in the preview** require `com.apple.security.network.client`, which the app does not
+  currently have, plus the app keeping its own cache in its own container. That is a small,
+  self-contained change and stays inside D-031.
+- **The widget's own data status** — its last successful refresh, its error state — is *not*
+  reachable. `WidgetCenter` exposes configuration, not cached rates, and D-031 keeps the widget's
+  runtime cache private to the extension. A "Last update" line describing the widget would need an
+  App Group and a new architecture decision. A line describing the *app's* own fetch is fine, but it
+  must be labelled as such rather than implying it reflects the widget.
+- **Editing configuration from the app** is blocked for the same reason.
 
-## 3. Make Added Currencies Renderable
+## 3. Production provider selection
 
-Currencies selected through `Add New Item` must be saved as the widget instance's membership. Selecting `Done` must construct a matching rate request, fetch or load a complete atomic snapshot, and render the selected currencies.
+D-015 is still DEFERRED and Milestone 9 owns the evaluation. Frankfurter is a development/reference
+daily-rate adapter under D-025, not a production choice.
 
-Current problem: after adding currencies and selecting `Done`, the widget can display `Exchange-rate data is unavailable.` The user therefore cannot reliably display currencies outside the initial default membership.
+A provider with intraday data would also make manual refresh materially more useful, and would make
+item 5 worth implementing.
 
-This work is related to item 2: the editor's collection, the persisted widget configuration, the canonical `RateRequestKey`, and the rendered snapshot must all describe the same ordered membership.
+## 4. `systemSmall` widget family
 
-## 4. Investigate the Configuration Surface and Host-App Fallback
+The smallest widget size, a square of roughly 164×164 points. Only Medium, Large, and Extra Large
+are supported today.
 
-At present, `Currency Name` is the only edit parameter that applies reliably. Reference Currency and Currencies do not reliably update the widget, as described above.
+D-022 defers it because the current row — flag, ISO code, currency name, rate, absolute change — is
+far too wide for that square. Supporting it needs a distinct compact row design, not a smaller font,
+and that design has not been made.
 
-Before implementation, verify whether macOS WidgetKit and App Intents can reliably provide all of the following in the standard `Edit fx-widget` flow:
+## 5. Manual refresh cooldown
 
-- family-specific default collections that are visible as existing rows;
-- ordered collection editing and persistence;
-- reference-currency membership swapping; and
-- a completed edit that triggers or schedules the correctly keyed rate request.
+Pressing refresh always performs a network request. With a daily provider the response is identical
+data, so repeated presses only hammer a free public API for nothing.
 
-If the standard widget editor cannot support these requirements reliably, evaluate moving reference-currency and membership editing to the host app. Any host-app design must preserve independent configuration for each widget instance; it must not replace per-instance settings with one unavoidable global selection.
+D-014 already permits a provider-specific cooldown: if the last successful fetch is newer than some
+interval, return the cached snapshot without contacting the provider. Nothing is implemented. Low
+priority until a provider with faster-moving data arrives.

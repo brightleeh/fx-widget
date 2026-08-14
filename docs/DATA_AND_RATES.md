@@ -219,7 +219,9 @@ Required:
 - persist one snapshot under its `RateRequestKey`,
 - then expose it to the widget.
 
-If a provider response is missing or invalid for any selected current currency, treat the refresh as failed and preserve the entire last successful snapshot for that `RateRequestKey`. Expose the refresh failure separately rather than publishing some new rows alongside retained old rows or replacing rows with zero.
+If a provider response is missing or invalid for a selected currency the provider *does* publish, treat the refresh as failed and preserve the entire last successful snapshot for that `RateRequestKey`. Expose the refresh failure separately rather than publishing some new rows alongside retained old rows or replacing rows with zero.
+
+A currency the active provider does not publish at all is a different case. It is recorded in the snapshot's `unavailableCurrencies`, its row renders as a dash, and every quoted row still shares one basis date. Such a currency stays selectable, because that is one provider's gap and another provider may quote it. Only the reference currency is fatal: nothing can be normalized without it. See D-013.
 
 ## 12. Precision and Formatting
 
@@ -267,14 +269,11 @@ Examples:
 
 A nonzero rate must never display as zero.
 
-If the normal band's maximum precision would render a nonzero value as zero:
-
-1. increase fixed-point precision as needed, up to 12 fraction digits,
-2. if fixed notation is still impractical, use compact scientific notation.
+If the normal band's maximum precision would render a nonzero value as zero, switch to compact scientific notation. Do **not** widen the column with more fraction digits: the earlier "expand up to twelve digits" rule produced change values wide enough that the layout truncated them, which is strictly worse than `4.2E-6`. See D-020.
 
 ### Changes
 
-Absolute change normally uses the same effective fraction-digit precision selected for the row rate.
+Absolute change starts at the row rate's effective precision and may widen only as far as the board's four-digit floor; below that it becomes scientific notation.
 
 If a nonzero absolute change would display as zero, increase its precision only as needed.
 
@@ -387,7 +386,7 @@ ProviderDataBasis.dateOnly(commonCurrentDate)
 
 For changes, find the latest date earlier than `commonCurrentDate` that is also present for every required raw leg. Normalize every previous rate from that common comparison date before calculating changes.
 
-If no common comparison date exists, the current snapshot remains valid but change is unavailable. If no common current date exists or any required current rate is missing/invalid, fail the entire refresh and retain the previous snapshot.
+If no common comparison date exists, the current snapshot remains valid but change is unavailable. If no common current date exists, or a required current rate for a published currency is missing/invalid, fail the entire refresh and retain the previous snapshot. Currencies the provider has stopped publishing are excluded from the common-date search instead of failing it; Frankfurter marks them with a stale `end_date`.
 
 
 ## 17. BIS Currency Ranking Metadata

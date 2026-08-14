@@ -2,40 +2,38 @@ import Foundation
 
 public struct RawWidgetConfiguration: Equatable, Sendable {
     public let referenceCurrencyIdentifier: String?
-    public let mediumMembershipIdentifiers: [String]?
-    public let largeMembershipIdentifiers: [String]?
-    public let extraLargeMembershipIdentifiers: [String]?
+    /// Ordered priority slots. `nil` entries are slots the user never set.
+    public let priorityIdentifiers: [String?]
+    /// Requested row count. `nil` means the family's validated capacity.
+    public let rowLimit: Int?
     public let showsCurrencyName: Bool
     public let family: WidgetFamilyCategory
 
     public init(
         referenceCurrencyIdentifier: String?,
-        mediumMembershipIdentifiers: [String]?,
-        largeMembershipIdentifiers: [String]?,
-        extraLargeMembershipIdentifiers: [String]?,
+        priorityIdentifiers: [String?] = [],
+        rowLimit: Int? = nil,
         showsCurrencyName: Bool,
         family: WidgetFamilyCategory
     ) {
         self.referenceCurrencyIdentifier = referenceCurrencyIdentifier
-        self.mediumMembershipIdentifiers = mediumMembershipIdentifiers
-        self.largeMembershipIdentifiers = largeMembershipIdentifiers
-        self.extraLargeMembershipIdentifiers = extraLargeMembershipIdentifiers
+        self.priorityIdentifiers = priorityIdentifiers
+        self.rowLimit = rowLimit
         self.showsCurrencyName = showsCurrencyName
         self.family = family
     }
 
-    public var activeMembershipIdentifiers: [String]? {
-        switch family {
-        case .medium: mediumMembershipIdentifiers
-        case .large: largeMembershipIdentifiers
-        case .extraLarge: extraLargeMembershipIdentifiers
-        }
+    /// D-022 keeps capacity a validated layout limit, so a configured row count
+    /// may only reduce it, never exceed it.
+    public var effectiveRowLimit: Int {
+        let capacity = WidgetConfigurationSelectionPolicy.capacity(family: family)
+        guard let rowLimit else { return capacity }
+        return max(0, min(rowLimit, capacity))
     }
 }
 
 public enum MembershipOrigin: String, Equatable, Sendable {
     case persisted
-    case explicitEmpty
     case reconstructedDefault
 }
 
@@ -46,7 +44,6 @@ public enum ConfigurationResolutionIssue: Equatable, Sendable {
     case unsupportedMembershipCurrency(CurrencyCode)
     case duplicateMembershipCurrency(CurrencyCode)
     case referenceCurrencyInMembership(CurrencyCode)
-    case capacityExceeded(configured: Int, capacity: Int)
     case defaultMembershipUnavailable
 }
 
@@ -103,33 +100,45 @@ public struct WidgetConfigurationResolver: Sendable {
     public func resolve(_ raw: RawWidgetConfiguration) -> ResolvedWidgetConfiguration {
         var issues: [ConfigurationResolutionIssue] = []
         let referenceCurrency = resolveReference(raw.referenceCurrencyIdentifier, issues: &issues)
-        let activeMembership = raw.activeMembershipIdentifiers
 
-        let origin: MembershipOrigin
-        let membership: [CurrencyCode]
-        if let activeMembership {
-            origin = activeMembership.isEmpty ? .explicitEmpty : .persisted
-            membership = resolvePersistedMembership(
-                activeMembership,
-                referenceCurrency: referenceCurrency,
-                issues: &issues
-            )
-        } else {
-            origin = .reconstructedDefault
-            membership = reconstructedDefaultMembership(
-                referenceCurrency: referenceCurrency,
-                family: raw.family,
-                issues: &issues
-            )
-        }
+        // Slot N is row N. A set slot holds its exact position; an unset one is
+        // filled from Default Order for the *active* reference, so changing the
+        // reference recalculates every unpinned row while pinned rows stay put.
+        let limit = raw.effectiveRowLimit
+        let pinned = resolvePinnedSlots(
+            raw.priorityIdentifiers,
+            limit: limit,
+            referenceCurrency: referenceCurrency,
+            issues: &issues
+        )
+        let origin: MembershipOrigin = pinned.isEmpty ? .reconstructedDefault : .persisted
 
-        if membership.count > WidgetConfigurationSelectionPolicy.capacity(family: raw.family) {
-            issues.append(
-                .capacityExceeded(
-                    configured: membership.count,
-                    capacity: WidgetConfigurationSelectionPolicy.capacity(family: raw.family)
-                )
-            )
+        // Pinning replaces the row it occupies instead of pushing the rest down.
+        // A pin that introduces a currency the Default Order did not contain
+        // displaces one default entry; a pin that merely moves a currency
+        // already in the board displaces nothing.
+        let defaultOrder = defaultOrderMembership(
+            referenceCurrency: referenceCurrency,
+            limit: limit + pinned.count,
+            issues: &issues
+        )
+        // "Already on the board" is judged against the unpinned board of this
+        // length, not the longer list fetched to leave spares.
+        let unpinnedBoard = Set(defaultOrder.prefix(limit))
+        let pinnedSet = Set(pinned.values)
+        var fill = defaultOrder.filter { !pinnedSet.contains($0) }.makeIterator()
+
+        var membership: [CurrencyCode] = []
+        membership.reserveCapacity(limit)
+        for row in 0..<limit {
+            guard let currency = pinned[row] else {
+                if let next = fill.next() { membership.append(next) }
+                continue
+            }
+            membership.append(currency)
+            if !unpinnedBoard.contains(currency) {
+                _ = fill.next()
+            }
         }
 
         return ResolvedWidgetConfiguration(
@@ -158,14 +167,19 @@ public struct WidgetConfigurationResolver: Sendable {
         return currency
     }
 
-    private func resolvePersistedMembership(
-        _ identifiers: [String],
+    /// Validates each slot in place and returns row index -> currency. A slot
+    /// that fails validation leaves its row to the Default Order fill rather
+    /// than shifting later slots up.
+    private func resolvePinnedSlots(
+        _ identifiers: [String?],
+        limit: Int,
         referenceCurrency: CurrencyCode,
         issues: inout [ConfigurationResolutionIssue]
-    ) -> [CurrencyCode] {
+    ) -> [Int: CurrencyCode] {
         var seen = Set<CurrencyCode>()
-        var result: [CurrencyCode] = []
-        for identifier in identifiers {
+        var pinned: [Int: CurrencyCode] = [:]
+        for (row, identifier) in identifiers.enumerated() {
+            guard let identifier else { continue }
             guard let currency = try? CurrencyCode(validating: identifier) else {
                 issues.append(.invalidMembershipCurrency(identifier))
                 continue
@@ -182,96 +196,38 @@ public struct WidgetConfigurationResolver: Sendable {
                 issues.append(.duplicateMembershipCurrency(currency))
                 continue
             }
-            result.append(currency)
+            // A slot past the configured row count keeps its saved value but is
+            // not rendered; it returns when the count grows again.
+            guard row < limit else { continue }
+            pinned[row] = currency
         }
-        return result
+        return pinned
     }
 
-    private func reconstructedDefaultMembership(
+    /// The board as it would look with no pins at all. D-010: always derived
+    /// from the *active* reference, so changing the reference recalculates every
+    /// unpinned row, and the previous reference is never inserted.
+    private func defaultOrderMembership(
         referenceCurrency: CurrencyCode,
-        family: WidgetFamilyCategory,
+        limit: Int,
         issues: inout [ConfigurationResolutionIssue]
     ) -> [CurrencyCode] {
+        guard limit > 0 else { return [] }
         guard let ranking else {
             issues.append(.defaultMembershipUnavailable)
             return []
         }
-        let originalMembership = CurrencyOrdering.defaultMembership(
-            referenceCurrency: originalDefaultReferenceCurrency,
+        return CurrencyOrdering.defaultMembership(
+            referenceCurrency: referenceCurrency,
             providerSupportedCurrencies: supportedCurrencies,
-            capacity: WidgetConfigurationSelectionPolicy.capacity(family: family),
+            capacity: limit,
             ranking: ranking
-        )
-        guard referenceCurrency != originalDefaultReferenceCurrency else {
-            return originalMembership
-        }
-        return WidgetConfigurationSelectionPolicy.membershipAfterChangingReference(
-            from: originalDefaultReferenceCurrency,
-            to: referenceCurrency,
-            membership: originalMembership
         )
     }
 }
 
 public enum WidgetConfigurationSelectionPolicy {
-    public enum SelectionError: Error, Equatable, Sendable {
-        case unsupportedCurrency(CurrencyCode)
-        case referenceCurrency(CurrencyCode)
-        case duplicateCurrency(CurrencyCode)
-        case capacityReached(Int)
-    }
-
     public static func capacity(family: WidgetFamilyCategory) -> Int {
         WidgetLayoutPolicy.capacity(family: family)
-    }
-
-    public static func availableAdditions(
-        membership: [CurrencyCode],
-        referenceCurrency: CurrencyCode,
-        catalog: CurrencyCatalog,
-        family: WidgetFamilyCategory
-    ) -> [CurrencyCode] {
-        guard membership.count < capacity(family: family) else { return [] }
-
-        let selected = Set(membership)
-        return catalog.currencyCodes.filter {
-            $0 != referenceCurrency && !selected.contains($0)
-        }
-    }
-
-    public static func adding(
-        _ currency: CurrencyCode,
-        to membership: [CurrencyCode],
-        referenceCurrency: CurrencyCode,
-        catalog: CurrencyCatalog,
-        family: WidgetFamilyCategory
-    ) throws -> [CurrencyCode] {
-        guard catalog.contains(currency) else {
-            throw SelectionError.unsupportedCurrency(currency)
-        }
-        guard currency != referenceCurrency else {
-            throw SelectionError.referenceCurrency(currency)
-        }
-        guard !membership.contains(currency) else {
-            throw SelectionError.duplicateCurrency(currency)
-        }
-
-        let limit = capacity(family: family)
-        guard membership.count < limit else {
-            throw SelectionError.capacityReached(limit)
-        }
-        return membership + [currency]
-    }
-
-    public static func membershipAfterChangingReference(
-        from previousReference: CurrencyCode,
-        to newReference: CurrencyCode,
-        membership: [CurrencyCode]
-    ) -> [CurrencyCode] {
-        ReferenceCurrencyPolicy.membershipAfterChangingReference(
-            from: previousReference,
-            to: newReference,
-            membership: membership
-        )
     }
 }

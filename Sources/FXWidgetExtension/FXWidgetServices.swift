@@ -11,6 +11,7 @@ enum FXWidgetServices {
         let store: FileRateStore
         let coordinator: RateRefreshCoordinator
         let providerID: ProviderID
+        let automaticRefreshPolicy: AutomaticRefreshPolicy
         let catalogService: CurrencyCatalogService
         let rankingService: CurrencyRankingService
     }
@@ -63,6 +64,7 @@ enum FXWidgetServices {
             store: store,
             coordinator: coordinator,
             providerID: provider.id,
+            automaticRefreshPolicy: provider.automaticRefreshPolicy,
             catalogService: CurrencyCatalogService(
                 provider: provider,
                 store: metadataStore
@@ -81,6 +83,16 @@ enum FXWidgetServices {
 
     static func providerID() throws -> ProviderID {
         try providerResult.get().id
+    }
+
+    /// Cached provider catalog only: no network. Used where a timeout would kill
+    /// the extension, such as App Intents descriptor enumeration.
+    static func cachedCurrencyCatalog() async throws -> [CurrencyCode] {
+        let dependencies = try dependencies()
+        guard let snapshot = try await dependencies.catalogService.cachedCatalog() else {
+            return []
+        }
+        return snapshot.currencyCodes
     }
 
     static func currencyCatalog() async throws -> CurrencyCatalog {

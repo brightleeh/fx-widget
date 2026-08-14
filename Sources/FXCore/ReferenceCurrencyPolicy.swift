@@ -12,19 +12,4 @@ public enum ReferenceCurrencyPolicy {
         }
         return try! CurrencyCode(validating: "USD")
     }
-
-    public static func membershipAfterChangingReference(
-        from previousReference: CurrencyCode,
-        to newReference: CurrencyCode,
-        membership: [CurrencyCode]
-    ) -> [CurrencyCode] {
-        guard previousReference != newReference,
-              let replacedIndex = membership.firstIndex(of: newReference) else {
-            return membership
-        }
-
-        var result = membership
-        result[replacedIndex] = previousReference
-        return result
-    }
 }

@@ -12,7 +12,9 @@ Status legend:
 
 Build a native macOS app using Swift, SwiftUI, WidgetKit, App Intents, and Foundation.
 
-Minimum deployment target: **macOS 14** because interactive widgets were introduced on macOS 14.
+Minimum deployment target: **macOS 15**.
+
+Interactive widgets arrived in macOS 14, but macOS 15 is required for the non-`_const` collection `@Parameter(default:)` overload that materializes runtime-derived BIS default membership as real editable rows in the widget editor. Property-wrapper initializer selection is fixed at declaration, so `if #available` cannot straddle 14 and 15; see D-034 and D-039.
 
 The widget is the primary product surface. The host app mainly provides configuration, diagnostics, provider/setup surfaces if needed, and richer management UI.
 
@@ -133,14 +135,14 @@ Provider capability discovery is cached per `ProviderID`. The initial revalidati
 
 **Status: DECIDED**
 
-Sorting modes:
+Two orderings coexist within one board rather than being a mode the user switches:
 
-- Default Order
-- Custom Order
+- **Default Order** — any row whose configuration slot is empty follows the BIS ranking for the active reference currency.
+- **Custom** — any row whose slot is set shows exactly that currency, in that position.
 
-For selected currencies not present in the current BIS ranking snapshot, fallback order is alphabetical by ISO currency code unless the user has chosen Custom Order.
+For currencies absent from the current BIS ranking snapshot, fallback order is alphabetical by ISO currency code.
 
-Custom Order is user-reorderable.
+Reordering happens by changing which currency a slot holds, not by dragging: the macOS widget editor cannot present a reorderable list, because that requires a collection of `AppEntity` values and those are never committed (D-039). Changing the reference currency recalculates every empty slot while set slots stay where they are.
 
 ## D-008 — Reference currency
 
@@ -178,25 +180,32 @@ The reference currency should not appear as an ordinary quote row by default.
 
 If a reference-currency change makes one selected row equal to the reference currency, exclude/disable it from normal rendering.
 
-Preserve selection count and position by swapping currencies when the newly chosen reference currency is already in the saved membership:
+The previous in-place swap rule is removed for the V1 standard-editor architecture. The previous reference currency is never inserted into membership. See D-039: in the standard macOS widget edit flow, WidgetKit delivers only the newly saved configuration and supplies no previous-reference value and no cross-parameter transaction hook, so the swap cannot be computed anywhere in that flow.
 
-1. find the newly chosen reference currency in the saved membership,
-2. replace it in place with the previous reference currency,
-3. preserve the rest of the membership and order.
+This is a limit of the chosen configuration surface, not of the platform. A host-app configuration surface would hold the previous reference, the new reference, and membership together and could implement the swap. If configuration ever moves there, revisit this removal rather than inheriting it.
 
-If the newly chosen reference currency was not in the saved membership, do not insert the previous reference currency and do not otherwise mutate membership.
+Membership behavior on a reference change depends on membership origin:
 
-Example:
+1. derived membership (untouched instance) is re-derived directly from the active reference currency, BIS Default Order, the provider-supported catalog, and family capacity; row count is preserved because the derivation excludes only the active reference,
+2. user-edited membership keeps its saved value untouched; the active reference is dropped from rendering only, a resolution issue is reported, and nothing is inserted or reordered,
+3. an empty membership resolves to the derived Default Order membership, not to zero rows; see D-034.
+
+Because a user-edited membership is never rewritten, changing the reference back restores the original rows.
+
+Examples:
 
 ```text
-previous reference = KRW
-saved membership   = [USD, JPY, EUR]
-new reference      = JPY
+untouched, Medium, reference KRW      rows [USD, EUR, JPY]
+new reference JPY                     rows [USD, EUR, GBP]
 
-result membership  = [USD, KRW, EUR]
+user-edited, saved [USD, JPY, EUR]
+new reference JPY                     rows [USD, EUR]        saved value unchanged
+back to reference KRW                 rows [USD, JPY, EUR]
 ```
 
 Do not display `USD 1.0000` unless a future explicit feature requires it.
+
+
 
 ## D-011 — Rate unit
 
@@ -251,7 +260,11 @@ Use App Intent-backed widget interactivity.
 
 The refresh action updates the widget extension's persistent cache and returns only after the persisted update has completed. WidgetKit then reloads/requests the timeline.
 
-A refresh commits one coherent all-currency snapshot. A response that cannot produce valid current data for every selected currency is a refresh failure: keep the entire last successful snapshot visible and expose the failure separately. Do not publish a mixed snapshot containing newly refreshed rows alongside retained rows from an older provider basis.
+A refresh commits one coherent snapshot: every quoted row shares a single provider basis date. A response that cannot produce valid current data for a currency the provider *does* publish is a refresh failure: keep the entire last successful snapshot visible and expose the failure separately. Do not publish a mixed snapshot containing newly refreshed rows alongside retained rows from an older provider basis.
+
+A currency the active provider does not publish at all is a different case and is not a refresh failure. The snapshot records it in `unavailableCurrencies`, the row renders as a dash, and the remaining rows still share one basis date. The currency is **not** removed from the selectable catalog: that is one provider's gap, and D-015 keeps the product provider-agnostic — a different provider may quote it. Frankfurter's `/currencies` marks these with a stale `end_date`; `KPW` stopped in July 2026.
+
+A reference currency the provider does not publish is still a hard failure, because nothing can be normalized without it.
 
 Do not advertise the feature as guaranteed instantaneous real-time streaming.
 
@@ -363,18 +376,27 @@ Do not round before inversion, cross-rate normalization, comparison, absolute-ch
 Default V1 display policy:
 
 ```text
-rate >= 100                 -> exactly 2 fraction digits
-1 <= rate < 100             -> exactly 2 fraction digits
+rate >= 1                   -> exactly 2 fraction digits
 0.01 <= rate < 1            -> 2...4 fraction digits
-0.0001 <= rate < 0.01       -> 2...6 fraction digits
-rate < 0.0001               -> 2...8 fraction digits
+0.0001 <= rate < 0.01       -> exactly 4 fraction digits
+rate < 0.0001               -> compact scientific notation
 ```
+
+Four fraction digits is the fixed-notation floor for the whole board. This is a
+glanceable FX board, not a trading terminal: `0.006275` and `0.0063` inform the
+reader identically while the former costs column width, and below `0.0001` a
+fixed rendering is mostly leading zeros. Under a USD reference this gives
+`JPY 0.0063`, `CNY 0.1484`, and `VND 3.8E-5`.
 
 Variable ranges trim unnecessary trailing zeros while preserving at least two fractional digits.
 
-A nonzero value must never display as zero solely because of formatting. Increase precision as needed, up to 12 fixed fractional digits, before considering compact scientific notation.
+A nonzero value must never display as zero solely because of formatting. The
+remedy is scientific notation, **not** additional fraction digits: the previous
+policy of expanding up to twelve digits produced change values so wide that the
+layout truncated them to `0.0000…`, which is strictly worse than `4.2E-6`.
 
-Absolute change normally follows the row rate's effective precision.
+Absolute change follows its row's effective precision, capped at the same four
+digits, and switches to scientific notation when it would otherwise round away.
 
 Percentage change normally uses two fractional digits; a nonzero value that would render as `0.00%` may expand up to four.
 
@@ -443,19 +465,17 @@ Normal invariant:
 selectedCurrencyCount <= currentValidatedCapacity
 ```
 
-The configuration UI should prevent adding another currency when the current layout capacity is already reached.
-
 Do not show an always-visible `selected / maximum` counter merely to expose an implementation limit.
 
-If an existing saved selection is larger than the current family's validated capacity:
+A configured selection can no longer exceed capacity, because each family exposes exactly one slot per row. `+N` survives for the remaining case: a widget rendered shorter than its declared family fits fewer complete rows than it holds. In that situation:
 
 - preserve the saved selected currencies,
 - do not silently delete currencies,
 - render the fitting ordered prefix,
 - show a subtle non-interactive `+N` overflow fallback,
-- allow the user to resolve the selection through normal widget editing.
+- let `Quote Currency Count` resolve it if the user prefers fewer, complete rows.
 
-`+N` is a fallback for configuration transitions/legacy states, not the normal default experience.
+`+N` indicates a runtime height shortfall, not a configuration state, and never appears for a board that fits.
 
 ### Layout rules
 
@@ -509,7 +529,7 @@ Search should match at least:
 
 Users can remove an existing currency and search/add another currency within the validated capacity.
 
-When capacity is reached, prevent additional selection or present a concise limit indication in the configuration experience.
+Capacity is structural rather than enforced: there is exactly one configuration slot per row for the family, so a selection cannot exceed it.
 
 Do not require an always-visible maximum-count label.
 
@@ -683,11 +703,15 @@ The unit part removes its duplicated country/region qualifier where Foundation's
 
 An untouched widget's `Currencies` editor must contain its BIS-derived default currencies as real removable/reorderable items; an empty editor paired with an implicit runtime-only default is not acceptable.
 
-The configuration model must preserve family-appropriate membership and expose exactly one field titled `Currencies` for the active family. A missing value may resolve to the family default at runtime as a defensive migration/failure fallback, while an explicit empty array remains empty. The normal fresh-widget state must nevertheless materialize the real BIS-derived items in the editable per-instance configuration. Their limits are Medium 3, Large 10, and Extra Large 20; each allows zero items so a newly added item can be removed immediately.
+The configuration model must preserve family-appropriate membership and expose exactly one field titled `Currencies` for the active family. A missing value resolves to the family default at runtime. An empty array does the same: WidgetKit delivers `[]` for a fresh instance whose declared `@Parameter(default:)` is shown in the editor but not yet committed, so empty cannot mean "the user chose zero currencies" — and a zero-row FX board has no use. Empty and omitted are therefore both Default Order. The normal fresh-widget state must nevertheless materialize the real BIS-derived items in the editable per-instance configuration. Their limits are Medium 3, Large 10, and Extra Large 20; each allows zero items so a newly added item can be removed immediately.
 
 `AppIntentRecommendation` is not the macOS editor persistence mechanism: Apple documents it as inactive on platforms, including macOS, that provide a dedicated widget configuration interface. Do not rely on a recommendation, Swift property observation, mutation of hidden sibling parameters, or a runtime-only rendering fallback to populate or transact the standard edit UI.
 
-Changing widget family must not delete preserved membership. Completing a reference-currency edit must save the reference and D-010 membership transition coherently for the widget instance. The exact App Intents persistence mechanism is not yet validated and must follow the observation and architecture gates in `WIDGET_CONFIGURATION_REMEDIATION.md`. If the standard editor cannot satisfy the decided outcomes, a host-app/profile or other shared-configuration design requires a new architecture decision before implementation.
+Changing widget family must not delete preserved membership. Completing a reference-currency edit must save the reference coherently for the widget instance; the membership transition is now resolved at read time under D-010 and no longer requires an atomic multi-parameter write. The exact App Intents persistence mechanism is not yet validated and is recorded in D-039. If the standard editor cannot satisfy the decided outcomes, a host-app/profile or other shared-configuration design requires a new architecture decision before implementation.
+
+The macOS 14 collection `@Parameter(default:)` overload is `_const`, so a runtime-derived default array cannot be expressed there; D-001 therefore requires macOS 15, whose non-`_const` overload does materialize the BIS-derived membership as real removable, reorderable editor rows. Verified on macOS 26.6.1: a 20-item default supplied to a family-keyed `size` is truncated to that family's maximum (Large showed exactly the first 10).
+
+Materializing those rows does not persist them. WidgetKit still delivers `[]` to the timeline until the user commits an edit, and per D-039 an `[AppEntity]` edit is never committed at all. Empty therefore resolves to Default Order rather than to zero rows.
 
 ## D-035 — Primary row numeric columns
 
@@ -715,7 +739,7 @@ The widget uses the stable kind `FXBoardWidgetV1` together with the stable App I
 
 An earlier development-only configuration used `FXWidgetConfigurationIntent` for a materially different schema containing removed parameters such as column count, text size, and country-name visibility. The new App Intent type identifier prevents those obsolete serialized parameters from being decoded as the current currency-membership schema without changing the widget kind. Intent-less placements from the even earlier static prototype cannot be migrated and must be removed and re-added once. Keep both current identifiers stable after release; any future schema change must preserve compatible parameter identifiers or define an explicit migration decision before implementation.
 
-When legacy or incomplete App Intents state omits an untouched family currency collection, a defensive runtime fallback may reconstruct membership derived for the original regional reference currency. This fallback is not evidence that the editor persisted its visible rows and is not sufficient to implement a strict D-010 transition after the previous reference has been lost. It must not derive an unrelated fresh membership directly from the newly selected reference currency.
+When legacy or incomplete App Intents state omits an untouched family currency collection, a defensive runtime fallback reconstructs membership derived from the currently active reference currency, the bundled BIS ranking, the provider-supported catalog, and family capacity. Since D-010 no longer performs an in-place swap, deriving from the active reference is the defined behavior for that path rather than a prohibited shortcut. This fallback is still not evidence that the editor persisted its visible rows. A saved membership is never replaced by a freshly derived BIS default.
 
 ## D-038 — Cold-start timeline network boundary
 
@@ -723,4 +747,104 @@ When legacy or incomplete App Intents state omits an untouched family currency c
 
 Widget timeline generation must not wait for provider-catalog discovery or the low-frequency remote BIS ranking check before constructing its `RateRequestKey`. A fresh extension container has neither metadata cache; making both calls prerequisites can exhaust WidgetKit's execution opportunity before any non-placeholder view is returned.
 
-The concrete per-instance configuration must be sufficient to construct the request. The intended untouched state is materialized from the bundled latest validated final BIS ranking, while edited configurations contain their saved membership. Until D-034's persistence mechanism is validated, a bundled-ranking runtime fallback may keep rendering functional but must not be mistaken for persisted editor state. Provider support remains validated by the provider adapter during the atomic refresh. Catalog discovery remains part of App Intent configuration/search, and remote BIS checks remain metadata maintenance rather than primary rendering work.
+The concrete per-instance configuration must be sufficient to construct the request. An empty configuration slot resolves against the bundled latest validated final BIS ranking, while a set slot supplies its own currency, so neither path needs the network. Provider support remains validated by the provider adapter during the atomic refresh. Catalog discovery remains part of App Intent configuration/search, and remote BIS checks remain metadata maintenance rather than primary rendering work.
+
+## D-039 — Standard widget editor capabilities and limits
+
+**Status: DECIDED**
+
+These are verified properties of the macOS widget editing surface. Record them here so later sessions do not re-derive or contradict them.
+
+Absent in the standard widget edit flow. The first two are properties of that surface, not of the platform; a host-app configuration surface is not subject to them.
+
+```text
+previous reference currency at edit time      not provided by any API
+cross-parameter transaction hook              none
+AppIntentRecommendation on macOS              inactive where a dedicated editor exists
+referenceCurrency.didSet                      not a persistence mechanism
+```
+
+Collection parameter defaults:
+
+```text
+macOS 14    @Parameter(default:) for an AppEntity collection is _const;
+            a runtime-derived array cannot compile
+macOS 15+   a non-_const overload exists, including the
+            [IntentWidgetFamily: IntentCollectionSize] variant
+macOS 14    family-keyed size: is available
+```
+
+Property-wrapper initializer selection is fixed at declaration, so `if #available` cannot straddle macOS 14 and 15. Adopting the dynamic default requires raising the minimum deployment target, which is a D-001 change.
+
+The collection overloads take a family-keyed `size` but a **single** `default` array. No overload supplies a different default per widget family. A single `Currencies` parameter therefore cannot declare distinct Medium 3, Large 10, and Extra Large 20 defaults, and the editor's behavior when an oversized default meets a smaller family maximum is unverified. Any plan that collapses the three family collections into one parameter must first measure this on all three families.
+
+Because the standard edit flow supplies no previous reference, D-010's in-place swap was removed there rather than deferred.
+
+### Observed parameter persistence (macOS 26.6.1)
+
+Measured in the installed macOS widget editor. Values that require App Intents metadata
+resolution are displayed and editable but are **not committed** on Done:
+
+```text
+Bool                          toggle              persists
+String + optionsProvider      dynamic options      persists
+AppEnum                       static case popup    NOT persisted
+AppEntity                     entity picker        NOT persisted
+[AppEntity]                   collection editor    NOT persisted
+```
+
+Parameter *visibility* follows the same split. Verified on macOS 26.6.1:
+
+```text
+Switch(.widgetFamily)          works — the family is fixed when the editor opens,
+                               so slot counts can be 3 / 10 / 20 per family
+Switch(\.$someParameter)       inert — the summary never re-evaluates
+When(\.$someParameter, ...)    inert, including after Done and reopening
+```
+
+A configuration surface therefore cannot reveal or hide controls in response to
+a value the user just chose. Anything conditional must key off the widget family.
+
+Metadata registration is not the cause: `extract.actionsdata` contained the entity, both
+enums, and every parameter, including `defaultQueryForEntity: true`.
+
+Consequences:
+
+- widget configuration must use `Bool` or `String` + `DynamicOptionsProvider` only;
+- `EntityStringQuery` free-text search is therefore unavailable in widget configuration,
+  because search requires `AppEntity`;
+- multi-select membership has no scalar representation at all: the collection `size:`
+  overloads exist only for `AppEntity`, `IntentPerson`, `URL`, and `FileEntity`, and no
+  collection overload accepts an options provider. Fixed slots, one scalar parameter each,
+  are the only remaining expression of ordered membership;
+- `IntentItem.subtitle` is not rendered by the macOS widget editor, so labels belong in the
+  title. Menu type-ahead matches the leading characters of the title, so the ISO code stays
+  first and ordering stays stable across UI languages.
+
+
+Provider fact, recorded because a claim to the contrary has already cost time: the repository uses Frankfurter **v2** (`https://api.frankfurter.dev/v2/`), which serves 165 currencies including `TWD`. The v1 endpoint serves 30 and is not what this project talks to. Default membership is not blocked by provider support on any family.
+
+Do not bundle a static provider-capability list. It would go stale exactly as `BGN` did when Bulgaria adopted the euro, and the catalog is already discovered at runtime.
+
+## D-040 — Timeline reload policy after a failed cold start
+
+**Status: DECIDED**
+
+`FileRateStore.recordRefreshAttempt` preserves the existing `nextAutoRefreshEligibleAt`, which is `nil` for a request key that has never succeeded, and only `commit` sets it. A first-fetch failure therefore leaves the timeline policy at `.never`, freezing the widget in the unavailable state until a manual refresh.
+
+D-014 already requires provider-safe retry/backoff for automatic failures. That policy must also cover the cold-start path. Reload policy is resolved by a pure, testable rule:
+
+```text
+nextAutoRefreshEligibleAt present and future     .after(that date)
+nextAutoRefreshEligibleAt present and past       .after(now + 1 hour)
+no snapshot and a recorded failure               .after(now + 15 minutes)
+failure code == unsupportedCurrency              .after(now + 24 hours)
+membership explicitly empty                      .never
+provider automatic policy is .disabled           .never
+```
+
+`.never` remains correct for an explicitly empty membership, which needs no provider request, and for a provider whose `AutomaticRefreshPolicy` is `.disabled`.
+
+The intervals above are the V1 policy for the Frankfurter daily-reference adapter under D-014 and D-025, not a global constant. A provider with a different cadence supplies its own.
+
+The rule lives in `FXCore` and must not import WidgetKit. It returns a neutral decision value that the widget extension maps to `TimelineReloadPolicy`.

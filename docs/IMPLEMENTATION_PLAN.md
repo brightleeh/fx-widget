@@ -2,15 +2,16 @@
 
 Do not attempt the entire product in one pass.
 
-## Current implementation status (2026-08-12)
+## Current implementation status (2026-08-15)
 
-- Milestone 0 is in progress: the app, widget extension, shared `FXCore` target, String Catalog, test target, and Xcode project skeleton exist. D-031/D-032 replace the unused App Group boundary with widget-extension-owned persistence and identity-less ad-hoc signing. Debug and Release builds pass deep nested-code validation with `Signature=adhoc` and no Team identifier. Installing the app in `~/Applications` and launching that copy resolves the default App Intent; Xcode DerivedData copies must not remain registered as competing extensions. `FXBoardWidgetV1` is the stable kind; pre-schema-reset intent-less static placements cannot be migrated and must be removed and re-added once. A build 9 desktop check verified that existing Medium, Large, and Extra Large `FXBoardWidgetV1` placements render real cached KRW rates rather than placeholders; the remaining visual matrix still needs the other localized, stale, and error cases.
+- Milestone 0 is complete: app, widget extension, shared `FXCore` target, String Catalog, test target, and Xcode project. D-031/D-032 replace the App Group boundary with widget-extension-owned persistence and identity-less ad-hoc signing; Debug and Release builds pass deep nested-code validation with `Signature=adhoc` and no Team identifier. `FXBoardWidgetV1` and `FXBoardConfigurationIntent` are the stable identifiers. Installation discipline is a release gate, not a convenience: the complete app must live in an Applications directory, DerivedData copies must not stay registered as competing extensions, and a quarantined copy must not be launched, since App Translocation runs it from a randomized read-only path and breaks App Intents resolution.
 - Milestone 1 is complete: validated currency/provider identifiers, `ProviderDataBasis`, canonical `RateRequestKey`, cross-rate normalization, rate-change arithmetic, atomic `RateSnapshot` validation, the provider protocol, deterministic Mock Provider, centralized D-020 `RateFormatter`, regional reference/default-swap policy, and the recorded 2025-final BIS D11.3 ranking source are implemented. The widget fixture renders through the same Mock Provider/domain/formatter path. This milestone established the first 35 passing tests.
 - Milestone 2 is complete for the fixed family layouts: Medium is 3×1, Large is 10×1, and Extra Large is 10×2. `WidgetLayoutPolicy` centralizes complete-row capacity, runtime-height fallback, vertical/column-major Extra Large ordering, and non-mutating `+N` overflow. The view keeps WidgetKit's margins, packs the footer directly after the last complete row, omits percentage change, aligns rate/absolute-change integer and fractional parts at the locale-aware decimal separator, keeps the direction symbol adjacent to the change integer, and uses monospaced ISO codes so inline labels share a start position. Final post-install desktop screenshots remain Milestone 8 evidence.
 - Milestone 3 implementation is complete against the Mock Provider: versioned atomic extension-owned documents store snapshots, refresh metadata, and failures by canonical `RateRequestKey`; `NSFileCoordinator` protects cross-process read-modify-write updates; `RateRefreshCoordinator` coalesces only equal in-process keys; the App Intent persists a complete validated snapshot before requesting a WidgetKit timeline reload; and the timeline renders cached success plus keyed failure state. Cache round trips, corrupt/schema handling, key isolation, simulated interleaved writers, request coalescing, changed deterministic refresh data, and whole-snapshot preservation after network/partial-current failure remain covered after the D-031 refactor. An ad-hoc widget refresh click-through remains part of the Milestone 0 host validation.
 - Milestone 4 is complete as a development/reference integration: the widget runtime now uses a keyless, configurable Frankfurter v2 adapter; provider DTO/client code is isolated from the domain and UI; supported currencies are discovered dynamically; and D-030's current/previous common-date search, explicit common-date fetch, identity leg, cross-rate normalization, date-only basis, atomic failure, and provider-specific daily/24-hour automatic eligibility are implemented. Recorded HTTP fixtures and coordinator/cache tests bring the full Xcode suite to 67 passing tests.
-- Milestone 5 is complete: the App Intent catalog is the active Frankfurter capability set intersected with modern Foundation ISO currencies and is searchable by ISO code/localized currency name; safe representative regions and neutral no-flag fallback are centralized; an official BIS SDMX D11.3 source validates the exact final-table dimension slice; and a separate versioned extension-owned metadata store caches provider catalogs plus final ranking/check metadata. Fresh widget configurations initialize family-specific membership from the reference currency, BIS ranking, and fixed family capacity, while saved membership remains untouched. Fixture-only BIS tests and cache-corruption validation brought the full Xcode suite to 87 passing tests.
-- Milestone 6 is in progress: a shared `WidgetConfigurationSelectionPolicy` validates provider support, active-reference exclusion, duplicates, and fixed family capacity without truncating existing selections. App Intents-compatible optional family collections and runtime fallback can derive BIS defaults while preserving an explicit empty selection, and reference/collection entity restoration no longer depends on a successful provider call. However, installed macOS validation has shown that the editable collection, reference transition, and rendered request are not yet one reliable persisted source of truth. `AppIntentRecommendation` does not populate the macOS editor, and `referenceCurrency.didSet` is not an approved cross-parameter transaction mechanism. Follow `WIDGET_CONFIGURATION_REMEDIATION.md` before changing persistence architecture. Columns, Text Size, and separate Country Names have been removed; `Currency Name` defaults to On for fresh widgets.
+- Milestone 5 is complete: the App Intent catalog is the active Frankfurter capability set intersected with modern Foundation ISO currencies; safe representative regions and neutral no-flag fallback are centralized; an official BIS SDMX D11.3 source validates the exact final-table dimension slice; and a separate versioned extension-owned metadata store caches provider catalogs plus final ranking/check metadata. Membership derivation takes the reference currency, BIS ranking, and fixed family capacity. Fixture-only BIS tests and cache-corruption validation brought the full Xcode suite to 87 passing tests.
+- Milestone 6 is complete. Widget configuration is scalar-only: `Bool` and `String` + `DynamicOptionsProvider`. Installed-macOS measurement established that `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are never committed, and that parameter visibility can follow the widget family but not a parameter value (D-039). Configuration is Language, Currency Name, Reference Currency, Quote Currency Count, and one quote slot per row (3/10/20 by family); slot N pins row N while empty slots follow Default Order for the active reference. D-010's in-place swap was removed as unimplementable, and the cold-start reload policy is D-040. Columns, Text Size, and separate Country Names remain removed; `Currency Name` defaults to On.
+- Milestone 7 (localization) is partially delivered: English, Korean, and Japanese, plus a per-widget UI language covering names, labels, and dates while numeric separators follow the system region.
 - No production provider has been selected. Frankfurter remains a development/reference daily-rate adapter under D-025; production-provider freshness and acceptance remain Milestone 9 work.
 
 ## Milestone 0 — Project Skeleton
@@ -181,37 +182,20 @@ Exit criteria:
 
 ## Milestone 6 — Configuration
 
-Status: in progress. Core selection/addition policy, the pure reference-currency swap rule, active-reference candidate filtering, missing-versus-explicit-empty handling, and fixed family bounds are implemented. The current App Intents persistence mechanism is not validated: the installed macOS editor can omit rendered BIS defaults, and reference/addition edits can fail to produce the intended resolved request. Execute the diagnostic, resolver, platform-experiment, and architecture gates in `WIDGET_CONFIGURATION_REMEDIATION.md` before claiming editable defaults or reference transitions are complete.
+Status: complete.
 
-Implement per-widget configuration through the standard WidgetKit/macOS edit flow.
+Widget configuration is scalar-only. Installed-macOS measurement established the rules recorded in D-039: `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are never committed by the editor, while `Bool` and `String` + `DynamicOptionsProvider` persist reliably. Parameter visibility can follow the widget family but never a parameter value.
 
-Parameters:
+Delivered:
 
-- Reference Currency
-- Currencies
-- Currency Name
+- Language, Currency Name, Reference Currency, Quote Currency Count, and one quote slot per row (3/10/20 by family, exposed through `Switch(.widgetFamily)`).
+- Slot N pins row N; an empty slot follows Default Order for the active reference, so changing the reference recalculates every unpinned row.
+- `Quote Currency Count` reduces rendered rows but can never exceed the family capacity (D-022).
+- D-010's in-place reference swap removed as unimplementable; replacement semantics recorded there.
+- Cold-start reload backoff (D-040) and per-row unavailable currencies (D-013).
+- Per-widget UI language covering names, labels, and dates while numeric separators follow the system region.
 
-Each widget instance owns these values independently. An untouched instance uses capacity-limited BIS-derived defaults.
-
-Currencies:
-
-- use the dynamic provider-supported catalog,
-- searchable by ISO code,
-- searchable by localized currency name,
-- start with family-capacity BIS-derived items visible in the editor,
-- allow remove/add/reorder behavior supported by the chosen App Intent configuration model, including deleting back to zero,
-- when a newly chosen reference currency is already in membership, replace its position with the previous reference currency; otherwise leave membership unchanged,
-- prevent new selections beyond current validated capacity,
-- do not require an always-visible selected/max count.
-
-Capacity changes only with WidgetKit family.
-
-If an existing selection becomes over-capacity after a layout-setting change, preserve stored membership and allow overflow fallback until the user edits it down.
-
-Exit criteria:
-
-- user can replace a BIS-default currency with another supported searched currency,
-- capacity enforcement and overflow fallback are both covered by tests.
+Columns, Text Size, and separate Country Names remain removed; `Currency Name` defaults to On.
 
 ## Milestone 7 — Localization
 

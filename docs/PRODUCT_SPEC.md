@@ -131,7 +131,7 @@ Default Order and Custom Order are distinct modes.
 
 The user chooses a reference currency.
 
-If the new reference currency already appears in saved membership, replace that position with the previous reference currency. If it was absent from membership, do not insert the previous reference currency. Preserve all other membership and order.
+The previous reference currency is never inserted into membership. A default (untouched) selection is re-derived from the new reference, Default Order, provider support, and family capacity, so the row count is preserved. A customized selection is left exactly as saved; the new reference is simply not rendered as a row, and changing the reference back restores the original rows.
 
 Every row means:
 

@@ -57,8 +57,10 @@ Test:
 - locale-derived supported currency
 - locale-derived unsupported currency -> USD fallback
 - reference currency removed/disabled from displayed rows
-- changing to a reference currency already in membership replaces that membership position with the previous reference currency
-- changing to a reference currency absent from membership does not insert the previous reference currency
+- changing to a reference currency already in a derived membership re-derives that membership from the new reference at full capacity
+- changing to a reference currency already in a customized membership drops only that row and leaves the saved value unchanged
+- changing the reference back restores the original customized rows
+- no reference change ever inserts the previous reference currency
 - changing reference currency does not corrupt custom order
 
 ## 2. Catalog Tests
@@ -66,9 +68,8 @@ Test:
 Test:
 
 - provider/Foundation intersection
-- search by exact code
-- case-insensitive code search
-- localized currency-name search
+- picker entries carry the ISO code first, then the localized region and unit name
+- entry order is stable across UI languages
 - representative-region metadata
 - currency without safe flag
 - EUR special representative
@@ -139,9 +140,9 @@ Required checks:
 14. Positive/negative/unchanged/unavailable absolute-change states remain legible without a percentage column.
 15. Rate and absolute-change values align at the locale-aware decimal separator; the direction symbol remains immediately adjacent to the change integer part.
 16. Monospaced ISO codes give every following Currency Name label the same starting position.
-17. The verified fresh-widget configuration mechanism persists the family's BIS-derived currencies as real rows in the standard edit list (Medium 3, Large 10, Extra Large 20), rather than showing only `Add New Item`; `AppIntentRecommendation` is not accepted as evidence on macOS.
+17. A fresh widget shows one empty slot per row for its family (Medium 3, Large 10, Extra Large 20) and renders the BIS-derived Default Order; setting slot N moves only row N. Configuration parameters are `Bool` or `String` + `DynamicOptionsProvider` only (D-039).
 18. Completing an edit with a different reference currency delivers that reference to the timeline provider, constructs a distinct `RateRequestKey`, and fetches/loads a snapshot normalized to it.
-19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. A missing untouched family collection reconstructs the original default membership and applies the reference-currency swap.
+19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. A missing untouched family collection reconstructs default membership from the active reference currency.
 20. A cold extension container can construct and return a timeline without waiting for provider-catalog discovery or a remote BIS ranking check; those metadata calls are not prerequisites for leaving the placeholder state.
 
 Exact capacity numbers must come from real WidgetKit preview validation.
@@ -318,8 +319,7 @@ Test configuration logic independently of visual rendering.
 
 Cases:
 
-- search currency by ISO code,
-- search currency by localized name,
+- pick a currency from the slot menu,
 - remove a BIS-default currency and add another provider-supported currency,
 - reference currency is not selectable as a quote row,
 - provider-unsupported currency is absent/unavailable,
@@ -328,7 +328,8 @@ Cases:
 - no always-visible selected/max count is required by domain/config state,
 - fixed family capacities are 3, 10, and 20,
 - changing Currency Name preserves capacity,
-- a fresh installed widget persists the BIS-derived 3/10/20 members in the edit list rather than only `Add New Item` (verified in the real macOS editor, not inferred from a recommendation or unit test),
+- a fresh installed widget renders BIS-derived Default Order and exposes one slot per row for its family (verified in the real macOS editor, not inferred from a unit test),
+- a currency the active provider does not publish renders as a dash while every other row still resolves,
 - a missing collection resolves to matching runtime defaults defensively, while an explicit empty collection remains empty,
 - an explicitly emptied collection remains empty and is not repopulated,
 - changing Reference Currency changes `RateRequestKey` identity and loads or requests rates normalized to the new reference,

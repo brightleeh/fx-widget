@@ -239,6 +239,16 @@ public actor CurrencyCatalogService {
         self.refreshInterval = refreshInterval
     }
 
+    /// The cached catalog without any network work, or `nil` when nothing has
+    /// been fetched yet. Callers that must not block — App Intents descriptor
+    /// enumeration, for instance — use this and fall back on their own.
+    public func cachedCatalog() async -> CurrencyCatalog? {
+        guard let cached = try? await store.state().catalog(for: provider.id) else {
+            return nil
+        }
+        return try? makeCatalog(from: cached.providerSupportedCurrencyCodes)
+    }
+
     public func catalog(at date: Date = .now) async throws -> CurrencyCatalog {
         let cached = try? await store.state().catalog(for: provider.id)
         if let cached,

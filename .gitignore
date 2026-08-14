@@ -14,3 +14,6 @@ Config/Local.xcconfig
 
 # Distribution artifacts
 dist/
+
+# Superseded working documents, kept locally only
+.trash/

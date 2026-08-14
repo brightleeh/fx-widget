@@ -67,6 +67,12 @@ UI language determines labels.
 
 Region settings determine formatting defaults and the proposed default reference currency.
 
+Each widget instance additionally carries a `Language` setting: `System`, or an explicit supported language. It overrides the *content* the widget renders — currency and region names, footer labels, dates — while numeric grouping and decimal separators keep following the system region, preserving the split above.
+
+The widget editor itself always follows the system language, because it is system UI rather than something the extension draws. The setting therefore governs the widget body only.
+
+Implementation note: `String(localized:)` resolves against the process locale, so widget copy is looked up in a language-specific bundle instead. Passing a locale to a formatter is not enough on its own.
+
 Examples:
 
 - English UI + Korea region -> UI in English, reference currency may default to KRW.
@@ -74,7 +80,7 @@ Examples:
 
 ## 5. Supported Languages
 
-Architecture must allow languages to be added cheaply.
+Architecture must allow languages to be added cheaply. Adding one means a new `WidgetLanguage` case, its `displayLocale`, and the String Catalog translations; nothing structural changes.
 
 The first implementation may start with:
 

@@ -21,24 +21,4 @@ struct ReferenceCurrencyPolicyTests {
         )
         #expect(result == code("USD"))
     }
-
-    @Test func selectingExistingMemberSwapsPreviousReferenceIntoItsPosition() {
-        let membership = [code("USD"), code("JPY"), code("EUR")]
-        let result = ReferenceCurrencyPolicy.membershipAfterChangingReference(
-            from: code("KRW"),
-            to: code("JPY"),
-            membership: membership
-        )
-        #expect(result == [code("USD"), code("KRW"), code("EUR")])
-    }
-
-    @Test func selectingNonmemberDoesNotInsertPreviousReference() {
-        let membership = [code("USD"), code("JPY"), code("EUR")]
-        let result = ReferenceCurrencyPolicy.membershipAfterChangingReference(
-            from: code("KRW"),
-            to: code("CHF"),
-            membership: membership
-        )
-        #expect(result == membership)
-    }
 }

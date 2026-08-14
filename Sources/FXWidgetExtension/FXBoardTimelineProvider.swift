@@ -43,7 +43,7 @@ enum FXWidgetDiagnostics {
         resolved: ResolvedWidgetConfiguration
     ) {
         configuration.info(
-            "callback=\(callback, privacy: .public) family=\(family.rawValue, privacy: .public) reference=\(reference.id, privacy: .public) medium=\(collectionDescription(intent.mediumCurrencies), privacy: .public) large=\(collectionDescription(intent.largeCurrencies), privacy: .public) extraLarge=\(collectionDescription(intent.currencies), privacy: .public) active=\(selected.map(\.id).joined(separator: ","), privacy: .public) origin=\(resolved.origin.rawValue, privacy: .public) issues=\(String(describing: resolved.issues), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public)"
+            "callback=\(callback, privacy: .public) family=\(family.rawValue, privacy: .public) reference=\(reference.id, privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) slots=\(intent.slot1 ?? "-",privacy: .public),\(intent.slot2 ?? "-",privacy: .public),\(intent.slot3 ?? "-",privacy: .public) active=\(selected.map(\.id).joined(separator: ","), privacy: .public) origin=\(resolved.origin.rawValue, privacy: .public) issues=\(String(describing: resolved.issues), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "omitted", privacy: .public)"
         )
     }
 
@@ -81,7 +81,7 @@ enum FXWidgetDiagnostics {
                         continue
                     }
                     configuration.info(
-                        "family=\(String(describing: info.family), privacy: .public) typedReference=\(intent.referenceCurrency?.id ?? "omitted", privacy: .public) medium=\(collectionDescription(intent.mediumCurrencies), privacy: .public) large=\(collectionDescription(intent.largeCurrencies), privacy: .public) extraLarge=\(collectionDescription(intent.currencies), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public)"
+                        "family=\(String(describing: info.family), privacy: .public) typedReference=\(intent.referenceCurrencyCode ?? "omitted", privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) slots=\(intent.slot1 ?? "-",privacy: .public),\(intent.slot2 ?? "-",privacy: .public),\(intent.slot3 ?? "-",privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "omitted", privacy: .public)"
                     )
                 }
             case .failure:
@@ -112,18 +112,15 @@ struct FXBoardEntry: TimelineEntry {
     let refreshFailure: RateRefreshFailure?
     let timelineFailure: FXBoardTimelineFailure?
     let nextAutoRefreshEligibleAt: Date?
+
+    /// Per-widget UI language (D-016 / LOCALIZATION.md): names, labels, and
+    /// dates follow this locale while numeric separators follow the system.
+    var displayLocale: Locale { WidgetLanguage.parsed(configuration.languageCode).displayLocale }
 }
 
 struct FXBoardTimelineProvider: AppIntentTimelineProvider {
     func recommendations() -> [AppIntentRecommendation<FXBoardConfigurationIntent>] {
-        // Recommendations are gallery metadata, not persistence for the
-        // dedicated macOS widget editor.
-        [
-            AppIntentRecommendation(
-                intent: FXBoardConfigurationIntent(),
-                description: "Default Order"
-            )
-        ]
+        [AppIntentRecommendation(intent: FXBoardConfigurationIntent(), description: "fx-widget")]
     }
 
     func placeholder(in context: Context) -> FXBoardEntry {
@@ -175,16 +172,18 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
             family: context.family.layoutCategory,
             automaticRefreshOpportunity: true
         )
-        let reloadPolicy: TimelineReloadPolicy
-        if let eligibleAt = entry.nextAutoRefreshEligibleAt {
-            // A failed eligible refresh retains the old (now past) eligibility.
-            // Ask WidgetKit no sooner than one hour later to avoid a retry loop.
-            let requestedDate = eligibleAt > entry.date
-                ? eligibleAt
-                : entry.date.addingTimeInterval(3_600)
-            reloadPolicy = .after(requestedDate)
-        } else {
-            reloadPolicy = .never
+        let decision = TimelineReloadPolicyRule.decision(
+            hasSnapshot: entry.snapshot != nil,
+            membershipIsEmpty: entry.resolvedConfiguration.orderedMembership.isEmpty,
+            automaticRefreshPolicy: (try? FXWidgetServices.dependencies())?
+                .automaticRefreshPolicy ?? .fixedInterval(86_400),
+            refreshFailureCode: entry.refreshFailure?.code,
+            nextAutoRefreshEligibleAt: entry.nextAutoRefreshEligibleAt,
+            now: entry.date
+        )
+        let reloadPolicy: TimelineReloadPolicy = switch decision {
+        case .never: .never
+        case let .after(date): .after(date)
         }
         return Timeline(
             entries: [entry],

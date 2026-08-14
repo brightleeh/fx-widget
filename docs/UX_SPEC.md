@@ -133,7 +133,7 @@ selectedCurrencyCount <= validatedCapacity
 
 Do not expose an always-visible `N / Max` counter merely to communicate an implementation limit.
 
-When at capacity, prevent additional selection or show a concise limit indication only when needed.
+Capacity is structural rather than enforced: there is exactly one configuration slot per row for the family, so a selection cannot exceed it.
 
 ### Overflow fallback
 
@@ -176,20 +176,13 @@ right-click / Control-click widget
 
 Do not place permanent `Add Currency` management controls in the widget itself.
 
-Configuration should expose a `Currencies` parameter backed by the dynamic provider-supported currency catalog.
+Configuration exposes one scalar picker per board row, backed by the dynamic provider-supported currency catalog. Slot N is row N: setting it pins that currency to that row, and leaving it empty fills the row from Default Order for the active reference currency. A pin that introduces a currency Default Order did not contain displaces one default entry; pinning a currency already on the board only moves it.
 
-Search matches:
+The number of slots follows the family capacity (Medium 3, Large 10, Extra Large 20). `Quote Currency Count` reduces the rendered rows below that capacity but can never exceed it.
 
-- ISO currency code,
-- localized currency name.
-
-Users may remove default currencies and add other supported currencies.
-
-For a newly added widget, this field is prepopulated with that family's BIS-derived defaults rather than appearing empty. The collection permits zero items so any newly added item can be removed immediately.
+Picker entries read `USD  United States · Dollar`: the ISO code comes first so ordering and menu type-ahead stay stable when the UI language changes. Free-text search is not available — it requires `AppEntity`, which the macOS widget editor does not persist (D-039).
 
 Do not show an always-visible `selected / max` counter.
-
-At validated capacity, additional selection is prevented or a concise limit message is shown in the edit experience.
 
 The widget remains a glanceable FX board, not a currency management surface.
 
@@ -207,8 +200,10 @@ Do not show BIS ranking numbers in the primary widget.
 
 Expose only understandable labels:
 
-- Default Order
-- Custom Order
+- Default Order — every row derived from the BIS ranking
+- Custom — one or more rows pinned by the user
+
+These are states of the slot configuration, not a separate mode control: the editor cannot show or hide controls in response to a parameter value (D-039).
 
 Do not expose wording like:
 
@@ -231,9 +226,9 @@ Reference currency uses the same dynamic supported-currency catalog.
 When changed:
 
 - recalculate/reload rows consistently,
-- if the new reference currency is already in saved membership, replace it at the same position with the previous reference currency,
-- if the new reference currency is not in saved membership, do not insert the previous reference currency,
-- preserve all other membership and order,
+- never insert the previous reference currency into membership,
+- re-derive a default (untouched) selection from the new reference so the row count is preserved,
+- leave a customized saved selection exactly as stored,
 - omit the active reference currency itself from normal selected rows.
 
 ## 12. Accessibility
@@ -282,14 +277,13 @@ Rates use adaptive decimal precision rather than one fixed number of decimal pla
 V1 default:
 
 ```text
-rate >= 100                 -> 2 fixed decimals
-1 <= rate < 100             -> 2 fixed decimals
+rate >= 1                   -> 2 fixed decimals
 0.01 <= rate < 1            -> 2...4 decimals
-0.0001 <= rate < 0.01       -> 2...6 decimals
-rate < 0.0001               -> 2...8 decimals
+0.0001 <= rate < 0.01       -> 4 fixed decimals
+rate < 0.0001               -> compact scientific notation
 ```
 
-Variable ranges remove unnecessary trailing zeros above the two-digit minimum.
+Four decimals is the fixed-notation floor for the whole board. Variable ranges remove unnecessary trailing zeros above the two-digit minimum.
 
 Expected examples:
 
@@ -298,12 +292,12 @@ USD/KRW   1,418.50
 JPY/KRW       8.96
 EUR/USD       1.16
 USD/EUR       0.8739
-JPY/USD       0.00634
+JPY/USD       0.0063
 ```
 
 Absolute change should visually align with the row rate's effective precision when possible.
 
-Nonzero values must not become visually indistinguishable from zero solely because of formatting; the formatter may add precision for such edge cases.
+Nonzero values must not become visually indistinguishable from zero solely because of formatting. The remedy is scientific notation, not extra fraction digits.
 
 All decimal/grouping separators remain locale-aware.
 

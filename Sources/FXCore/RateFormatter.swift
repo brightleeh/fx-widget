@@ -19,33 +19,36 @@ public struct RateFormatter: Sendable {
         localeIdentifier = locale.identifier
     }
 
+    /// Maximum fraction digits the board will ever render in fixed notation.
+    /// Below this magnitude a value switches to scientific notation instead of
+    /// growing more digits: this is a glanceable board, not a trading terminal,
+    /// and six or more fraction digits cost column width without informing the
+    /// reader (D-020).
+    public static let maximumFractionDigits = 4
+    static let scientificThreshold = Decimal(string: "0.0001")!
+
     public func rate(_ value: Decimal) -> FormattedRate {
         let absolute = abs(value)
+
+        // Anything smaller than the fixed-notation floor becomes scientific
+        // rather than a row of leading zeros.
+        guard absolute >= Self.scientificThreshold || value == 0 else {
+            return FormattedRate(
+                text: scientific(value),
+                fractionDigits: Self.maximumFractionDigits,
+                usesScientificNotation: true
+            )
+        }
+
         let band: (minimum: Int, maximum: Int)
         switch absolute {
-        case 100...:
-            band = (2, 2)
-        case 1..<100:
+        case 1...:
             band = (2, 2)
         case Decimal(string: "0.01")!..<1:
             band = (2, 4)
-        case Decimal(string: "0.0001")!..<Decimal(string: "0.01")!:
-            band = (2, 6)
         default:
-            band = (2, 8)
-        }
-
-        let guardedMaximum = precisionThatDoesNotRenderNonzeroAsZero(
-            value,
-            startingAt: band.maximum,
-            limit: 12
-        )
-        guard rounded(value, scale: guardedMaximum) != 0 || value == 0 else {
-            return FormattedRate(
-                text: scientific(value),
-                fractionDigits: 12,
-                usesScientificNotation: true
-            )
+            // 0.0001 ..< 0.01 — fixed 4 digits, e.g. 0.006275 -> 0.0063.
+            band = (4, 4)
         }
 
         let digits: Int
@@ -55,7 +58,7 @@ public struct RateFormatter: Sendable {
             digits = effectivePrecision(
                 value,
                 minimum: band.minimum,
-                maximum: guardedMaximum
+                maximum: band.maximum
             )
         }
 
@@ -66,12 +69,21 @@ public struct RateFormatter: Sendable {
         )
     }
 
+    /// Absolute change shares its row's precision. When a nonzero change would
+    /// round away at that precision it switches to scientific notation rather
+    /// than widening the column, which previously produced values that the
+    /// layout had to truncate to `0.0000…`.
     public func absoluteChange(_ value: Decimal, rateFractionDigits: Int) -> String {
         let magnitude = abs(value)
+        let start = min(max(rateFractionDigits, 0), Self.maximumFractionDigits)
+
+        // Start at the row's precision and widen only as far as the board's
+        // fixed-notation floor. A 1.15 row whose change is 0.0004 still shows
+        // 0.0004; only changes below the floor become scientific.
         let digits = precisionThatDoesNotRenderNonzeroAsZero(
             magnitude,
-            startingAt: min(max(rateFractionDigits, 0), 12),
-            limit: 12
+            startingAt: start,
+            limit: Self.maximumFractionDigits
         )
 
         guard rounded(magnitude, scale: digits) != 0 || magnitude == 0 else {
@@ -146,9 +158,11 @@ public struct RateFormatter: Sendable {
         let formatter = NumberFormatter()
         formatter.locale = Locale(identifier: localeIdentifier)
         formatter.numberStyle = .scientific
+        // Two significant digits keep the column narrow enough that the layout
+        // never has to truncate it. `4.13371916…` is strictly worse than `4.1E-4`.
         formatter.usesSignificantDigits = true
         formatter.minimumSignificantDigits = 1
-        formatter.maximumSignificantDigits = 12
+        formatter.maximumSignificantDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: value))
             ?? NSDecimalNumber(decimal: value).stringValue
     }

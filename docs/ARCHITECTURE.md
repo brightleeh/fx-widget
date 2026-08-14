@@ -113,7 +113,7 @@ Persist:
 - optional provider metadata
 - app-level defaults/presets if necessary
 
-Per-widget App Intent configuration remains managed through WidgetKit/App Intents where appropriate.
+Per-widget App Intent configuration remains managed through WidgetKit/App Intents. Every parameter is a scalar backed by a `DynamicOptionsProvider`; `AppEntity`, `[AppEntity]`, and `AppEnum` parameters are not committed by the macOS widget editor (D-039). Ordered membership is therefore expressed as one scalar slot per row, where slot N pins row N and an empty slot follows Default Order.
 
 Canonical rate-data identity:
 
@@ -192,7 +192,7 @@ overflowCount
 Invariants:
 
 - BIS determines ordering priority, not physical capacity,
-- normal configuration limits new selections to `validatedSelectionCapacity`,
+- capacity is structural: one configuration slot per row, `validatedSelectionCapacity` slots per family,
 - no permanent `selected/max` UI is required,
 - never mutate stored configuration merely due to a smaller family,
 - fixed family columns: Medium/Large 1, Extra Large 2,

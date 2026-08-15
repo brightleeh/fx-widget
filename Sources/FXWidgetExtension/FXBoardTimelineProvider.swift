@@ -81,7 +81,7 @@ enum FXWidgetDiagnostics {
                         continue
                     }
                     configuration.info(
-                        "family=\(String(describing: info.family), privacy: .public) typedReference=\(intent.referenceCurrencyCode ?? "omitted", privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) slots=\(intent.slot1 ?? "-",privacy: .public),\(intent.slot2 ?? "-",privacy: .public),\(intent.slot3 ?? "-",privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "omitted", privacy: .public)"
+                        "family=\(String(describing: info.family), privacy: .public) typedReference=\(intent.referenceCurrencyCode ?? "-", privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "-", privacy: .public) slots=\(slotDescription(intent), privacy: .public)"
                     )
                 }
             case .failure:
@@ -90,9 +90,14 @@ enum FXWidgetDiagnostics {
         }
     }
 
-    private static func collectionDescription(_ collection: [CurrencyEntity]?) -> String {
-        guard let collection else { return "omitted" }
-        return collection.isEmpty ? "empty" : collection.map(\.id).joined(separator: ",")
+    /// Every slot, position included. Logging only the first three hid whether a
+    /// later slot had been committed at all, which is the question the editor
+    /// cannot answer on its own.
+    private static func slotDescription(_ intent: FXBoardConfigurationIntent) -> String {
+        intent.orderedSlots
+            .enumerated()
+            .map { "\($0.offset + 1):\($0.element ?? "-")" }
+            .joined(separator: ",")
     }
 
     private static func requestDescription(_ key: RateRequestKey?) -> String {

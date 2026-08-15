@@ -25,7 +25,7 @@ struct CurrencyPresentationMetadataTests {
         #expect(CurrencyPresentationMetadata.flag(for: code("CZK")) == "🇨🇿")
     }
 
-    @Test func ambiguousCurrencyHasNoFlagAndFallsBackToCurrencyName() {
+    @Test func ambiguousCurrencyHasNoFlagButKeepsItsFullName() {
         let currency = code("XCD")
         let locale = Locale(identifier: "en_US")
 
@@ -35,103 +35,47 @@ struct CurrencyPresentationMetadataTests {
             ) == nil
         )
         #expect(CurrencyPresentationMetadata.flag(for: currency) == nil)
-        #expect(
-            CurrencyPresentationMetadata.localizedName(for: currency, locale: locale)
-                == locale.localizedString(forCurrencyCode: "XCD")
-        )
-    }
-
-    @Test func regionAndCurrencyNamesAreIndependentLocalizedValues() {
-        let currency = code("USD")
-        let locale = Locale(identifier: "ko_KR")
-
-        #expect(
-            CurrencyPresentationMetadata.localizedRegionName(
-                for: currency,
-                locale: locale
-            ) == locale.localizedString(forRegionCode: "US")
-        )
+        // No safe flag is exactly when the name has to carry the whole burden,
+        // so the qualifier must survive: "East Caribbean Dollar", not "Dollar".
         #expect(
             CurrencyPresentationMetadata.localizedCurrencyName(
                 for: currency,
                 locale: locale
-            ) == locale.localizedString(forCurrencyCode: "USD")
+            ) == locale.localizedString(forCurrencyCode: "XCD")
         )
     }
 
-    @Test func compactCurrencyNameDropsTheKoreanCountryQualifier() {
-        let locale = Locale(identifier: "ko_KR")
-
-        #expect(
-            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
-                for: code("USD"),
-                locale: locale
-            ) == "달러"
-        )
-        #expect(
-            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
-                for: code("JPY"),
-                locale: locale
-            ) == "엔"
-        )
-    }
-
-    @Test func compactCurrencyNameTakesTheUnitNounInHeadInitialLanguages() {
-        // Romance currency names are unit-first: taking the last word returns
-        // the nationality adjective instead, and French "dollar des États-Unis"
-        // degrades to "Unis".
-        let expected: [(String, String)] = [
-            ("es", "dólar"),
-            ("fr", "dollar"),
-            ("it", "dollaro"),
-            ("pt_BR", "Dólar")
-        ]
-
-        for (identifier, unit) in expected {
-            #expect(
-                CurrencyPresentationMetadata.compactLocalizedCurrencyName(
-                    for: code("USD"),
-                    locale: Locale(identifier: identifier)
-                ) == unit
-            )
+    /// D-041: the label is CLDR's currency name verbatim, in every language.
+    /// Asserting against Foundation rather than against literals keeps this
+    /// green when a macOS update revises CLDR wording.
+    @Test func currencyNameIsTheCLDRNameVerbatim() {
+        for tag in ["en_US", "ko_KR", "ja_JP", "de_DE", "fr_FR", "zh-Hans", "pt_BR"] {
+            let locale = Locale(identifier: tag)
+            for iso in ["USD", "EUR", "CHF", "PLN", "XCD"] {
+                #expect(
+                    CurrencyPresentationMetadata.localizedCurrencyName(
+                        for: code(iso),
+                        locale: locale
+                    ) == locale.localizedString(forCurrencyCode: iso)
+                )
+            }
         }
     }
 
-    @Test func compactCurrencyNameStillTakesTheLastWordInHeadFinalLanguages() {
-        #expect(
-            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
-                for: code("USD"),
-                locale: Locale(identifier: "en_US")
-            ) == "Dollar"
-        )
-        #expect(
-            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
-                for: code("USD"),
-                locale: Locale(identifier: "de_DE")
-            ) == "Dollar"
-        )
-    }
-
-    @Test func localizedRegionAndCurrencyNameRestoresTheCombinedLabel() {
-        let locale = Locale(identifier: "ko_KR")
-
-        #expect(
-            CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
-                for: code("USD"),
-                locale: locale
-            ) == "미국 · 달러"
-        )
-        #expect(
-            CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
-                for: code("JPY"),
-                locale: locale
-            ) == "일본 · 엔"
-        )
-        #expect(
-            CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
-                for: code("KRW"),
-                locale: locale
-            ) == "대한민국 · 원"
-        )
+    /// Regression for the word-segmentation labels D-041 removed. Splitting a
+    /// CJK currency name left a single character that is not a word, so a
+    /// one-character label is the signature of the defect — assert against that
+    /// rather than against wording a macOS update may revise.
+    @Test func multiCharacterCJKUnitsSurviveIntact() {
+        for tag in ["zh-Hans", "zh-Hant"] {
+            let locale = Locale(identifier: tag)
+            for iso in ["CHF", "PLN", "MXN", "NZD"] {
+                let label = CurrencyPresentationMetadata.localizedCurrencyName(
+                    for: code(iso),
+                    locale: locale
+                )
+                #expect(label.count > 1, "\(tag) \(iso) collapsed to \(label)")
+            }
+        }
     }
 }

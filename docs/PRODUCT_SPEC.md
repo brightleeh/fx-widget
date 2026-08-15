@@ -24,9 +24,9 @@ For an English-language UI using KRW as the reference currency, the primary Extr
 ```text
 FX · KRW                                                   ↻
 
-🇺🇸 USD 미국 · 달러       1,418.10      ▲ 8.60
-🇪🇺 EUR 유럽 연합 · 유로  1,643.20      ▲ 4.20
-🇯🇵 JPY 일본 · 엔             8.93      ▼ 0.06
+🇺🇸 USD US Dollar         1,418.10      ▲ 8.60
+🇪🇺 EUR Euro              1,643.20      ▲ 4.20
+🇯🇵 JPY Japanese Yen          8.93      ▼ 0.06
 🇬🇧 GBP      1,899.30      ▲ ...         ...
 🇨🇳 CNY        197.40      ▲ ...         ...
 🇨🇭 CHF      1,755.10      ▼ ...         ...
@@ -139,7 +139,7 @@ Every row means:
 
 The header must make the current reference currency apparent. With Currency Name enabled, include its compact combined label, for example:
 
-`FX · KRW 대한민국 · 원`
+`FX · KRW South Korean Won`
 
 This prevents ambiguity in a global/multilingual app.
 
@@ -171,7 +171,7 @@ Example default:
 
 `🇯🇵 JPY  8.93  ▼0.06`
 
-With `Currency Name` enabled, append a safe representative region and compact localized unit name, for example `JPY 일본 · 엔`. Remove the duplicated country/region qualifier from the unit part when Foundation word segmentation can identify it. Show the label on every supported family, using a smaller supporting font that yields to the numeric columns when width is constrained.
+With `Currency Name` enabled, append Foundation's localized currency name, for example `JPY Japanese Yen`. Use it verbatim (D-041). Show the label on every supported family, using a smaller supporting font that yields to the numeric columns when width is constrained.
 
 ### 3.7 Refresh
 

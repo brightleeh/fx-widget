@@ -131,7 +131,7 @@ Required checks:
 5. No partial row.
 6. No scrolling.
 7. Saved membership/order is unchanged by rendering.
-8. Currency Name preserves row capacity and appears as a safe representative region plus compact currency-unit name inline on every family without displacing numeric columns.
+8. Currency Name preserves row capacity and appears as Foundation's localized currency name inline on every family without displacing numeric columns.
 9. A fresh widget configuration defaults Currency Name to On; an explicitly disabled saved setting remains Off.
 10. Extra Large uses vertical/column-major visual and accessibility order (`1...10`, then `11...20`).
 11. WidgetKit supplies the system content margins and the view does not add a second inset; all family defaults fit without `+N` or horizontal clipping.

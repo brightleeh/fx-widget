@@ -67,16 +67,21 @@ enum WidgetLanguage: String, CaseIterable {
 }
 
 /// Shared list building for the scalar currency pickers. A flat list of bare
-/// ISO codes is unusable, so each item carries the localized region/unit name
-/// in its title.
-/// Memoizes the expensive part of building a currency picker.
+/// ISO codes is unusable, so each item carries the localized currency name in
+/// its title.
 ///
-/// Every quote slot declares its own `DynamicOptionsProvider`, and the widget
-/// exposes twenty of them. Rebuilding a 162-entry list with a localized region
-/// and unit name per entry, once per provider, was enough for WidgetKit's
-/// watchdog to kill the extension during `getAllDescriptors`, which leaves every
-/// widget stuck on a placeholder. The labels depend only on the locale, so they
-/// are computed once and shared.
+/// Every quote slot declares its own `DynamicOptionsProvider` and the widget
+/// exposes twenty of them, so this list is requested twenty times during
+/// `getAllDescriptors`. It once rebuilt a localized label per entry each time,
+/// which was slow enough — 51 ms per pass in Japanese, all of it word
+/// segmentation — for WidgetKit's watchdog to kill the extension and leave every
+/// widget on a placeholder. D-041 removed the segmentation, and labelling the
+/// whole catalog now costs 0.03 ms regardless of language.
+///
+/// The memoization is kept for the catalog read itself, which still touches
+/// disk. The `await` below means concurrent callers on a cold cache can each do
+/// the work rather than joining the first one; that is now a few duplicated
+/// microseconds of labelling, not a watchdog risk.
 actor CurrencyOptionsCache {
     static let shared = CurrencyOptionsCache()
 
@@ -91,7 +96,7 @@ actor CurrencyOptionsCache {
         labelled = codes.map { currency in
             (
                 currency.rawValue,
-                "\(currency.rawValue)  \(CurrencyPresentationMetadata.localizedRegionAndCurrencyName(for: currency, locale: locale))"
+                "\(currency.rawValue)  \(CurrencyPresentationMetadata.localizedCurrencyName(for: currency, locale: locale))"
             )
         }
         localeIdentifier = locale.identifier
@@ -122,7 +127,7 @@ enum CurrencyOptionsCatalog {
     /// changes, and flags are omitted because currencies without a safe
     /// representative flag would break column alignment (D-017).
     static func item(for currency: CurrencyCode, locale: Locale) -> IntentItem<String> {
-        let label = CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
+        let label = CurrencyPresentationMetadata.localizedCurrencyName(
             for: currency,
             locale: locale
         )

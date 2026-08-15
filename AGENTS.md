@@ -41,7 +41,7 @@ Do not change these without an explicit product decision:
 - Call this ordering **Default Order** in UI and documentation. Do not call it "international status order", "importance order", "world rank", or similar.
 - The default row does show:
   `flag + ISO 4217 code + Currency Name + rate + absolute change`.
-- Currency Name defaults to on and combines a safe localized representative region and compact currency-unit name after the ISO code, for example `미국 · 달러`. It can be hidden, but it is not a separate country/region-name setting.
+- Currency Name defaults to on and renders Foundation's localized currency name verbatim after the ISO code, for example `US Dollar` (D-041). It can be hidden, but it is not a separate country/region-name setting.
 - Currency support must not be limited to the default-derived widget selection.
 - Do not implement currencies as a giant source-code enum that must be edited for every new currency.
 - The reference currency must not be hardcoded to KRW.
@@ -205,8 +205,8 @@ The previous reference currency is never inserted into membership (D-010, D-039:
 - Parameters are Language, Currency Name, Reference Currency, Quote Currency Count, and per-row Quote Currency slots (3/10/20 by family).
 - Currencies come from the dynamic provider-supported catalog.
 - Picker titles carry the ISO code first so ordering and menu type-ahead stay stable across UI languages.
-- Currency Name is default-on and renders a safe localized representative region plus compact currency-unit name inline after the ISO code on every supported family. Country/region names are not a separate setting.
-- With Currency Name enabled, the header also appends the reference currency's combined label in the same supporting font and size as row labels.
+- Currency Name is default-on and renders the localized currency name inline after the ISO code on every supported family. Country/region names are not a separate setting.
+- With Currency Name enabled, the header also appends the reference currency's localized currency name in the same supporting font and size as row labels.
 - Users may remove default currencies and add other supported currencies.
 - Do not expose permanent `Add Currency` controls or a permanent `N / Max` label in the widget.
 - Capacity needs no enforcement: one configuration slot per row means a selection cannot exceed it. `Quote Currency Count` may reduce the rendered rows but never raise them above the family capacity.
@@ -243,10 +243,10 @@ Use String Catalogs for app/widget UI copy.
 
 Currency codes remain ISO 4217 identifiers and are not translated.
 
-Country/region names are not independently configurable. When Currency Name is enabled, a safe localized representative region and compact localized currency-unit name are derived at presentation time and follow the ISO code.
+Country/region names are not independently configurable. When Currency Name is enabled, Foundation's localized currency name follows the ISO code. Do not recombine it with a separately looked-up region name or trim it by word segmentation; D-041 records why.
 
-The default widget shows the combined Currency Name label:
-`🇺🇸 USD 미국 · 달러  1,418.10  ▲ 8.60`
+The default widget shows the Currency Name label:
+`🇺🇸 USD US Dollar  1,418.10  ▲ 8.60`
 
 UI language and regional formatting/reference-currency defaults are separate concepts. A user can run the app in English while their region is Korea.
 
@@ -326,7 +326,7 @@ Widget layout changes require previews or snapshot-style visual checks for:
 - Medium 3-row one-column layout,
 - Large 10-row one-column layout,
 - Extra Large 10-row two-column layout with vertical fill order,
-- optional representative-region and compact currency-unit labels on every family,
+- optional localized currency-name labels on every family,
 - long localized strings,
 - stale/error state,
 - default capacity-derived membership for every family.

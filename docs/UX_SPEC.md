@@ -5,7 +5,7 @@
 1. Glanceable before interactive.
 2. Family-fixed density: Medium 3×1, Large 10×1, Extra Large 10×2.
 3. ISO currency code is the primary textual identifier.
-4. An optional localized label combines a safe representative region and compact currency-unit name.
+4. An optional localized label carries Foundation's currency name.
 5. Reference currency is always discoverable.
 6. Changes must be understandable without relying on color alone.
 7. The widget should still be useful when offline with cached data.
@@ -22,7 +22,7 @@ Preferred logical structure:
 Example:
 
 ```text
-🇺🇸  USD  미국 · 달러        1,418.10        ▲ 8.60
+🇺🇸  USD  US Dollar          1,418.10        ▲ 8.60
 ```
 
 Use aligned numeric columns where practical.
@@ -36,7 +36,7 @@ Show the combined localized Currency Name label in the default row unless the us
 Recommended:
 
 ```text
-FX · KRW 대한민국 · 원                    ↻
+FX · KRW South Korean Won                 ↻
 ```
 
 or an equivalent compact label.
@@ -217,7 +217,7 @@ Custom order uses drag/reorder affordances in the host app where practical.
 
 Default: on.
 
-When enabled, append a safe Foundation-localized representative region and compact currency-unit name (for example `미국 · 달러`, `일본 · 엔`, `유럽 연합 · 유로`, `영국 · 파운드`) inline after the ISO code on every family. Remove the duplicated country/region qualifier from the unit part when localized word segmentation can identify it. Use a smaller supporting font, allow it to scale or truncate first, and preserve numeric columns.
+When enabled, append Foundation's localized currency name (for example `US Dollar`, `Japanese Yen`, `Euro`, `British Pound`) inline after the ISO code on every family. Use it verbatim; D-041 removed the earlier region-plus-unit recombination. Use a smaller supporting font, allow it to scale or truncate first, and preserve numeric columns.
 
 ## 11. Reference Currency Setting
 
@@ -246,16 +246,16 @@ The agreed default visual direction is:
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
 │ FX · KRW                                                     ↻   │
-│ 🇺🇸 USD [미국 · 달러] rate Δ     row 11 currency  rate Δ          │
-│ 🇪🇺 EUR [유럽 연합 · 유로] Δ     row 12 currency  rate Δ          │
-│ 🇯🇵 JPY [일본 · 엔] rate Δ       row 13 currency  rate Δ          │
+│ 🇺🇸 USD [US Dollar] rate Δ      row 11 currency  rate Δ          │
+│ 🇪🇺 EUR [Euro] rate Δ           row 12 currency  rate Δ          │
+│ 🇯🇵 JPY [Japanese Yen] rate Δ   row 13 currency  rate Δ          │
 │ ...                              ...                              │
 │ row 10 currency rate Δ          row 20 currency  rate Δ          │
-│ 2026. 8. 10. 18:00 기준                                           │
+│ As of Aug 10, 2026 at 18:00                                      │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-The displayed numbers and the literal Korean date format are mockup examples only.
+The displayed numbers and the literal date format are mockup examples only; the real one is Foundation locale-aware.
 
 Production invariants represented by this mockup are:
 

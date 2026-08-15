@@ -93,7 +93,7 @@ Default row:
 
 Example:
 
-`🇺🇸  USD  미국 · 달러   1,418.10   ▲ 8.60`
+`🇺🇸  USD  US Dollar   1,418.10   ▲ 8.60`
 
 The combined label in D-004 is visible by default and may be hidden per widget.
 
@@ -103,7 +103,7 @@ The combined label in D-004 is visible by default and may be hidden per widget.
 
 Country/region-name display is not a separate widget setting.
 
-A default-on `Currency Name` setting appends a safe localized representative region and compact localized currency-unit name after the ISO code on every supported family, for example `미국 · 달러`, `일본 · 엔`, `유럽 연합 · 유로`, and `영국 · 파운드`. Users may turn it off. Foundation supplies localized names; the compact unit removes a duplicated country/region qualifier before the two parts are combined.
+A default-on `Currency Name` setting appends the localized currency name after the ISO code on every supported family, for example `US Dollar`, `Japanese Yen`, `Euro`, and `British Pound`. Users may turn it off. D-041 takes Foundation's CLDR name verbatim; nothing is recombined or trimmed.
 
 Do not store localized names in the currency domain model.
 
@@ -695,9 +695,9 @@ The complete containing app must be installed in `/Applications` or the user's `
 
 `Currency Name` is one independent, default-on presentation setting. A separate country/region-name setting remains removed.
 
-When enabled, a safe localized representative region plus compact currency-unit name appears inline next to the ISO code on Medium, Large, and Extra Large. It never appears on a second line and does not change capacity. The label uses a smaller supporting font and may scale or truncate before numeric columns are allowed to collide.
+When enabled, the localized currency name appears inline next to the ISO code on Medium, Large, and Extra Large. It never appears on a second line and does not change capacity. The label uses a smaller supporting font and may scale or truncate before numeric columns are allowed to collide.
 
-The unit part removes its duplicated country/region qualifier where Foundation's localized word segmentation permits it, then combines with the safe representative region using a middle dot. The ISO code remains visible. If no safe representative region exists, show the compact unit name alone.
+The label is CLDR's currency name verbatim under D-041. The ISO code remains visible alongside it.
 
 ## D-034 — Family default membership in the standard editor
 
@@ -734,7 +734,7 @@ ISO currency codes use a monospaced font so every three-letter code gives the fo
 
 Completing widget editing with a different Reference Currency creates a new `RateRequestKey` with that reference and requests or loads a snapshot normalized to it. The previous reference's snapshot must never be rendered under the newly selected reference header.
 
-When Currency Name is enabled, the header appends the reference currency's safe representative-region and compact unit label after `FX · ISO`, using the same supporting font and size as row Currency Name labels. Region names use Foundation's localized result without a KRW-specific rename; Korean KRW therefore renders as `대한민국 · 원` when Foundation supplies `대한민국`.
+When Currency Name is enabled, the header appends the reference currency's localized currency name after `FX · ISO`, using the same supporting font and size as row Currency Name labels. The name is Foundation's CLDR result without a KRW-specific rename, so Korean KRW renders as `대한민국 원`.
 
 ## D-037 — Pre-release widget configuration schema reset
 
@@ -853,3 +853,34 @@ provider automatic policy is .disabled           .never
 The intervals above are the V1 policy for the Frankfurter daily-reference adapter under D-014 and D-025, not a global constant. A provider with a different cadence supplies its own.
 
 The rule lives in `FXCore` and must not import WidgetKit. It returns a neutral decision value that the widget extension maps to `TimelineReloadPolicy`.
+
+## D-041 — Currency Name is the CLDR currency name verbatim
+
+**Status: DECIDED.** Supersedes the combined region-plus-unit label in D-004, D-033, and D-036, and the `미국 · 달러` form previously required by `AGENTS.md`.
+
+The `Currency Name` label renders `Locale.localizedString(forCurrencyCode:)` unchanged. Nothing is recombined, and no region name is looked up for it.
+
+```text
+ko  USD    미국 달러                 previously   미국 · 달러
+en  USD    US Dollar                             United States · Dollar
+fr  USD    dollar des États-Unis                 États-Unis · dollar
+ko  EUR    유로                                   유럽 연합 · 유로
+```
+
+The previous design paired a separately resolved representative region with a "compact" unit extracted by localized word segmentation. Three findings retired it.
+
+It produced wrong labels. Segmentation kept the last word, which is the unit only in head-final languages. Romance names are unit-first, so French `dollar des États-Unis` yielded `Unis`. CJK names have no word boundaries, so a multi-character unit collapsed to a single character that is not a word: `瑞士法郎` yielded `郎`. Five of the twenty Default Order currencies were affected in Chinese. A per-language head-position table fixed the Romance cases but was a hardcoded mapping that had to grow with every new language, and a wrong entry produces a plausible-looking incorrect label.
+
+It also discarded the qualifier exactly where it mattered most: a currency with no safe representative region has no flag either, and `East Caribbean Dollar` was reduced to `Dollar`.
+
+It was the entire cost of building a picker. Labelling the catalog took 51 ms in Japanese, all of it segmentation; the CLDR lookups themselves measure 0.03 ms for 308 currencies. That cost, multiplied by the twenty slot options providers, is what tripped WidgetKit's watchdog during `getAllDescriptors`.
+
+CLDR already places the region inside the currency name wherever it is part of the name, and omits it where it does not apply, as with `Euro`. The row also states the region twice already, through the flag and the ISO code, so the separate region name was a third statement of it.
+
+Region data is unaffected as data: `representativeRegionIdentifier` and the override layer still select the flag under D-017. Only the localized region *name* left the label path.
+
+Consequences:
+
+- `compactLocalizedCurrencyName`, its head-initial language table, the Korean `화` suffix rule, and `localizedRegionName` are removed;
+- a label is now language-independent in cost, so no memoization is required to keep the editor within the watchdog budget;
+- the label follows the OS. A macOS update that revises CLDR wording changes it, so tests assert against `Locale.localizedString(forCurrencyCode:)` rather than literal strings.

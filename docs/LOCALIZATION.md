@@ -7,7 +7,7 @@ The product should be multilingual without making the core widget dependent on t
 The default widget includes the localized Currency Name label:
 
 ```text
-🇺🇸 USD 미국 · 달러  1,418.10  ▲ 8.60
+🇺🇸 USD 미국 달러  1,418.10  ▲ 8.60
 ```
 
 ISO codes and numbers remain the primary identifiers, and users may turn the localized label off.
@@ -49,31 +49,17 @@ Conceptual model:
 currencyCode = "JPY"
 ```
 
-The compact currency-unit component can produce:
+`Locale.localizedString(forCurrencyCode:)` can produce:
 
-- Korean: 엔
-- English: Yen
-- Japanese: 円
+- Korean: 일본 엔화
+- English: Japanese Yen
+- Japanese: 日本円
 
 without changing the domain model.
 
-A separate country/region-name setting is not exposed. `Currency Name` is one default-on display setting. When enabled, append a safe localized representative region and compact localized unit name inline after the ISO code on every family, for example `미국 · 달러` or `일본 · 엔`. Use Foundation localization and localized word segmentation to remove the duplicated country qualifier from the unit part; the smaller supporting label scales or truncates before numeric data.
+A separate country/region-name setting is not exposed. `Currency Name` is one default-on display setting. When enabled, append that name inline after the ISO code on every family; the smaller supporting label scales or truncates before numeric data.
 
-Which word carries the unit depends on the language's head position, and getting it wrong produces a label that looks plausible but is wrong:
-
-```text
-head-final    en  US Dollar              → Dollar     last word
-              de  US-Dollar              → Dollar
-              ko  미국 달러화              → 달러        (also strips the 화 suffix)
-              ja  アメリカドル             → ドル
-
-head-initial  es  dólar estadounidense   → dólar      first word
-              fr  dollar des États-Unis  → dollar
-              it  dollaro statunitense   → dollaro
-              pt  dólar americano        → dólar
-```
-
-Taking the last word in a head-initial language yields the nationality adjective — and French collapses to `Unis`, the tail of `États-Unis`. `CurrencyPresentationMetadata` keeps a verified set of head-initial language codes. Because `System` follows whatever language the Mac runs, that set is not limited to the languages listed in §5, but a code belongs in it only after its Foundation output has been checked.
+**Use the name verbatim.** An earlier design paired a separately resolved region name with a "compact" unit extracted by localized word segmentation. It mangled every language family it had not been designed against, and it stripped the qualifier from exactly the currencies that have no representative flag to fall back on. CLDR already includes the region wherever it belongs in the name, and the row states the region twice over through the flag and the ISO code. D-041 records the evidence.
 
 ## 4. UI Language vs Region
 
@@ -188,4 +174,4 @@ Test at least:
 - German, whose compound currency labels are the longest of the supported set
 - Simplified or Traditional Chinese, whose labels are the shortest and whose glyphs set a different baseline
 
-The default row and default-on combined region/currency label should remain stable across languages.
+The default row and default-on currency-name label should remain stable across languages.

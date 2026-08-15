@@ -74,7 +74,7 @@ struct FXBoardView: View {
                        validating: entry.referenceCurrency.id
                    ) {
                     Text(
-                        CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
+                        CurrencyPresentationMetadata.localizedCurrencyName(
                             for: reference,
                             locale: entry.displayLocale
                         )
@@ -297,7 +297,7 @@ struct FXBoardView: View {
 
             if entry.resolvedConfiguration.showsCurrencyName {
                 Text(
-                    CurrencyPresentationMetadata.localizedRegionAndCurrencyName(
+                    CurrencyPresentationMetadata.localizedCurrencyName(
                         for: currency,
                         locale: entry.displayLocale
                     )

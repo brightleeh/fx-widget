@@ -705,7 +705,7 @@ The label is CLDR's currency name verbatim under D-041. The ISO code remains vis
 
 The original decision required an untouched widget's `Currencies` editor to contain its BIS-derived defaults as real removable, reorderable items. D-039 measured that surface: an `[AppEntity]` collection renders and accepts edits but is never committed on Done. No `Currencies` collection parameter exists, and none may be reintroduced.
 
-Ordered membership is expressed as fixed scalar slots — one `String` + `DynamicOptionsProvider` parameter per row, exposed 3 / 10 / 20 by family through `Switch(.widgetFamily)`. Slot N is row N. An unset slot resolves at read time to Default Order for the active reference, so a fresh widget renders its BIS-derived board with nothing committed.
+Ordered membership is expressed as fixed scalar slots — one `String` + `DynamicOptionsProvider` parameter per row, exposed through `Switch(.widgetFamily)`: three for Medium and twenty for every other family, because D-039 measured that the editor cannot distinguish Large from Extra Large. Slot N is row N. An unset slot resolves at read time to Default Order for the active reference, so a fresh widget renders its BIS-derived board with nothing committed.
 
 What survives from the original decision:
 
@@ -801,14 +801,41 @@ AppEntity                     entity picker        NOT persisted
 Parameter *visibility* follows the same split. Verified on macOS 26.6.1:
 
 ```text
-Switch(.widgetFamily)          works — the family is fixed when the editor opens,
-                               so slot counts can be 3 / 10 / 20 per family
+Switch(.widgetFamily)          works, but see the Extra Large defect below
 Switch(\.$someParameter)       inert — the summary never re-evaluates
 When(\.$someParameter, ...)    inert, including after Done and reopening
 ```
 
 A configuration surface therefore cannot reveal or hide controls in response to
 a value the user just chose. Anything conditional must key off the widget family.
+
+**The editor reports `.systemLarge` for a `systemExtraLarge` widget.** Measured on
+macOS 26.6.1 by giving each case a distinct set of slot parameters and reading
+back which appeared:
+
+```text
+Medium widget       Case(.systemMedium)        correct
+Large widget        Case(.systemLarge)         correct
+Extra Large widget  Case(.systemLarge)         wrong
+```
+
+`Case(.systemExtraLarge)` is never selected, and neither is `DefaultCase` — an
+Extra Large widget renders whatever `Case(.systemLarge)` declares, and reversing
+the declared order inside the Extra Large case changed nothing. The widget body
+is unaffected: `context.family` on the timeline side is correct, and Extra Large
+renders twenty rows.
+
+Extra Large therefore reaches its twenty slots only if the Large case carries
+them. Both `Case(.systemLarge)` and `DefaultCase` declare twenty so the result
+does not depend on the exact shape of the quirk. The cost is that a Large widget
+also shows twenty slots; `RawWidgetConfiguration.effectiveRowLimit` clamps to the
+family capacity, so the extra slots are stored and ignored rather than rendered.
+Nothing in the API can hide them, because the only working discriminator is the
+family value and it does not distinguish these two families.
+
+An earlier revision of this decision claimed slot counts could be 3 / 10 / 20 per
+family. That was generalized from Medium and Large without ever confirming twenty
+on Extra Large, and it was wrong.
 
 Metadata registration is not the cause: `extract.actionsdata` contained the entity, both
 enums, and every parameter, including `defaultQueryForEntity: true`.

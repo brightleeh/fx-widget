@@ -95,6 +95,20 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
     // Switch(\.$parameter) and When(...) were both verified inert — but the
     // widget family is fixed when the editor opens, so the slot count follows
     // the family capacity (D-022).
+    // Parameter visibility cannot follow a parameter *value* in this editor —
+    // Switch(\.$parameter) and When(...) were both verified inert (D-039) — so
+    // the slot count follows the widget family.
+    //
+    // Measured on macOS 26.6.1: the editor reports `.systemLarge` for a
+    // `systemExtraLarge` widget. `Case(.systemExtraLarge)` is never selected and
+    // neither is `DefaultCase`; an Extra Large widget renders whatever
+    // `Case(.systemLarge)` declares. Medium and Large themselves map correctly.
+    //
+    // Extra Large therefore only reaches its twenty slots if the Large case
+    // carries them, so both that case and the default declare twenty rather than
+    // relying on the exact shape of the quirk. A Large widget shows slots it
+    // cannot render; `RawWidgetConfiguration.effectiveRowLimit` clamps to the
+    // family capacity, so those slots are stored and ignored, never rendered.
     static var parameterSummary: some ParameterSummary {
         Switch(.widgetFamily) {
             Case(.systemMedium) {
@@ -124,6 +138,16 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
                     \.$slot8
                     \.$slot9
                     \.$slot10
+                    \.$slot11
+                    \.$slot12
+                    \.$slot13
+                    \.$slot14
+                    \.$slot15
+                    \.$slot16
+                    \.$slot17
+                    \.$slot18
+                    \.$slot19
+                    \.$slot20
                 }
             }
             DefaultCase {

@@ -202,7 +202,8 @@ The previous reference currency is never inserted into membership (D-010, D-039:
 
 - Configure via the standard macOS widget edit flow.
 - Configuration parameters must be `Bool` or `String` + `DynamicOptionsProvider`. `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are **not committed** on Done (D-039). Do not reintroduce them.
-- Parameters are Language, Currency Name, Reference Currency, Quote Currency Count, and per-row Quote Currency slots (3/10/20 by family).
+- Parameters are Language, Currency Name, Reference Currency, Quote Currency Count, and per-row Quote Currency slots.
+- The editor exposes 3 slots for Medium and 20 for every other family. It reports `.systemLarge` for an Extra Large widget, so Large and Extra Large cannot be told apart there (D-039). Rendering still honours the family capacity, so a Large widget stores and ignores slots 11-20.
 - Currencies come from the dynamic provider-supported catalog.
 - Picker titles carry the ISO code first so ordering and menu type-ahead stay stable across UI languages.
 - Currency Name is default-on and renders the localized currency name inline after the ISO code on every supported family. Country/region names are not a separate setting.

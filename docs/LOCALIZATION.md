@@ -59,6 +59,22 @@ without changing the domain model.
 
 A separate country/region-name setting is not exposed. `Currency Name` is one default-on display setting. When enabled, append a safe localized representative region and compact localized unit name inline after the ISO code on every family, for example `미국 · 달러` or `일본 · 엔`. Use Foundation localization and localized word segmentation to remove the duplicated country qualifier from the unit part; the smaller supporting label scales or truncates before numeric data.
 
+Which word carries the unit depends on the language's head position, and getting it wrong produces a label that looks plausible but is wrong:
+
+```text
+head-final    en  US Dollar              → Dollar     last word
+              de  US-Dollar              → Dollar
+              ko  미국 달러화              → 달러        (also strips the 화 suffix)
+              ja  アメリカドル             → ドル
+
+head-initial  es  dólar estadounidense   → dólar      first word
+              fr  dollar des États-Unis  → dollar
+              it  dollaro statunitense   → dollaro
+              pt  dólar americano        → dólar
+```
+
+Taking the last word in a head-initial language yields the nationality adjective — and French collapses to `Unis`, the tail of `États-Unis`. `CurrencyPresentationMetadata` keeps a verified set of head-initial language codes. Because `System` follows whatever language the Mac runs, that set is not limited to the languages listed in §5, but a code belongs in it only after its Foundation output has been checked.
+
 ## 4. UI Language vs Region
 
 Treat these separately.
@@ -80,17 +96,37 @@ Examples:
 
 ## 5. Supported Languages
 
-Architecture must allow languages to be added cheaply. Adding one means a new `WidgetLanguage` case, its `displayLocale`, and the String Catalog translations; nothing structural changes.
+Architecture must allow languages to be added cheaply. Adding one means a new `WidgetLanguage` case with its BCP 47 `languageTag`, the tag in the project's `knownRegions`, and the String Catalog translations; nothing structural changes.
 
-The first implementation may start with:
+Supported:
 
-- Korean
-- English
-- Japanese
+```text
+System        follows the system language
+English       en
+Deutsch       de
+Español       es
+Français      fr
+Italiano      it
+日本語         ja
+한국어         ko
+Português (Brasil)  pt-BR
+简体中文       zh-Hans
+繁體中文       zh-Hant
+```
 
-Adding Simplified Chinese, Traditional Chinese, German, French, Spanish, etc. should require localization resources, not domain changes.
+`System` and `English` lead the picker; every other language follows in ascending BCP 47 tag order. Ordering by speaker count, market size, or the developer's own language would read as arbitrary or partial to most users. The tag is neutral, stable, and identical no matter who is looking.
+
+Picker titles are the language's own endonym, matching macOS System Settings. They are not translated, so a user can find their language without already reading the current UI language.
+
+`knownRegions` must list every tag. Without it the String Catalog compiles no `.lproj` for that language and `WidgetLanguage.localizationBundle` falls back to `.main`, which renders English while the setting appears to have been accepted. Verify a new language by confirming its `.lproj` exists in the built `.appex`, not only that the build succeeded.
+
+Only the widget's own copy is covered here. Currency, region, and language names come from Foundation and follow the locale automatically, so most rendered text needs no translation resource at all.
 
 Do not make the list above a hard product ceiling.
+
+### Translation provenance
+
+The `en`, `ko`, and `ja` strings are `translated`. The seven languages added alongside them are machine-produced and carry `state: "needs_review"` in the String Catalog, because no speaker of those languages has reviewed them. Promote an entry to `translated` only after a human check; Xcode's catalog editor lists what is still outstanding.
 
 ## 6. Flags Are Not Localization
 
@@ -149,7 +185,7 @@ Test at least:
 - Korean
 - English
 - Japanese
-
-Also test one language with longer currency labels (German or French).
+- German, whose compound currency labels are the longest of the supported set
+- Simplified or Traditional Chinese, whose labels are the shortest and whose glyphs set a different baseline
 
 The default row and default-on combined region/currency label should remain stable across languages.

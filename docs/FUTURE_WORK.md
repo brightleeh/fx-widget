@@ -2,10 +2,14 @@
 
 Pending work only. Verified platform rules are in D-039/D-040 and coding constraints in `AGENTS.md`.
 
-## 1. Additional UI languages
+## 1. Review the machine-produced translations
 
-The widget ships English, Korean, and Japanese. `WidgetLanguage` and the String Catalog take a new
-language without structural change: add the case, its `displayLocale`, and the translations.
+The widget ships ten languages. `en`, `ko`, and `ja` are reviewed; `de`, `es`, `fr`, `it`, `pt-BR`,
+`zh-Hans`, and `zh-Hant` are machine-produced and marked `needs_review` in the String Catalog. They
+need a speaker's pass before being promoted to `translated`.
+
+Adding an eleventh language stays cheap and is documented in `LOCALIZATION.md`: a `WidgetLanguage`
+case with its BCP 47 tag, the tag in `knownRegions`, and the translations.
 
 The widget editor itself always follows the system language. The Language setting governs the
 widget's own content only, because the editor is system UI.

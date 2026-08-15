@@ -92,14 +92,31 @@ public enum CurrencyPresentationMetadata {
             if !word.isEmpty { words.append(word) }
         }
 
-        guard var unitName = words.last else { return fullName }
-        if locale.language.languageCode?.identifier == "ko",
-           unitName.count > 1,
-           unitName.hasSuffix("화") {
+        let languageCode = locale.language.languageCode?.identifier
+        guard var unitName = headInitialLanguageCodes.contains(languageCode ?? "")
+            ? words.first
+            : words.last
+        else { return fullName }
+
+        if languageCode == "ko", unitName.count > 1, unitName.hasSuffix("화") {
             unitName.removeLast()
         }
         return unitName
     }
+
+    /// Languages whose currency names put the unit noun first and the country
+    /// qualifier after it, so the *first* word is the unit.
+    ///
+    /// English, German, Korean, and Japanese are head-final — "US Dollar",
+    /// "미국 달러화", "アメリカドル" — and the last word is the unit. Romance
+    /// languages invert that: "dólar estadounidense", "dollaro statunitense".
+    /// Taking the last word there yields the nationality adjective, and French
+    /// "dollar des États-Unis" degrades further to "Unis".
+    ///
+    /// Only codes verified against Foundation's output belong here. A new
+    /// head-initial language must be checked before being added, because a
+    /// wrong guess produces a plausible-looking but incorrect label.
+    private static let headInitialLanguageCodes: Set<String> = ["es", "fr", "it", "pt"]
 
     /// Combines a safe localized representative region with the compact
     /// localized currency-unit name. Ambiguous currencies without a safe

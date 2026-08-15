@@ -11,7 +11,7 @@ Do not attempt the entire product in one pass.
 - Milestone 4 is complete as a development/reference integration: the widget runtime now uses a keyless, configurable Frankfurter v2 adapter; provider DTO/client code is isolated from the domain and UI; supported currencies are discovered dynamically; and D-030's current/previous common-date search, explicit common-date fetch, identity leg, cross-rate normalization, date-only basis, atomic failure, and provider-specific daily/24-hour automatic eligibility are implemented. Recorded HTTP fixtures and coordinator/cache tests bring the full Xcode suite to 67 passing tests.
 - Milestone 5 is complete: the App Intent catalog is the active Frankfurter capability set intersected with modern Foundation ISO currencies; safe representative regions and neutral no-flag fallback are centralized; an official BIS SDMX D11.3 source validates the exact final-table dimension slice; and a separate versioned extension-owned metadata store caches provider catalogs plus final ranking/check metadata. Membership derivation takes the reference currency, BIS ranking, and fixed family capacity. Fixture-only BIS tests and cache-corruption validation brought the full Xcode suite to 87 passing tests.
 - Milestone 6 is complete. Widget configuration is scalar-only: `Bool` and `String` + `DynamicOptionsProvider`. Installed-macOS measurement established that `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are never committed, and that parameter visibility can follow the widget family but not a parameter value (D-039). Configuration is Language, Currency Name, Reference Currency, Quote Currency Count, and one quote slot per row (3/10/20 by family); slot N pins row N while empty slots follow Default Order for the active reference. D-010's in-place swap was removed as unimplementable, and the cold-start reload policy is D-040. Columns, Text Size, and separate Country Names remain removed; `Currency Name` defaults to On.
-- Milestone 7 (localization) is partially delivered: English, Korean, and Japanese, plus a per-widget UI language covering names, labels, and dates while numeric separators follow the system region.
+- Milestone 7 (localization) is delivered for ten languages, plus a per-widget UI language covering names, labels, and dates while numeric separators follow the system region. Seven of the ten are machine-produced and marked `needs_review`.
 - No production provider has been selected. Frankfurter remains a development/reference daily-rate adapter under D-025; production-provider freshness and acceptance remain Milestone 9 work.
 
 ## Milestone 0 — Project Skeleton
@@ -199,11 +199,7 @@ Columns, Text Size, and separate Country Names remain removed; `Currency Name` d
 
 ## Milestone 7 — Localization
 
-Add/verify at minimum:
-
-- Korean
-- English
-- Japanese
+Add/verify at minimum the supported set listed in `LOCALIZATION.md`: English, German, Spanish, French, Italian, Japanese, Korean, Brazilian Portuguese, Simplified Chinese, and Traditional Chinese.
 
 Verify UI language and region/reference default are independent.
 

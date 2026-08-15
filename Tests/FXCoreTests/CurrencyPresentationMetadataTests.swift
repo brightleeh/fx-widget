@@ -76,6 +76,42 @@ struct CurrencyPresentationMetadataTests {
         )
     }
 
+    @Test func compactCurrencyNameTakesTheUnitNounInHeadInitialLanguages() {
+        // Romance currency names are unit-first: taking the last word returns
+        // the nationality adjective instead, and French "dollar des États-Unis"
+        // degrades to "Unis".
+        let expected: [(String, String)] = [
+            ("es", "dólar"),
+            ("fr", "dollar"),
+            ("it", "dollaro"),
+            ("pt_BR", "Dólar")
+        ]
+
+        for (identifier, unit) in expected {
+            #expect(
+                CurrencyPresentationMetadata.compactLocalizedCurrencyName(
+                    for: code("USD"),
+                    locale: Locale(identifier: identifier)
+                ) == unit
+            )
+        }
+    }
+
+    @Test func compactCurrencyNameStillTakesTheLastWordInHeadFinalLanguages() {
+        #expect(
+            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
+                for: code("USD"),
+                locale: Locale(identifier: "en_US")
+            ) == "Dollar"
+        )
+        #expect(
+            CurrencyPresentationMetadata.compactLocalizedCurrencyName(
+                for: code("USD"),
+                locale: Locale(identifier: "de_DE")
+            ) == "Dollar"
+        )
+    }
+
     @Test func localizedRegionAndCurrencyNameRestoresTheCombinedLabel() {
         let locale = Locale(identifier: "ko_KR")
 

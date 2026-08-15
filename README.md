@@ -57,7 +57,9 @@ For example, with KRW as the reference currency, `USD 1,415.22` means `1 USD = 1
 Control-click a widget and select `Edit fx-widget`:
 
 ```text
-Language               System / English / 한국어 / 日本語
+Language               System / English / Deutsch / Español / Français /
+                       Italiano / 日本語 / 한국어 / Português (Brasil) /
+                       简体中文 / 繁體中文
 Currency Name          on
 Reference Currency     KRW
 Quote Currency Count   Auto (the family capacity) or 1…20

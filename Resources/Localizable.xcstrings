@@ -3,10 +3,34 @@
   "strings": {
     "%@ rate %@ %@; change %@": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ Kurs %@ %@; Veränderung %@"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ rate %@ %@; change %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ tipo de cambio %@ %@; variación %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ taux %@ %@ ; variation %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ tasso %@ %@; variazione %@"
           }
         },
         "ja": {
@@ -20,16 +44,58 @@
             "state": "translated",
             "value": "%@ 환율 %@ %@, 변동 %@"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ taxa %@ %@; variação %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 汇率 %@ %@；变动 %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 匯率 %@ %@；變動 %@"
+          }
         }
       }
     },
     "%lld additional currencies": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld weitere Währungen"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld additional currencies"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld monedas adicionales"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld devises supplémentaires"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld valute aggiuntive"
           }
         },
         "ja": {
@@ -43,14 +109,50 @@
             "state": "translated",
             "value": "추가 통화 %lld개"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%lld moedas adicionais"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "另有 %lld 种货币"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "另有 %lld 種貨幣"
+          }
         }
       }
     },
     "+%@": {
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
+            "value": "+%@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "+%@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "+%@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
             "value": "+%@"
           }
         },
@@ -59,16 +161,64 @@
             "state": "translated",
             "value": "+%@"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%@"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "+%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "+%@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "+%@"
+          }
         }
       }
     },
     "A glanceable exchange-rate board.": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wechselkurse auf einen Blick."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "A glanceable exchange-rate board."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tipos de cambio de un vistazo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Les taux de change en un coup d’œil."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tassi di cambio a colpo d’occhio."
           }
         },
         "ja": {
@@ -82,16 +232,58 @@
             "state": "translated",
             "value": "한눈에 확인하는 환율 보드입니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Taxas de câmbio num relance."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "一目了然的汇率面板。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "一目瞭然的匯率面板。"
+          }
         }
       }
     },
     "As of %@": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Stand: %@"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "As of %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "A fecha de %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Au %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Al %@"
           }
         },
         "ja": {
@@ -105,15 +297,57 @@
             "state": "translated",
             "value": "%@ 기준"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Em %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "截至 %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "截至 %@"
+          }
         }
       }
     },
     "Configure each widget from the desktop’s Edit Widget menu.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Konfiguriere jedes Widget über das Menü „Widget bearbeiten“ auf dem Schreibtisch."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Configure each widget from the desktop’s Edit Widget menu."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configura cada widget desde el menú «Editar widget» del escritorio."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configurez chaque widget depuis le menu « Modifier le widget » du bureau."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configura ogni widget dal menu «Modifica widget» della scrivania."
           }
         },
         "ja": {
@@ -127,16 +361,58 @@
             "state": "translated",
             "value": "데스크톱의 위젯 편집 메뉴에서 각 위젯을 설정할 수 있습니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configure cada widget pelo menu “Editar Widget” da mesa."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "在桌面的“编辑小组件”菜单中配置每个小组件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "在桌面的「編輯小工具」選單中設定每個小工具。"
+          }
         }
       }
     },
     "Configure the currencies shown by this FX board.": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lege fest, welche Währungen dieses FX-Board anzeigt."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Configure the currencies shown by this FX board."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configura las monedas que muestra este panel de divisas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Choisissez les devises affichées par ce tableau des changes."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Scegli le valute mostrate da questo pannello valute."
           }
         },
         "ja": {
@@ -150,16 +426,58 @@
             "state": "translated",
             "value": "이 FX 보드에 표시할 통화를 설정합니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Configure as moedas exibidas neste painel de câmbio."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "设置此汇率面板显示的货币。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "設定此匯率面板顯示的貨幣。"
+          }
         }
       }
     },
     "Currencies": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Währungen"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Currencies"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Monedas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devises"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valute"
           }
         },
         "ja": {
@@ -172,6 +490,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "통화"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moedas"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "货币"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "貨幣"
           }
         }
       }
@@ -179,10 +515,34 @@
     "Currency": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Währung"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Currency"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta"
           }
         },
         "ja": {
@@ -196,15 +556,57 @@
             "state": "translated",
             "value": "통화"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "货币"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "貨幣"
+          }
         }
       }
     },
     "Currency Name": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Währungsname"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Currency Name"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nombre de la moneda"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nom de la devise"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nome valuta"
           }
         },
         "ja": {
@@ -218,15 +620,57 @@
             "state": "translated",
             "value": "통화명"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nome da moeda"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "货币名称"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "貨幣名稱"
+          }
         }
       }
     },
     "Default Order": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Standardreihenfolge"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Default Order"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Orden predeterminado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ordre par défaut"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ordine predefinito"
           }
         },
         "ja": {
@@ -240,15 +684,57 @@
             "state": "translated",
             "value": "기본 순서"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ordem padrão"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "默认顺序"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "預設順序"
+          }
         }
       }
     },
     "Exchange-rate data is unavailable.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Keine Wechselkursdaten verfügbar."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Exchange-rate data is unavailable."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "No hay datos de tipos de cambio disponibles."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Données de taux de change indisponibles."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dati sui tassi di cambio non disponibili."
           }
         },
         "ja": {
@@ -262,16 +748,58 @@
             "state": "translated",
             "value": "환율 데이터를 사용할 수 없습니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Dados de câmbio indisponíveis."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "无法获取汇率数据。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "無法取得匯率資料。"
+          }
         }
       }
     },
     "Fetch the latest available exchange-rate snapshot.": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Ruft die neueste verfügbare Wechselkurs-Momentaufnahme ab."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Fetch the latest available exchange-rate snapshot."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Obtiene la última instantánea de tipos de cambio disponible."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Récupère le dernier relevé de taux de change disponible."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Recupera l’ultima rilevazione di tassi di cambio disponibile."
           }
         },
         "ja": {
@@ -285,15 +813,63 @@
             "state": "translated",
             "value": "현재 제공되는 최신 환율 스냅샷을 가져옵니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Busca o último instantâneo de taxas de câmbio disponível."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "获取最新可用的汇率快照。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "取得最新可用的匯率快照。"
+          }
         }
       }
     },
     "FX · %@": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Wechselkurse · %@"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Exchange Rates · %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tipos de cambio · %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Taux de change · %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tassi di cambio · %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "為替レート · %@"
           }
         },
         "ko": {
@@ -302,20 +878,56 @@
             "value": "환율 · %@"
           }
         },
-        "ja": {
+        "pt-BR": {
           "stringUnit": {
-            "state": "translated",
-            "value": "為替レート · %@"
+            "state": "needs_review",
+            "value": "Taxas de câmbio · %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "汇率 · %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "匯率 · %@"
           }
         }
       }
     },
     "FX board settings are stored per widget instance.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "FX-Board-Einstellungen werden pro Widget gespeichert."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "FX board settings are stored per widget instance."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Los ajustes del panel de divisas se guardan por widget."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Les réglages du tableau des changes sont enregistrés par widget."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Le impostazioni del pannello valute sono salvate per singolo widget."
           }
         },
         "ja": {
@@ -329,14 +941,56 @@
             "state": "translated",
             "value": "FX 보드 설정은 위젯 인스턴스별로 저장됩니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Os ajustes do painel de câmbio são salvos por widget."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "汇率面板设置按小组件分别保存。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "匯率面板設定會依小工具分別儲存。"
+          }
         }
       }
     },
     "fx-widget": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
+            "value": "fx-widget"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
             "value": "fx-widget"
           }
         },
@@ -351,16 +1005,58 @@
             "state": "translated",
             "value": "fx-widget"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "fx-widget"
+          }
         }
       }
     },
     "Reference Currency": {
       "extractionState": "stale",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Referenzwährung"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Reference Currency"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda de referencia"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise de référence"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta di riferimento"
           }
         },
         "ja": {
@@ -374,15 +1070,57 @@
             "state": "translated",
             "value": "기준 통화"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda de referência"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "基准货币"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "基準貨幣"
+          }
         }
       }
     },
     "Refresh": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aktualisieren"
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Refresh"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Actualizar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Actualiser"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aggiorna"
           }
         },
         "ja": {
@@ -396,15 +1134,57 @@
             "state": "translated",
             "value": "새로고침"
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Atualizar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "刷新"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "重新整理"
+          }
         }
       }
     },
     "Refresh failed. Showing last successful rates.": {
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aktualisierung fehlgeschlagen. Es werden die zuletzt geladenen Kurse angezeigt."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Refresh failed. Showing last successful rates."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Error al actualizar. Se muestran los últimos tipos obtenidos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Échec de l’actualisation. Affichage des derniers taux obtenus."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aggiornamento non riuscito. Vengono mostrati gli ultimi tassi disponibili."
           }
         },
         "ja": {
@@ -418,21 +1198,81 @@
             "state": "translated",
             "value": "새로고침에 실패했습니다. 마지막으로 가져온 환율을 표시합니다."
           }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Falha na atualização. Exibindo as últimas taxas obtidas."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "刷新失败，显示上次成功获取的汇率。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "重新整理失敗，顯示上次成功取得的匯率。"
+          }
         }
       }
     },
     "Updated %@": {
       "extractionState": "manual",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aktualisiert: %@"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Actualizado: %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Actualisé : %@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Aggiornato: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 更新"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ 갱신"
           }
         },
-        "ja": {
+        "pt-BR": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
+            "value": "Atualizado: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 更新"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
             "value": "%@ 更新"
           }
         }
@@ -441,10 +1281,28 @@
     "%@ rate unavailable": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "%@ 환율 없음"
+            "state": "needs_review",
+            "value": "Kurs für %@ nicht verfügbar"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tipo de %@ no disponible"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Taux %@ indisponible"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Tasso %@ non disponibile"
           }
         },
         "ja": {
@@ -452,16 +1310,58 @@
             "state": "translated",
             "value": "%@ レートなし"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 환율 없음"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Taxa de %@ indisponível"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 汇率不可用"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ 匯率無法取得"
+          }
         }
       }
     },
     "Language": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "언어"
+            "state": "needs_review",
+            "value": "Sprache"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Idioma"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Langue"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Lingua"
           }
         },
         "ja": {
@@ -469,16 +1369,58 @@
             "state": "translated",
             "value": "言語"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "언어"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Idioma"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "语言"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "語言"
+          }
         }
       }
     },
     "Quote Currency Count": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 수"
+            "state": "needs_review",
+            "value": "Anzahl der Kurswährungen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Número de monedas cotizadas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Nombre de devises cotées"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Numero di valute quotate"
           }
         },
         "ja": {
@@ -486,16 +1428,58 @@
             "state": "translated",
             "value": "相手通貨の数"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 수"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Número de moedas cotadas"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币数量"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣數量"
+          }
         }
       }
     },
     "Quote Currency 1": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 1"
+            "state": "needs_review",
+            "value": "Kurswährung 1"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 1"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 1"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 1"
           }
         },
         "ja": {
@@ -503,16 +1487,58 @@
             "state": "translated",
             "value": "相手通貨 1"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 1"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 1"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 1"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 1"
+          }
         }
       }
     },
     "Quote Currency 2": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 2"
+            "state": "needs_review",
+            "value": "Kurswährung 2"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 2"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 2"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 2"
           }
         },
         "ja": {
@@ -520,16 +1546,58 @@
             "state": "translated",
             "value": "相手通貨 2"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 2"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 2"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 2"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 2"
+          }
         }
       }
     },
     "Quote Currency 3": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 3"
+            "state": "needs_review",
+            "value": "Kurswährung 3"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 3"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 3"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 3"
           }
         },
         "ja": {
@@ -537,16 +1605,58 @@
             "state": "translated",
             "value": "相手通貨 3"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 3"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 3"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 3"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 3"
+          }
         }
       }
     },
     "Quote Currency 4": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 4"
+            "state": "needs_review",
+            "value": "Kurswährung 4"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 4"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 4"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 4"
           }
         },
         "ja": {
@@ -554,16 +1664,58 @@
             "state": "translated",
             "value": "相手通貨 4"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 4"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 4"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 4"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 4"
+          }
         }
       }
     },
     "Quote Currency 5": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 5"
+            "state": "needs_review",
+            "value": "Kurswährung 5"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 5"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 5"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 5"
           }
         },
         "ja": {
@@ -571,16 +1723,58 @@
             "state": "translated",
             "value": "相手通貨 5"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 5"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 5"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 5"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 5"
+          }
         }
       }
     },
     "Quote Currency 6": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 6"
+            "state": "needs_review",
+            "value": "Kurswährung 6"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 6"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 6"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 6"
           }
         },
         "ja": {
@@ -588,16 +1782,58 @@
             "state": "translated",
             "value": "相手通貨 6"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 6"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 6"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 6"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 6"
+          }
         }
       }
     },
     "Quote Currency 7": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 7"
+            "state": "needs_review",
+            "value": "Kurswährung 7"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 7"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 7"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 7"
           }
         },
         "ja": {
@@ -605,16 +1841,58 @@
             "state": "translated",
             "value": "相手通貨 7"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 7"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 7"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 7"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 7"
+          }
         }
       }
     },
     "Quote Currency 8": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 8"
+            "state": "needs_review",
+            "value": "Kurswährung 8"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 8"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 8"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 8"
           }
         },
         "ja": {
@@ -622,16 +1900,58 @@
             "state": "translated",
             "value": "相手通貨 8"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 8"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 8"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 8"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 8"
+          }
         }
       }
     },
     "Quote Currency 9": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 9"
+            "state": "needs_review",
+            "value": "Kurswährung 9"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 9"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 9"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 9"
           }
         },
         "ja": {
@@ -639,16 +1959,58 @@
             "state": "translated",
             "value": "相手通貨 9"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 9"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 9"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 9"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 9"
+          }
         }
       }
     },
     "Quote Currency 10": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 10"
+            "state": "needs_review",
+            "value": "Kurswährung 10"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 10"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 10"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 10"
           }
         },
         "ja": {
@@ -656,16 +2018,58 @@
             "state": "translated",
             "value": "相手通貨 10"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 10"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 10"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 10"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 10"
+          }
         }
       }
     },
     "Quote Currency 11": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 11"
+            "state": "needs_review",
+            "value": "Kurswährung 11"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 11"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 11"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 11"
           }
         },
         "ja": {
@@ -673,16 +2077,58 @@
             "state": "translated",
             "value": "相手通貨 11"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 11"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 11"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 11"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 11"
+          }
         }
       }
     },
     "Quote Currency 12": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 12"
+            "state": "needs_review",
+            "value": "Kurswährung 12"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 12"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 12"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 12"
           }
         },
         "ja": {
@@ -690,16 +2136,58 @@
             "state": "translated",
             "value": "相手通貨 12"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 12"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 12"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 12"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 12"
+          }
         }
       }
     },
     "Quote Currency 13": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 13"
+            "state": "needs_review",
+            "value": "Kurswährung 13"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 13"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 13"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 13"
           }
         },
         "ja": {
@@ -707,16 +2195,58 @@
             "state": "translated",
             "value": "相手通貨 13"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 13"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 13"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 13"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 13"
+          }
         }
       }
     },
     "Quote Currency 14": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 14"
+            "state": "needs_review",
+            "value": "Kurswährung 14"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 14"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 14"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 14"
           }
         },
         "ja": {
@@ -724,16 +2254,58 @@
             "state": "translated",
             "value": "相手通貨 14"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 14"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 14"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 14"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 14"
+          }
         }
       }
     },
     "Quote Currency 15": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 15"
+            "state": "needs_review",
+            "value": "Kurswährung 15"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 15"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 15"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 15"
           }
         },
         "ja": {
@@ -741,16 +2313,58 @@
             "state": "translated",
             "value": "相手通貨 15"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 15"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 15"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 15"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 15"
+          }
         }
       }
     },
     "Quote Currency 16": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 16"
+            "state": "needs_review",
+            "value": "Kurswährung 16"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 16"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 16"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 16"
           }
         },
         "ja": {
@@ -758,16 +2372,58 @@
             "state": "translated",
             "value": "相手通貨 16"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 16"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 16"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 16"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 16"
+          }
         }
       }
     },
     "Quote Currency 17": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 17"
+            "state": "needs_review",
+            "value": "Kurswährung 17"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 17"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 17"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 17"
           }
         },
         "ja": {
@@ -775,16 +2431,58 @@
             "state": "translated",
             "value": "相手通貨 17"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 17"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 17"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 17"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 17"
+          }
         }
       }
     },
     "Quote Currency 18": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 18"
+            "state": "needs_review",
+            "value": "Kurswährung 18"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 18"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 18"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 18"
           }
         },
         "ja": {
@@ -792,16 +2490,58 @@
             "state": "translated",
             "value": "相手通貨 18"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 18"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 18"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 18"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 18"
+          }
         }
       }
     },
     "Quote Currency 19": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 19"
+            "state": "needs_review",
+            "value": "Kurswährung 19"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 19"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 19"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 19"
           }
         },
         "ja": {
@@ -809,16 +2549,58 @@
             "state": "translated",
             "value": "相手通貨 19"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 19"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 19"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 19"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 19"
+          }
         }
       }
     },
     "Quote Currency 20": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "상대 통화 20"
+            "state": "needs_review",
+            "value": "Kurswährung 20"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moneda cotizada 20"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Devise cotée 20"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Valuta quotata 20"
           }
         },
         "ja": {
@@ -826,21 +2608,87 @@
             "state": "translated",
             "value": "相手通貨 20"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대 통화 20"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Moeda cotada 20"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "报价货币 20"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "報價貨幣 20"
+          }
         }
       }
     },
     "Auto": {
       "extractionState": "manual",
       "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Automatisch"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Automático"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Automatique"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Automatico"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自動"
+          }
+        },
         "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "자동"
           }
         },
-        "ja": {
+        "pt-BR": {
           "stringUnit": {
-            "state": "translated",
+            "state": "needs_review",
+            "value": "Automático"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "自动"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
             "value": "自動"
           }
         }
@@ -849,16 +2697,58 @@
     "System": {
       "extractionState": "manual",
       "localizations": {
-        "ko": {
+        "de": {
           "stringUnit": {
-            "state": "translated",
-            "value": "시스템"
+            "state": "needs_review",
+            "value": "System"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sistema"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Système"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sistema"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "システム"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시스템"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Sistema"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "系统"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "系統"
           }
         }
       }

@@ -2,19 +2,7 @@
 
 Pending work only. Verified platform rules are in D-039/D-040 and coding constraints in `AGENTS.md`.
 
-## 1. Review the machine-produced translations
-
-The widget ships ten languages. `en`, `ko`, and `ja` are reviewed; `de`, `es`, `fr`, `it`, `pt-BR`,
-`zh-Hans`, and `zh-Hant` are machine-produced and marked `needs_review` in the String Catalog. They
-need a speaker's pass before being promoted to `translated`.
-
-Adding an eleventh language stays cheap and is documented in `LOCALIZATION.md`: a `WidgetLanguage`
-case with its BCP 47 tag, the tag in `knownRegions`, and the translations.
-
-The widget editor itself always follows the system language. The Language setting governs the
-widget's own content only, because the editor is system UI.
-
-## 2. Host app as a widget companion
+## 1. Host app as a widget companion
 
 `ContentView` is still a placeholder that only says where to configure widgets. Target shape:
 
@@ -25,11 +13,11 @@ widget's own content only, because the editor is system UI.
 │                                              │
 │ ┌──────────────────────────────────────────┐ │
 │ │ Exchange Rates · KRW               ↻     │ │
-│ │ 🇺🇸 USD  United States · Dollar           │ │
+│ │ 🇺🇸 USD  US Dollar                        │ │
 │ │                          1,418.10 ▲ 8.60 │ │
-│ │ 🇪🇺 EUR  European Union · Euro            │ │
+│ │ 🇪🇺 EUR  Euro                             │ │
 │ │                          1,643.20 ▲ 4.20 │ │
-│ │ 🇯🇵 JPY  Japan · Yen                      │ │
+│ │ 🇯🇵 JPY  Japanese Yen                     │ │
 │ │                              8.93 ▼ 0.06 │ │
 │ └──────────────────────────────────────────┘ │
 │                                              │
@@ -73,6 +61,17 @@ of a title and a sentence.
   App Group and a new architecture decision. A line describing the *app's* own fetch is fine, but it
   must be labelled as such rather than implying it reflects the widget.
 - **Editing configuration from the app** is blocked for the same reason.
+
+## 2. Recheck the Extra Large family reporting
+
+The widget editor reports `.systemLarge` for a `systemExtraLarge` widget (D-039), so
+`Case(.systemExtraLarge)` never runs and both families share one parameter list. Extra Large only
+reaches twenty slots because the Large case declares twenty, which means a Large widget shows ten
+slots it cannot render.
+
+Recheck on each macOS release with the marker method that found it: give each case a distinct set
+of slot parameters and read back which appear. If the family is ever reported correctly, restore
+`Case(.systemLarge)` to ten slots and move the twenty into `Case(.systemExtraLarge)`.
 
 ## 3. Production provider selection
 

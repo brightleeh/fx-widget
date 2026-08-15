@@ -142,7 +142,7 @@ Required checks:
 16. Monospaced ISO codes give every following Currency Name label the same starting position.
 17. A fresh widget shows one empty slot per row for its family (Medium 3, Large 10, Extra Large 20) and renders the BIS-derived Default Order; setting slot N moves only row N. Configuration parameters are `Bool` or `String` + `DynamicOptionsProvider` only (D-039).
 18. Completing an edit with a different reference currency delivers that reference to the timeline provider, constructs a distinct `RateRequestKey`, and fetches/loads a snapshot normalized to it.
-19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. A missing untouched family collection reconstructs default membership from the active reference currency.
+19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. An untouched widget commits no slot at all, and membership is reconstructed from the active reference currency.
 20. A cold extension container can construct and return a timeline without waiting for provider-catalog discovery or a remote BIS ranking check; those metadata calls are not prerequisites for leaving the placeholder state.
 
 Exact capacity numbers must come from real WidgetKit preview validation.
@@ -323,15 +323,14 @@ Cases:
 - remove a BIS-default currency and add another provider-supported currency,
 - reference currency is not selectable as a quote row,
 - provider-unsupported currency is absent/unavailable,
-- adding a currency below capacity succeeds,
-- adding another currency at capacity is rejected,
 - no always-visible selected/max count is required by domain/config state,
 - fixed family capacities are 3, 10, and 20,
 - changing Currency Name preserves capacity,
-- a fresh installed widget renders BIS-derived Default Order and exposes one slot per row for its family (verified in the real macOS editor, not inferred from a unit test),
+- a fresh installed widget renders BIS-derived Default Order with no slot committed (verified in the real macOS editor, not inferred from a unit test),
+- the editor exposes 3 slots on Medium and 20 on Large and Extra Large, and an Extra Large widget can set slot 20 (D-039: the editor reports `.systemLarge` for Extra Large),
+- selecting `Auto` in a quote slot returns that row to Default Order, and in Reference Currency returns it to the regional default, neither reported as a resolution issue,
+- an unset parameter shows its own title in the editor rather than a raw stored identifier,
 - a currency the active provider does not publish renders as a dash while every other row still resolves,
-- a missing collection resolves to matching runtime defaults defensively, while an explicit empty collection remains empty,
-- an explicitly emptied collection remains empty and is not repopulated,
 - changing Reference Currency changes `RateRequestKey` identity and loads or requests rates normalized to the new reference,
 - changing family recomputes capacity,
 - reducing capacity never silently deletes existing membership,

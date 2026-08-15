@@ -110,9 +110,29 @@ Only the widget's own copy is covered here. Currency, region, and language names
 
 Do not make the list above a hard product ceiling.
 
-### Translation provenance
+### What `translated` means here
 
-The `en`, `ko`, and `ja` strings are `translated`. The seven languages added alongside them are machine-produced and carry `state: "needs_review"` in the String Catalog, because no speaker of those languages has reviewed them. Promote an entry to `translated` only after a human check; Xcode's catalog editor lists what is still outstanding.
+`translated` means a translation exists. It carries no claim about who produced it.
+
+```text
+translated      a string has a translation, machine-produced unless noted
+needs_review    reserved for a string a person is actually queued to look at
+```
+
+Machine translation is the default and the normal end state. Every string in this repository was
+produced that way, Korean and Japanese included, and none has been read by a speaker of its language
+— a screenshot proving a language renders says nothing about whether its wording is natural.
+
+Do not mark a whole language `needs_review` to express that uncertainty. Apple's state means work is
+queued, and marking hundreds of finished strings as outstanding makes Xcode's list useless while
+changing nothing. Uncertainty about provenance belongs in this section; `state` describes the string.
+
+A human pass is worth buying case by case, not as a blanket gate: when someone reports a phrase as
+wrong, or when a specific string carries more risk than the rest. Otherwise a wrong phrase is fixed
+in the patch that follows the report. Shipping an unverified translation is a smaller cost than
+shipping none, since the alternative is English for everyone.
+
+Anyone reading this who spots a bad phrase — corrections are welcome.
 
 ## 6. Flags Are Not Localization
 

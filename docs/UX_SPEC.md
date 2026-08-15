@@ -180,7 +180,7 @@ Configuration exposes one scalar picker per board row, backed by the dynamic pro
 
 The number of slots follows the family capacity (Medium 3, Large 10, Extra Large 20). `Quote Currency Count` reduces the rendered rows below that capacity but can never exceed it.
 
-Picker entries read `USD  United States · Dollar`: the ISO code comes first so ordering and menu type-ahead stay stable when the UI language changes. Free-text search is not available — it requires `AppEntity`, which the macOS widget editor does not persist (D-039).
+Picker entries read `USD  US Dollar`: the ISO code comes first so ordering and menu type-ahead stay stable when the UI language changes. Free-text search is not available — it requires `AppEntity`, which the macOS widget editor does not persist (D-039).
 
 Do not show an always-visible `selected / max` counter.
 

@@ -246,6 +246,8 @@ Use String Catalogs for app/widget UI copy.
 
 Currency codes remain ISO 4217 identifiers and are not translated.
 
+Translations are machine-produced by default and that is a finished state. Mark them `translated`; it means a translation exists, not that a person wrote or checked it. Reserve `needs_review` for a string someone is actually queued to look at — do not use it to express general uncertainty, which belongs in `LOCALIZATION.md`. A human pass is bought case by case, usually after a report, not as a gate on shipping a language.
+
 Country/region names are not independently configurable. When Currency Name is enabled, Foundation's localized currency name follows the ISO code. Do not recombine it with a separately looked-up region name or trim it by word segmentation; D-041 records why.
 
 The default widget shows the Currency Name label:

@@ -33,10 +33,10 @@ Frankfurter currently supplies runtime exchange-rate data, but it has not been s
 The default English-language row shape is similar to:
 
 ```text
-Exchange Rates · KRW  South Korea · Won                    ↻
-🇺🇸 USD United States · Dollar          1,415.22    ▼ 0.05
-🇪🇺 EUR European Union · Euro           1,634.79    ▼ 0.85
-🇯🇵 JPY Japan · Yen                         8.89    ▼ 0.01
+Exchange Rates · KRW  South Korean Won                     ↻
+🇺🇸 USD US Dollar                      1,415.22    ▼ 0.05
+🇪🇺 EUR Euro                           1,634.79    ▼ 0.85
+🇯🇵 JPY Japanese Yen                       8.89    ▼ 0.01
 As of Aug 14, 2026        Updated Aug 15, 2026 at 5:53 AM
 ```
 
@@ -61,10 +61,19 @@ Language               System / English / Deutsch / Español / Français /
                        Italiano / 日本語 / 한국어 / Português (Brasil) /
                        简体中文 / 繁體中文
 Currency Name          on
-Reference Currency     KRW
+Reference Currency     Auto (your region's currency) or any supported currency
 Quote Currency Count   Auto (the family capacity) or 1…20
-Quote Currency 1…N     one slot per row, 3 / 10 / 20 by family
+Quote Currency 1…N     one slot per row
 ```
+
+Every picker offers `Auto`, which is how a parameter goes back to its default. The editor has no
+reset action of its own and no API can write a widget's configuration, so this is the whole of it
+(D-039).
+
+The editor exposes 3 slots on Medium and 20 on both Large and Extra Large, because it reports
+`.systemLarge` for an Extra Large widget and the two cannot be told apart there. Rendering is
+unaffected and still honours the family capacity of 3, 10, and 20, so a Large widget stores and
+ignores slots 11-20.
 
 Slot N is row N. Setting it pins that currency to that row; leaving it empty fills the row from
 Default Order for the active reference currency, so changing the reference recalculates every
@@ -78,7 +87,7 @@ Every parameter is a scalar backed by a dynamic options list. `AppEntity`, `[App
 being committed, so they are not used; see D-039. Two consequences are visible to users:
 
 - the currency pickers have no free-text search, because search requires `AppEntity`. Entries read
-  `USD  United States · Dollar` with the ISO code first, and the menu supports type-ahead on the code;
+  `USD  US Dollar` with the ISO code first, and the menu supports type-ahead on the code;
 - the editor cannot show or hide controls in response to a value you just chose. Slot count follows
   the widget family, which is fixed when the editor opens.
 

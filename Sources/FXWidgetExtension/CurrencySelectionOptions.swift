@@ -8,9 +8,6 @@ private let optionsLog = Logger(
     category: "options"
 )
 
-/// D-007 extended from ordering to membership. The mode is an `AppEnum`, whose
-/// raw value is a scalar, because AppEntity-backed widget parameters were
-/// observed not to persist through the macOS widget editor.
 /// Per-widget UI language. `LOCALIZATION.md` keeps UI language separate from
 /// regional formatting, so this overrides names and labels only; grouping and
 /// decimal separators continue to follow the system region.

@@ -32,7 +32,7 @@ Do not change these without an explicit product decision:
 
 - Native macOS app.
 - Swift + SwiftUI + WidgetKit + App Intents + Foundation.
-- macOS 15 or later is the minimum target: interactive widgets need 14, and the runtime collection `@Parameter(default:)` overload needs 15 (D-001, D-039).
+- macOS 15 or later is the minimum target. No current API forces it now that the configuration is scalar, but D-039's editor behaviour was measured only on a recent macOS, so lowering it is a separate decision (D-001).
 - Layout is fixed by family: Medium is 3 rows by 1 column, Large is 10 rows by 1 column, and Extra Large is 10 rows by 2 columns.
 - **Default Order** is derived from the latest validated final BIS `OTC foreign exchange turnover by currency` ranking.
 - Do not hardcode a fixed currency list as Default Order.

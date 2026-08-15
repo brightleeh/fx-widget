@@ -201,24 +201,4 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
     func configurationCapacity(for family: WidgetFamilyCategory) -> Int {
         WidgetConfigurationSelectionPolicy.capacity(family: family)
     }
-
-    /// Runtime-derived default membership for the widget editor. Evaluated when
-    /// the parameter is declared, so it must not perform network I/O.
-    static func initialDefaultCurrencies(
-        for family: WidgetFamilyCategory,
-        referenceCurrency: CurrencyEntity? = nil
-    ) -> [CurrencyEntity] {
-        let reference = referenceCurrency ?? CurrencyEntityQuery.defaultReferenceCurrency
-        guard let ranking = try? BISCurrencyRankingSource.bundled().validatedSnapshot,
-              let referenceCode = try? CurrencyCode(validating: reference.id) else {
-            return []
-        }
-
-        return CurrencyOrdering.defaultMembership(
-            referenceCurrency: referenceCode,
-            providerSupportedCurrencies: CurrencyCatalog.foundationCurrencyCodes(),
-            capacity: WidgetConfigurationSelectionPolicy.capacity(family: family),
-            ranking: ranking
-        ).map { CurrencyEntity(id: $0.rawValue) }
-    }
 }

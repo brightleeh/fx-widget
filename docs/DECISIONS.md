@@ -14,7 +14,9 @@ Build a native macOS app using Swift, SwiftUI, WidgetKit, App Intents, and Found
 
 Minimum deployment target: **macOS 15**.
 
-Interactive widgets arrived in macOS 14, but macOS 15 is required for the non-`_const` collection `@Parameter(default:)` overload that materializes runtime-derived BIS default membership as real editable rows in the widget editor. Property-wrapper initializer selection is fixed at declaration, so `if #available` cannot straddle 14 and 15; see D-034 and D-039.
+Interactive widgets arrived in macOS 14. macOS 15 was originally required for the non-`_const` collection `@Parameter(default:)` overload, but D-034 withdrew that design and the configuration is now entirely scalar, so **no current API forces 15**. Verified 2026-08-15: building with `MACOSX_DEPLOYMENT_TARGET=14.0` succeeds and yields `minos 14.0` for both the app and the extension.
+
+macOS 15 is retained anyway. Compiling for 14 is not evidence that the widget editor behaves the same there, and every persistence and visibility rule in D-039 was measured on macOS 26.6.1 only. Lowering the target means re-measuring D-039 on macOS 14 hardware first; until that happens it is a separate decision, not an incidental change.
 
 The widget is the primary product surface. The host app mainly provides configuration, diagnostics, provider/setup surfaces if needed, and richer management UI.
 
@@ -697,21 +699,24 @@ When enabled, a safe localized representative region plus compact currency-unit 
 
 The unit part removes its duplicated country/region qualifier where Foundation's localized word segmentation permits it, then combines with the safe representative region using a middle dot. The ISO code remains visible. If no safe representative region exists, show the compact unit name alone.
 
-## D-034 — Family-specific editable default membership
+## D-034 — Family default membership in the standard editor
 
-**Status: DECIDED**
+**Status: DECIDED.** Rewritten after D-039 measured the editor; the original requirement was unimplementable and is withdrawn rather than deferred.
 
-An untouched widget's `Currencies` editor must contain its BIS-derived default currencies as real removable/reorderable items; an empty editor paired with an implicit runtime-only default is not acceptable.
+The original decision required an untouched widget's `Currencies` editor to contain its BIS-derived defaults as real removable, reorderable items. D-039 measured that surface: an `[AppEntity]` collection renders and accepts edits but is never committed on Done. No `Currencies` collection parameter exists, and none may be reintroduced.
 
-The configuration model must preserve family-appropriate membership and expose exactly one field titled `Currencies` for the active family. A missing value resolves to the family default at runtime. An empty array does the same: WidgetKit delivers `[]` for a fresh instance whose declared `@Parameter(default:)` is shown in the editor but not yet committed, so empty cannot mean "the user chose zero currencies" — and a zero-row FX board has no use. Empty and omitted are therefore both Default Order. The normal fresh-widget state must nevertheless materialize the real BIS-derived items in the editable per-instance configuration. Their limits are Medium 3, Large 10, and Extra Large 20; each allows zero items so a newly added item can be removed immediately.
+Ordered membership is expressed as fixed scalar slots — one `String` + `DynamicOptionsProvider` parameter per row, exposed 3 / 10 / 20 by family through `Switch(.widgetFamily)`. Slot N is row N. An unset slot resolves at read time to Default Order for the active reference, so a fresh widget renders its BIS-derived board with nothing committed.
 
-`AppIntentRecommendation` is not the macOS editor persistence mechanism: Apple documents it as inactive on platforms, including macOS, that provide a dedicated widget configuration interface. Do not rely on a recommendation, Swift property observation, mutation of hidden sibling parameters, or a runtime-only rendering fallback to populate or transact the standard edit UI.
+What survives from the original decision:
 
-Changing widget family must not delete preserved membership. Completing a reference-currency edit must save the reference coherently for the widget instance; the membership transition is now resolved at read time under D-010 and no longer requires an atomic multi-parameter write. The exact App Intents persistence mechanism is not yet validated and is recorded in D-039. If the standard editor cannot satisfy the decided outcomes, a host-app/profile or other shared-configuration design requires a new architecture decision before implementation.
+- membership stays family-appropriate, with capacities Medium 3, Large 10, and Extra Large 20;
+- an unset slot means Default Order, never "the user chose zero currencies" — a zero-row FX board has no use;
+- changing widget family must not delete preserved membership;
+- `AppIntentRecommendation` is not the macOS editor persistence mechanism: Apple documents it as inactive on platforms, including macOS, that provide a dedicated widget configuration interface. Do not rely on a recommendation, Swift property observation, mutation of hidden sibling parameters, or a runtime-only rendering fallback to populate or transact the standard edit UI.
 
-The macOS 14 collection `@Parameter(default:)` overload is `_const`, so a runtime-derived default array cannot be expressed there; D-001 therefore requires macOS 15, whose non-`_const` overload does materialize the BIS-derived membership as real removable, reorderable editor rows. Verified on macOS 26.6.1: a 20-item default supplied to a family-keyed `size` is truncated to that family's maximum (Large showed exactly the first 10).
+Completing a reference-currency edit must save the reference coherently for the widget instance; the membership transition is resolved at read time under D-010 and requires no atomic multi-parameter write.
 
-Materializing those rows does not persist them. WidgetKit still delivers `[]` to the timeline until the user commits an edit, and per D-039 an `[AppEntity]` edit is never committed at all. Empty therefore resolves to Default Order rather than to zero rows.
+Measured while the collection design was still live, kept because it constrains any future attempt: a 20-item default supplied to a family-keyed `size` is truncated to that family's maximum, with Large showing exactly the first 10. Materializing rows that way still did not persist them.
 
 ## D-035 — Primary row numeric columns
 

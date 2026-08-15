@@ -1,5 +1,23 @@
 import Foundation
 
+/// The reserved identifier meaning "the user made no explicit choice".
+///
+/// The widget editor stores only `String` values (D-039) and gives no way to
+/// clear a parameter once it holds one, so "unset" needs an in-band value the
+/// picker can offer as an ordinary item. One identifier covers every such
+/// parameter — reference currency, row count, and each quote slot — because
+/// three different words for the same idea read as three different features.
+/// It cannot collide with an ISO 4217 code, which is always three letters.
+public enum WidgetConfigurationSentinel {
+    public static let automatic = "Auto"
+
+    /// Maps the sentinel back to `nil` so the resolver's existing unset paths run.
+    public static func cleared(_ raw: String?) -> String? {
+        guard let raw, raw != automatic else { return nil }
+        return raw
+    }
+}
+
 public struct RawWidgetConfiguration: Equatable, Sendable {
     public let referenceCurrencyIdentifier: String?
     /// Ordered priority slots. `nil` entries are slots the user never set.
@@ -16,8 +34,8 @@ public struct RawWidgetConfiguration: Equatable, Sendable {
         showsCurrencyName: Bool,
         family: WidgetFamilyCategory
     ) {
-        self.referenceCurrencyIdentifier = referenceCurrencyIdentifier
-        self.priorityIdentifiers = priorityIdentifiers
+        self.referenceCurrencyIdentifier = WidgetConfigurationSentinel.cleared(referenceCurrencyIdentifier)
+        self.priorityIdentifiers = priorityIdentifiers.map(WidgetConfigurationSentinel.cleared)
         self.rowLimit = rowLimit
         self.showsCurrencyName = showsCurrencyName
         self.family = family

@@ -163,6 +163,40 @@ struct WidgetConfigurationPolicyTests {
         #expect(resolved.orderedMembership == [code("CZK"), code("EUR"), code("JPY")])
     }
 
+    @Test func sentinelsRestoreTheDefaultWithoutBeingReportedAsErrors() {
+        // The editor cannot clear a parameter, so the pickers offer these as
+        // ordinary items. They must behave exactly like an untouched slot, not
+        // like an unknown currency.
+        let resolver = configurationResolver()
+        let sentinels = resolver.resolve(
+            rawConfiguration(
+                referenceCurrencyIdentifier: WidgetConfigurationSentinel.automatic,
+                slots: [WidgetConfigurationSentinel.automatic, "CZK"],
+                rowLimit: 3
+            )
+        )
+        let untouched = resolver.resolve(
+            rawConfiguration(slots: [nil, "CZK"], rowLimit: 3)
+        )
+
+        #expect(sentinels.referenceCurrency == code("KRW"))
+        #expect(sentinels.orderedMembership == untouched.orderedMembership)
+        #expect(sentinels.issues.isEmpty)
+    }
+
+    @Test func clearingEverySlotReturnsTheBoardToDefaultOrder() {
+        let resolver = configurationResolver()
+        let cleared = resolver.resolve(
+            rawConfiguration(
+                slots: Array(repeating: WidgetConfigurationSentinel.automatic, count: 3),
+                rowLimit: 3
+            )
+        )
+
+        #expect(cleared.orderedMembership == [code("USD"), code("EUR"), code("JPY")])
+        #expect(cleared.origin == .reconstructedDefault)
+    }
+
     @Test func invalidSlotIsReportedAndItsRowIsFilled() {
         let resolved = configurationResolver().resolve(
             rawConfiguration(slots: ["TOOLONG", "KRW", "AUD"], rowLimit: 3)

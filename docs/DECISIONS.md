@@ -837,6 +837,37 @@ An earlier revision of this decision claimed slot counts could be 3 / 10 / 20 pe
 family. That was generalized from Medium and Large without ever confirming twenty
 on Extra Large, and it was wrong.
 
+### Defaults, and the absence of a reset
+
+There is no way to clear a parameter once it holds a value, and no API can write
+a widget's configuration: `WidgetCenter` exposes `getCurrentConfigurations`,
+`currentConfigurations`, `reloadTimelines`, `reloadAllTimelines`,
+`invalidateConfigurationRecommendations`, `invalidateRelevance`, and
+`currentPushInfo` — all read or refresh, none write. A `Restore Defaults` button
+is therefore not expressible: the editor renders parameters, not actions, and
+nothing else can reach the stored values.
+
+"No explicit choice" is instead offered as an ordinary picker item under the
+reserved identifier `Auto` (`WidgetConfigurationSentinel`), which the resolver
+maps back to `nil`. One identifier covers the reference currency, the row count,
+and every quote slot, because three words for the same idea read as three
+features. It cannot collide with an ISO 4217 code, which is always three letters.
+
+How a value is drawn depends on whether it was committed. Verified on macOS
+26.6.1 with the editor in Korean, which is what makes the middle row legible —
+in an English editor the raw identifier reads like a correct label and the defect
+is invisible:
+
+```text
+committed value       the matching item's localized title   "AED  아랍에미리트 디르함"
+uncommitted default   the raw stored string, never localized "Auto"
+no value              the parameter's own title             "상대 통화 1"
+```
+
+The row printed `Auto` while the menu open beside it printed `자동` for that same
+item. Every `defaultResult()` therefore returns `nil`, which resolves to the same
+default anyway.
+
 Metadata registration is not the cause: `extract.actionsdata` contained the entity, both
 enums, and every parameter, including `defaultQueryForEntity: true`.
 

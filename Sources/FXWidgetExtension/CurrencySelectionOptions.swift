@@ -142,17 +142,19 @@ enum CurrencyOptionsCatalog {
     /// menu's type-ahead, which matches on the leading characters of a title.
     static func collection(
         excluding excluded: CurrencyCode? = nil,
-        locale: Locale = .current
+        locale: Locale = .current,
+        leading: IntentItem<String>? = nil
     ) async -> IntentItemCollection<String> {
         let entries = await CurrencyOptionsCache.shared.entries(locale: locale)
             .filter { $0.code != excluded?.rawValue }
+        // The editor offers no way to clear a parameter, so "no explicit choice"
+        // has to be a selectable item. It leads the list because it is the way
+        // back to the default, not one currency among three hundred.
+        var items = leading.map { [$0] } ?? []
+        items += entries.map { IntentItem<String>($0.code, title: "\($0.title)") }
         return IntentItemCollection(
             usesIndexedCollation: true,
-            sections: [
-                IntentItemSection(
-                    items: entries.map { IntentItem<String>($0.code, title: "\($0.title)") }
-                )
-            ]
+            sections: [IntentItemSection(items: items)]
         )
     }
 }
@@ -180,12 +182,17 @@ struct ReferenceCurrencyOptionsProvider: DynamicOptionsProvider {
     /// the system locale rather than the widget's Language setting, which is a
     /// cosmetic loss compared with silently clearing the reference currency.
     func results() async throws -> IntentItemCollection<String> {
-        await CurrencyOptionsCatalog.collection()
+        await CurrencyOptionsCatalog.collection(
+            leading: IntentItem<String>(WidgetConfigurationSentinel.automatic, title: "Auto")
+        )
     }
 
-    func defaultResult() async -> String? {
-        CurrencyEntityQuery.defaultReferenceCurrency.id
-    }
+    /// `nil`, not the sentinel. The editor prints an uncommitted default as its
+    /// raw stored string, so returning `"Auto"` showed an untranslated `Auto` in
+    /// the row while the menu showed the localized title. `nil` falls back to the
+    /// parameter's own name, which is what every quote slot already does, and it
+    /// resolves to the regional default either way.
+    func defaultResult() async -> String? { nil }
 }
 
 // MARK: - Quote currency slots
@@ -209,7 +216,12 @@ enum QuoteSlotOptions {
     /// reference currency, and the resolver drops that row and fills it from
     /// Default Order instead.
     static func collection() async -> IntentItemCollection<String> {
-        await CurrencyOptionsCatalog.collection()
+        await CurrencyOptionsCatalog.collection(
+            leading: IntentItem<String>(
+                WidgetConfigurationSentinel.automatic,
+                title: "Auto"
+            )
+        )
     }
 }
 
@@ -377,7 +389,7 @@ struct QuoteSlot20OptionsProvider: DynamicOptionsProvider {
 /// rendered row count, never exceed it. `Auto` means the family capacity, which
 /// a parameter cannot know at declaration time.
 enum QuoteCurrencyCountOption {
-    static let auto = "Auto"
+    static let auto = WidgetConfigurationSentinel.automatic
 
     static func parsed(_ raw: String?) -> Int? {
         guard let raw, raw != auto else { return nil }
@@ -393,7 +405,9 @@ struct QuoteCurrencyCountOptionsProvider: DynamicOptionsProvider {
         return IntentItemCollection(sections: [IntentItemSection(items: items)])
     }
 
-    func defaultResult() async -> String? { QuoteCurrencyCountOption.auto }
+    /// `nil` for the same reason as the currency pickers: an uncommitted default
+    /// is printed raw, and `nil` resolves to the family capacity regardless.
+    func defaultResult() async -> String? { nil }
 }
 
 extension WidgetLanguage {

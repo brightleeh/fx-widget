@@ -211,6 +211,8 @@ The previous reference currency is never inserted into membership (D-010, D-039:
 - Users may remove default currencies and add other supported currencies.
 - Do not expose permanent `Add Currency` controls or a permanent `N / Max` label in the widget.
 - Capacity needs no enforcement: one configuration slot per row means a selection cannot exceed it. `Quote Currency Count` may reduce the rendered rows but never raise them above the family capacity.
+- Every parameter must be returnable to its default. The editor has no clear action and no API writes a widget's configuration, so reference currency, row count, and each quote slot offer `Auto` (`WidgetConfigurationSentinel`) as a picker item. Use that one term everywhere; do not label the same idea `Default Order` in one picker and `Auto` in another.
+- `defaultResult()` returns `nil`. The editor prints an uncommitted default as its raw stored string, so returning a sentinel shows untranslated text in the row (D-039).
 - Preserve an existing over-capacity saved membership and use overflow fallback until the user edits it.
 
 ## Widget Rules

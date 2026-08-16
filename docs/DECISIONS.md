@@ -990,3 +990,26 @@ A shared presentation target, `FXUI`, holds what both surfaces draw: the board v
 The app gains `com.apple.security.network.client`. Verified: the extension already ships that entitlement under ad-hoc signing and fetches successfully, so this adds no signing or provisioning requirement. Entitlements that would — App Groups, iCloud, Push, Keychain sharing — remain out (D-032).
 
 Per-widget language uses a language-specific bundle because `String(localized:)` resolves against the process locale. The app needs the same indirection, and the failure is silent: a plain `Text("…")` compiles, renders, and quietly ignores the setting for anyone whose system language differs from their chosen one. Every user-visible string in the app goes through the shared helper.
+
+## D-043 — Product naming
+
+**Status: DECIDED**
+
+Two layers, and no more:
+
+```text
+project identity   fx-widget / FXWidget    repo, bundle identifier, product, app name
+widget item name   localized in every supported UI language; `Exchange Rates` in English
+```
+
+The app is named after the project rather than carrying a brand of its own. It exists to explain the widget (D-042), so a separate product name for it added a third thing to remember and nothing else. An earlier attempt to call the app `FX Board` was withdrawn for exactly that reason.
+
+`FX Widget`, spaced, appears only as the heading inside the app, where a large title needs the air. Everything the system shows — bundle, file, Dock, gallery — is the single word, because that is character-for-character what the repository and the bundle identifier already say. No convention requires either form; nearby apps in the same list run together (`ShellFish`, `SoundHound`) and others do not, so matching the identifier is the only reason that survives scrutiny.
+
+The widget item is named for what it shows, localized from the same string the board header uses. **The widget gallery searches names, not descriptions.** Measured on macOS 26.6.1 with the system in Korean, so the gallery and every widget's copy were Korean. Searching `환율` returned only widgets whose displayed *name* contained it. Another vendor's widget matched on its name, while this one did not: it was displayed as `fx-widget` at the time, with `환율` only in its description. Searching `fx` returned this one, so it was indexed; the description simply is not consulted. A brand-shaped widget name is therefore unfindable by anyone who does not already know the brand, which is most of the gallery's audience.
+
+`CFBundleName` is what the gallery and Dock display, not `CFBundleDisplayName`; setting only the latter left the old name on screen. `PRODUCT_NAME` stays `FXWidget` so the bundle path, executable, and install scripts do not move.
+
+Identifiers are unaffected and must stay: the bundle identifier `com.example.local.FXWidget`, the widget kind `FXBoardWidgetV1`, and `FXBoardConfigurationIntent` (D-037). Renaming the repository to match `FX Board` was considered and rejected — the bundle identifier cannot follow, so it would trade one mismatch for another.
+
+`FXBoardView`, `FXBoardPresentation`, and their siblings keep `Board`. That word names the thing being drawn, not the product, and it never reaches a user.

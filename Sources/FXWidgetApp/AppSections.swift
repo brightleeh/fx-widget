@@ -35,7 +35,7 @@ struct OverviewSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(verbatim: model.text("fx-widget"))
+                Text(verbatim: FXBoardModel.appName)
                     .font(.title2.weight(.semibold))
                 Text(verbatim: model.text("A glanceable exchange-rate board."))
                     .foregroundStyle(.secondary)

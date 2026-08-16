@@ -13,6 +13,15 @@ import Observation
 @MainActor
 @Observable
 final class FXBoardModel {
+    /// The product name set as a heading, spaced because a large title needs the
+    /// air. The bundle stays `FXWidget` — one word, matching the repository and
+    /// the identifier — so this is typography rather than a second name.
+    ///
+    /// Not localized: it identifies the project. The widget item is named for
+    /// what it *shows* instead, because the gallery searches names and a user
+    /// looks for the thing rather than the product (D-043).
+    static let appName = "FX Widget"
+
     /// Ten is a window default, not a capacity. The app has no widget family and
     /// no layout limit, so this only decides how much the window shows.
     static let defaultRowCount = 10

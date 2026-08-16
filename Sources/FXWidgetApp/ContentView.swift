@@ -43,7 +43,7 @@ struct ContentView: View {
             detail
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(24)
-                .navigationTitle(Text(verbatim: model.text(section?.titleKey ?? "fx-widget")))
+                .navigationTitle(Text(verbatim: section.map { model.text($0.titleKey) } ?? FXBoardModel.appName))
         }
         .frame(minWidth: 720, minHeight: 520)
         .task { await model.load() }

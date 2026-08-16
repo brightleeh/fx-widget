@@ -149,7 +149,7 @@ struct FXBoardEntry: TimelineEntry {
 
 struct FXBoardTimelineProvider: AppIntentTimelineProvider {
     func recommendations() -> [AppIntentRecommendation<FXBoardConfigurationIntent>] {
-        [AppIntentRecommendation(intent: FXBoardConfigurationIntent(), description: "fx-widget")]
+        [AppIntentRecommendation(intent: FXBoardConfigurationIntent(), description: "Exchange Rates")]
     }
 
     func placeholder(in context: Context) -> FXBoardEntry {

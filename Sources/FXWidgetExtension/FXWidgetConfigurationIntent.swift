@@ -8,7 +8,7 @@ import Foundation
 // Keep this new identifier stable so those obsolete serialized parameters are
 // never decoded as the current currency-membership schema.
 struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
-    static let title: LocalizedStringResource = "fx-widget"
+    static let title: LocalizedStringResource = "Exchange Rates"
     static let description = IntentDescription("Configure the currencies shown by this FX board.")
 
     // Scalar only: AppEntity / [AppEntity] / AppEnum parameters render and accept
@@ -91,10 +91,6 @@ struct FXBoardConfigurationIntent: WidgetConfigurationIntent {
     @Parameter(title: "Quote Currency 20", optionsProvider: QuoteSlot20OptionsProvider())
     var slot20: String?
 
-    // Parameter visibility cannot follow a parameter *value* in this editor —
-    // Switch(\.$parameter) and When(...) were both verified inert — but the
-    // widget family is fixed when the editor opens, so the slot count follows
-    // the family capacity (D-022).
     // Parameter visibility cannot follow a parameter *value* in this editor —
     // Switch(\.$parameter) and When(...) were both verified inert (D-039) — so
     // the slot count follows the widget family.

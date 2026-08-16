@@ -252,6 +252,8 @@ Use String Catalogs for app/widget UI copy.
 
 Currency codes remain ISO 4217 identifiers and are not translated.
 
+Naming has exactly two layers (D-043): `fx-widget` / `FXWidget` / `FX Widget` is the project — repository, bundle identifier, app name — and the widget item carries a localized name for what it shows. Do not give the app a brand of its own, and do not make the widget item a brand: the gallery searches names and not descriptions, so a brand-shaped widget name cannot be found by anyone who does not already know it. `Board` in type names is the noun for the thing drawn, not a product name.
+
 Every user-visible string in the host app goes through the shared localization helper, never a bare `Text("…")`. `String(localized:)` resolves against the process locale, so a bare literal silently ignores the app's Language setting; it compiles and renders correctly for anyone whose system language matches their choice, which is why it survives review (D-042).
 
 Translations are machine-produced by default and that is a finished state. Mark them `translated`; it means a translation exists, not that a person wrote or checked it. Reserve `needs_review` for a string someone is actually queued to look at — do not use it to express general uncertainty, which belongs in `LOCALIZATION.md`. A human pass is bought case by case, usually after a report, not as a gate on shipping a language.

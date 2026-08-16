@@ -1,6 +1,6 @@
 # fx-widget
 
-`fx-widget` is a native macOS exchange-rate board built with Swift, SwiftUI, WidgetKit, App Intents, and Foundation. The widget is the primary product surface. The host app renders the same board on real rates as a live demo, and is where a currency is looked up before being typed into the widget editor (D-042).
+`fx-widget` is a native macOS exchange-rate board built with Swift, SwiftUI, WidgetKit, App Intents, and Foundation. It ships as **FXWidget**, and the widget is listed under a localized name — `Exchange Rates` in English — because the gallery searches names rather than descriptions (D-043). The widget is the primary product surface. The host app renders the same board on real rates as a live demo, and is where a currency is looked up before being typed into the widget editor (D-042).
 
 This README assumes that macOS is set to English. Currency and number formatting still follow the user's locale and region. In particular, the default reference currency follows the regional currency when the provider supports it; the UI language does not force the reference currency. For example, macOS can use English while the region remains Korea and the default reference currency remains KRW.
 
@@ -211,7 +211,7 @@ After launching the installed app once:
 
 1. Control-click or right-click an empty area of the desktop.
 2. Select `Edit Widgets…`.
-3. Search for `fx-widget` or select it in the widget gallery.
+3. Search for `Exchange Rates` — or whatever your language calls it, since the widget is named for what it shows — or find it under `FX Widget` in the gallery.
 4. Choose one of the three supported widget previews.
 5. Add it to the desktop.
 6. Select `Done`.

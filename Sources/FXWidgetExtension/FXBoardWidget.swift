@@ -27,7 +27,9 @@ struct FXBoardWidget: Widget {
             }
             .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("fx-widget")
+        // The gallery searches names, not descriptions, so the widget is named
+        // for what it shows. The app name carries the brand in the group header.
+        .configurationDisplayName("Exchange Rates")
         .description("A glanceable exchange-rate board.")
         .supportedFamilies([.systemMedium, .systemLarge, .systemExtraLarge])
     }

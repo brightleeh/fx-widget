@@ -30,15 +30,14 @@ The current pre-release implementation includes:
 
 Frankfurter currently supplies runtime exchange-rate data, but it has not been selected as the final production provider. It is a daily reference-rate integration, not a real-time market feed. The widget intentionally does not show provider or app version text.
 
-The default English-language row shape is similar to:
+A Large widget with English copy and KRW as the reference currency:
 
-```text
-Exchange Rates · KRW  South Korean Won                     ↻
-🇺🇸 USD US Dollar                      1,415.22    ▼ 0.05
-🇪🇺 EUR Euro                           1,634.79    ▼ 0.85
-🇯🇵 JPY Japanese Yen                       8.89    ▼ 0.01
-As of Aug 14, 2026        Updated Aug 15, 2026 at 5:53 AM
-```
+<img src="docs/images/board-large.png" alt="A Large fx-widget on the desktop: the header reads Exchange Rates · KRW South Korean Won with a refresh button, then ten rows of flag, ISO code, currency name, rate, and absolute change, and a footer giving the provider's data date on the left and this widget's last successful refresh on the right." width="360">
+
+Each row is flag, ISO 4217 code, currency name, rate, and absolute change. The footer separates two
+different times: `As of` is the date the provider's rates belong to, and `Updated` is when this
+widget last reached the provider successfully. `UX_SPEC.md` and D-003 define the row precisely; this
+is only what it looks like.
 
 Rate display is deliberately shallow for a glanceable board: two fraction digits at or above 1, up
 to four below that, and compact scientific notation under 0.0001 rather than a row of leading zeros.

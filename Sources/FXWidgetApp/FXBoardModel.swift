@@ -30,7 +30,23 @@ final class FXBoardModel {
     private(set) var isRefreshing = false
 
     var language: WidgetLanguage {
-        didSet { rebuild() }
+        didSet {
+            guard language != oldValue else { return }
+            Defaults.language = language.rawValue
+            rebuild()
+        }
+    }
+
+    /// `nil` follows the region, exactly as the widget's `Auto` does (D-009).
+    /// Changing it changes the request key, so membership is re-derived for the
+    /// new reference and the board reloads.
+    var referenceSelection: CurrencyCode? {
+        didSet {
+            guard referenceSelection != oldValue else { return }
+            Defaults.reference = referenceSelection?.rawValue
+            referenceCurrency = referenceSelection ?? Self.regionalDefaultReferenceCurrency()
+            Task { await load() }
+        }
     }
 
     /// The provider's catalog once known, the Foundation ISO list until then.
@@ -43,9 +59,12 @@ final class FXBoardModel {
     private var snapshot: RateSnapshot?
     private var refreshFailed = false
 
-    init(language: WidgetLanguage = .system) {
+    init() {
+        let language = WidgetLanguage.parsed(Defaults.language)
         self.language = language
-        let reference = Self.regionalDefaultReferenceCurrency()
+        let selection = Defaults.reference.flatMap { try? CurrencyCode(validating: $0) }
+        referenceSelection = selection
+        let reference = selection ?? Self.regionalDefaultReferenceCurrency()
         referenceCurrency = reference
         presentation = FXBoardPresentation(
             referenceCurrency: reference,
@@ -151,7 +170,20 @@ final class FXBoardModel {
         )
     }
 
-    private static func regionalDefaultReferenceCurrency() -> CurrencyCode {
+    /// The app's own choices, which are separate from every widget's (D-042).
+    private enum Defaults {
+        static var language: String? {
+            get { UserDefaults.standard.string(forKey: "app.language") }
+            set { UserDefaults.standard.set(newValue, forKey: "app.language") }
+        }
+
+        static var reference: String? {
+            get { UserDefaults.standard.string(forKey: "app.referenceCurrency") }
+            set { UserDefaults.standard.set(newValue, forKey: "app.referenceCurrency") }
+        }
+    }
+
+    static func regionalDefaultReferenceCurrency() -> CurrencyCode {
         ReferenceCurrencyPolicy.defaultReferenceCurrency(
             regionalCurrencyIdentifier: Locale.current.currency?.identifier,
             providerSupportedCurrencies: CurrencyCatalog.foundationCurrencyCodes()

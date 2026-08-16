@@ -41,6 +41,22 @@ struct OverviewSection: View {
                     .foregroundStyle(.secondary)
             }
 
+            // The board's own setting, so it sits with the board rather than in
+            // the sidebar where the app-wide language lives. It does not reach
+            // any widget (D-042).
+            Picker(selection: Bindable(model).referenceSelection) {
+                Text(verbatim: model.text("Auto")).tag(CurrencyCode?.none)
+                Divider()
+                ForEach(model.supportedCurrencies, id: \.self) { currency in
+                    Text(verbatim: "\(currency.rawValue)  \(CurrencyPresentationMetadata.localizedCurrencyName(for: currency, locale: model.language.displayLocale))")
+                        .tag(CurrencyCode?.some(currency))
+                }
+            } label: {
+                Text(verbatim: model.text("Reference Currency"))
+            }
+            .pickerStyle(.menu)
+            .frame(maxWidth: 320)
+
             FXBoardView(model.presentation) {
                 Button {
                     Task { await model.refresh() }

@@ -4,7 +4,7 @@ SWIFT_STRICT_CONCURRENCY = complete
 ENABLE_USER_SCRIPT_SANDBOXING = YES
 
 MARKETING_VERSION = 0.1.0
-CURRENT_PROJECT_VERSION = 71
+CURRENT_PROJECT_VERSION = 75
 
 // Local.xcconfig may override only the identity-less bundle identifier prefix.
 FX_BUNDLE_ID_PREFIX = com.example

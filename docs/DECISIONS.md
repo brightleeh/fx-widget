@@ -1012,4 +1012,24 @@ The widget item is named for what it shows, localized from the same string the b
 
 Identifiers are unaffected and must stay: the bundle identifier `com.example.local.FXWidget`, the widget kind `FXBoardWidgetV1`, and `FXBoardConfigurationIntent` (D-037). Renaming the repository to match `FX Board` was considered and rejected — the bundle identifier cannot follow, so it would trade one mismatch for another.
 
+### The app icon
+
+Six currency symbols on the widget's dark card. No text — it disappears at 16 pt and Apple advises against it — and no chart, which would advertise something the board does not draw.
+
+The six are not a selection. They are every currency in the BIS top 20 that has a symbol of its own, and the rule runs out at rank 12:
+
+```text
+USD $   EUR €   JPY ¥   GBP £   INR ₹   KRW ₩
+
+CNY                 shares ¥ with JPY
+CHF SEK NOK ZAR     letters, not symbols
+AUD CAD HKD SGD     reuse $
+NZD MXN TWD BRL     reuse $
+PLN                 zł, letters
+```
+
+A nine-symbol grid would have to reach past rank 20 for ₽, ₺, ฿ or similar, which puts the icon out of step with the board's own Default Order (D-002). Six is what the rule produces, so it is reproducible when the BIS ranking is next revised.
+
+Generated art has to be fitted before it ships: macOS icons sit on a squircle inside the canvas rather than filling it, and a source with an opaque surround renders oversized with coloured corners in the Dock. Render each of the ten sizes from the source instead of downscaling one.
+
 `FXBoardView`, `FXBoardPresentation`, and their siblings keep `Board`. That word names the thing being drawn, not the product, and it never reaches a user.

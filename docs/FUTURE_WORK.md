@@ -33,8 +33,11 @@ and that design has not been made.
 ## 4. Manual refresh cooldown
 
 Pressing refresh always performs a network request. With a daily provider the response is identical
-data, so repeated presses only hammer a free public API for nothing.
+data, so repeated presses only hammer a free public API for nothing. Automatic paths already honour
+the provider's cadence — the widget timeline and the host app's launch load both refresh with
+`.automatic` — so this is only about the button.
 
 D-014 already permits a provider-specific cooldown: if the last successful fetch is newer than some
 interval, return the cached snapshot without contacting the provider. Nothing is implemented. Low
-priority until a provider with faster-moving data arrives.
+priority until a provider with faster-moving data arrives, since a user pressing the button is at
+least asking for it.

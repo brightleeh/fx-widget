@@ -38,11 +38,18 @@ fx-widget
 Suggested targets/modules:
 
 ```text
-FXWidgetApp
-FXWidgetExtension
-FXCore (framework/package/shared target)
+FXWidgetApp          host app: the board, widget help, currency lookup
+FXWidgetExtension    WidgetKit + App Intents; the configuration intent lives here
+FXUI                 presentation shared by both surfaces:
+                     FXBoardView, FXBoardPresentation, WidgetLanguage,
+                     the localization helper, the FXServices composition root
+FXCore               domain, provider, persistence, formatting; no SwiftUI
 FXCoreTests
 ```
+
+`FXUI` exists because `FXBoardView` was reachable only from the extension, which is what kept the
+host app from drawing the same board (D-042). `FXCore` stays free of SwiftUI, and the App Intent
+stays in the extension so its widget-facing registration has one home.
 
 The repository name is decided; target/product display names may remain working names until separately decided.
 
@@ -315,7 +322,7 @@ The widget extension owns its runtime cache in its sandboxed Application Support
 
 Timeline and refresh App Intent code use the same storage location. Keep keyed documents versioned, atomically replaced, and protected against concurrent extension-process access.
 
-The V1 host app does not access this cache. Do not add an App Group unless a future explicit feature requires host-app/extension data sharing.
+The host app does not access this cache. It keeps its own, in its own sandbox container, which the same Application Support path resolves to per process (D-042). Do not add an App Group unless a future explicit feature genuinely requires sharing.
 
 ## 7. Networking
 

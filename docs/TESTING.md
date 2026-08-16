@@ -143,7 +143,10 @@ Required checks:
 17. A fresh widget shows one empty slot per row for its family (Medium 3, Large 10, Extra Large 20) and renders the BIS-derived Default Order; setting slot N moves only row N. Configuration parameters are `Bool` or `String` + `DynamicOptionsProvider` only (D-039).
 18. Completing an edit with a different reference currency delivers that reference to the timeline provider, constructs a distinct `RateRequestKey`, and fetches/loads a snapshot normalized to it.
 19. The stable `FXBoardWidgetV1` kind is preserved across configuration changes. Obsolete `FXWidgetConfigurationIntent` parameters are not decoded as the current `FXBoardConfigurationIntent`; old intent-less static placements are removed and re-added rather than treated as migratable configurations. An untouched widget commits no slot at all, and membership is reconstructed from the active reference currency.
-20. A cold extension container can construct and return a timeline without waiting for provider-catalog discovery or a remote BIS ranking check; those metadata calls are not prerequisites for leaving the placeholder state.
+20. The host app renders from its own cache, keeps the last good snapshot when a refresh fails, and its stored data never appears in the widget's container or the reverse (D-042).
+21. Every user-visible string in the host app resolves through the shared localization helper: switching the in-app Language changes all app copy, not only currency names and dates.
+22. Widget Help lists a placed widget's resolved reference currency and membership, matching what that widget renders, and labels an edited widget Custom Order rather than Default Order.
+23. A cold extension container can construct and return a timeline without waiting for provider-catalog discovery or a remote BIS ranking check; those metadata calls are not prerequisites for leaving the placeholder state.
 
 Exact capacity numbers must come from real WidgetKit preview validation.
 

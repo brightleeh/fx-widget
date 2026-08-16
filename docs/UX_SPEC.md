@@ -337,4 +337,4 @@ The default widget does **not** display:
 
 Provider identity is an implementation detail unless attribution requirements require visible source disclosure.
 
-Diagnostics/About in the host app may expose provider/source information later without changing the primary widget layout.
+The host app names the provider and its update cadence in Introduction; D-026 keeps that out of the primary widget layout and explicitly allows it here.

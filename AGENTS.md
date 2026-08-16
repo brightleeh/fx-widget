@@ -125,6 +125,12 @@ Maintain these conceptual boundaries even if target/file names differ:
 
 Do not bypass these layers by calling an HTTP endpoint directly from a row view.
 
+Presentation is shared: the board view, the language type, the localization helper, and the services
+composition root live in `FXUI`, which both the app and the widget extension link. Anything either
+surface draws belongs there rather than in one of them. `FXCore` stays free of SwiftUI, and the
+widget configuration intent stays in the extension. A view that takes a WidgetKit or App Intents type
+is not shareable — pass a value the domain already owns (D-042).
+
 ## BIS Default Ranking Rules
 
 - Default Order is based on the latest validated **final** BIS `OTC foreign exchange turnover by currency` dataset.

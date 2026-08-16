@@ -1,6 +1,6 @@
 # fx-widget
 
-`fx-widget` is a native macOS exchange-rate board built with Swift, SwiftUI, WidgetKit, App Intents, and Foundation. The widget is the primary product surface; the host app currently exists mainly to install and register the widget extension.
+`fx-widget` is a native macOS exchange-rate board built with Swift, SwiftUI, WidgetKit, App Intents, and Foundation. The widget is the primary product surface. The host app renders the same board on real rates as a live demo, and is where a currency is looked up before being typed into the widget editor (D-042).
 
 This README assumes that macOS is set to English. Currency and number formatting still follow the user's locale and region. In particular, the default reference currency follows the regional currency when the provider supports it; the UI language does not force the reference currency. For example, macOS can use English while the region remains Korea and the default reference currency remains KRW.
 
@@ -108,7 +108,7 @@ sudo xcodebuild -license
 
 ## Open and test the project
 
-Open `FXWidget.xcodeproj` in Xcode. The project contains the host app, widget extension, shared `FXCore` target, and tests.
+Open `FXWidget.xcodeproj` in Xcode. The project contains the host app, the widget extension, the `FXCore` domain target, the `FXUI` presentation target the two surfaces share, and tests.
 
 Run the core test suite from Terminal with:
 
@@ -256,7 +256,7 @@ The complete currency catalog is not limited to the default membership. It is de
 - Automatic provider-call eligibility is provider-specific. WidgetKit still controls when a timeline actually runs.
 - Manual refresh requests fresh data but does not turn a daily feed into a real-time feed.
 
-Runtime state belongs to the widget extension's own Application Support container. The host app and extension do not share an App Group cache.
+Runtime state belongs to the widget extension's own Application Support container. The host app keeps its own cache in its own container; the two never share one, and there is no App Group.
 
 ## Troubleshooting
 

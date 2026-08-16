@@ -161,7 +161,7 @@ This allows widget/layout work without blocking on provider choice.
 
 ## 10. Cache Model
 
-Persist last successful normalized snapshots in the widget extension's Application Support container. The V1 host app does not consume or mutate this runtime cache.
+Persist last successful normalized snapshots in the widget extension's Application Support container. The host app does not consume or mutate it; it fetches and caches separately in its own container (D-042).
 
 Key persisted snapshot/refresh/error state and in-memory in-flight refresh work by:
 

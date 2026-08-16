@@ -18,7 +18,7 @@ Interactive widgets arrived in macOS 14. macOS 15 was originally required for th
 
 macOS 15 is retained anyway. Compiling for 14 is not evidence that the widget editor behaves the same there, and every persistence and visibility rule in D-039 was measured on macOS 26.6.1 only. Lowering the target means re-measuring D-039 on macOS 14 hardware first; until that happens it is a separate decision, not an incidental change.
 
-The widget is the primary product surface. The host app mainly provides configuration, diagnostics, provider/setup surfaces if needed, and richer management UI.
+The widget is the primary product surface. The host app is a live demo and a lookup surface for what the widget editor cannot do (D-042); it does not configure placed widgets and cannot.
 
 ## D-002 — Default currency preset and order
 
@@ -673,7 +673,7 @@ V1 stores rate snapshots, refresh/error state, provider catalogs, and BIS rankin
 
 Do not require an App Group merely to share data between `TimelineProvider` and the refresh `AppIntent`; both belong to the widget extension and can use the same extension-owned container. Keep versioned encoding, canonical `RateRequestKey` isolation, atomic replacement, and cross-process-safe file coordination.
 
-The V1 host app does not read or mutate the widget's runtime cache. If a future host-app diagnostics, provider-management, or configuration feature genuinely needs the same data, make a new architecture decision before reintroducing an App Group or another IPC boundary.
+The host app does not read or mutate the widget's runtime cache. Under D-042 it fetches and caches independently, which needs no coordination: the Application Support path resolves inside each process's own sandbox container. Sharing one cache would still require a new architecture decision before reintroducing an App Group or another IPC boundary.
 
 Removing the App Group does not authorize collapsing independently configured widgets into a global selection. Per-widget configuration remains owned by WidgetKit/App Intents.
 

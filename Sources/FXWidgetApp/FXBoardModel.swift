@@ -49,14 +49,21 @@ final class FXBoardModel {
         )
     }
 
-    /// Cached data first so the window has content immediately, then a refresh.
+    /// Cached data first so the window has content immediately, then a refresh
+    /// that honours the provider's cadence — opening the window is not a request
+    /// for fresh data, and the provider publishes once a working day (D-014).
     func load() async {
         await resolveMembership()
         await readCache()
-        await refresh()
+        await refresh(reason: .automatic)
     }
 
+    /// The refresh button, which is an explicit request and skips the cadence.
     func refresh() async {
+        await refresh(reason: .manual)
+    }
+
+    private func refresh(reason: RefreshReason) async {
         guard !isRefreshing, !currencies.isEmpty else { return }
         isRefreshing = true
         defer { isRefreshing = false; rebuild() }
@@ -72,7 +79,7 @@ final class FXBoardModel {
         }
 
         do {
-            snapshot = try await dependencies.coordinator.refresh(key, reason: .manual)
+            snapshot = try await dependencies.coordinator.refresh(key, reason: reason)
             refreshFailed = false
         } catch {
             // D-011: a failed refresh keeps the last good snapshot on screen.

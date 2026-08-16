@@ -1,3 +1,4 @@
+import FXUI
 import AppIntents
 import FXCore
 import WidgetKit
@@ -30,7 +31,7 @@ struct RefreshRatesIntent: AppIntent {
             referenceCurrency: CurrencyCode(validating: referenceCurrency),
             selectedCurrencyCodes: try selectedCurrencies.map(CurrencyCode.init(validating:))
         )
-        let dependencies = try FXWidgetServices.dependencies()
+        let dependencies = try FXServices.dependencies()
         _ = try await dependencies.coordinator.refresh(
             requestKey,
             reason: .manual,

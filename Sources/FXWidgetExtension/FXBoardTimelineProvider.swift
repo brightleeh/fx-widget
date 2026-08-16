@@ -1,3 +1,4 @@
+import FXUI
 import AppIntents
 import FXCore
 import OSLog
@@ -43,7 +44,7 @@ enum FXWidgetDiagnostics {
         resolved: ResolvedWidgetConfiguration
     ) {
         configuration.info(
-            "callback=\(callback, privacy: .public) family=\(family.rawValue, privacy: .public) reference=\(reference.id, privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) slots=\(intent.slot1 ?? "-",privacy: .public),\(intent.slot2 ?? "-",privacy: .public),\(intent.slot3 ?? "-",privacy: .public) active=\(selected.map(\.id).joined(separator: ","), privacy: .public) origin=\(resolved.origin.rawValue, privacy: .public) issues=\(String(describing: resolved.issues), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "omitted", privacy: .public)"
+            "callback=\(callback, privacy: .public) family=\(family.rawValue, privacy: .public) reference=\(reference.id, privacy: .public) count=\(intent.quoteCurrencyCountCode ?? "-", privacy: .public) slots=\(slotDescription(intent), privacy: .public) active=\(selected.map(\.id).joined(separator: ","), privacy: .public) origin=\(resolved.origin.rawValue, privacy: .public) issues=\(String(describing: resolved.issues), privacy: .public) currencyName=\(intent.showsCurrencyName, privacy: .public) language=\(intent.languageCode ?? "omitted", privacy: .public)"
         )
     }
 
@@ -121,6 +122,29 @@ struct FXBoardEntry: TimelineEntry {
     /// Per-widget UI language (D-016 / LOCALIZATION.md): names, labels, and
     /// dates follow this locale while numeric separators follow the system.
     var displayLocale: Locale { WidgetLanguage.parsed(configuration.languageCode).displayLocale }
+
+    /// What the shared board actually draws. Everything WidgetKit- and App
+    /// Intents-specific stops here (D-042).
+    var presentation: FXBoardPresentation {
+        FXBoardPresentation(
+            referenceCurrency: resolvedConfiguration.referenceCurrency,
+            currencies: resolvedConfiguration.orderedMembership,
+            showsCurrencyName: resolvedConfiguration.showsCurrencyName,
+            language: WidgetLanguage.parsed(configuration.languageCode),
+            family: resolvedConfiguration.family,
+            snapshot: snapshot,
+            refreshFailed: refreshFailure != nil
+        )
+    }
+
+    var refreshIntent: RefreshRatesIntent {
+        RefreshRatesIntent(
+            providerID: requestKey?.providerID.rawValue ?? "",
+            referenceCurrency: referenceCurrency.id,
+            selectedCurrencies: requestKey?.selectedCurrencyCodes.map(\.rawValue)
+                ?? selectedCurrencies.map(\.id).filter { $0 != referenceCurrency.id }
+        )
+    }
 }
 
 struct FXBoardTimelineProvider: AppIntentTimelineProvider {
@@ -180,7 +204,7 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
         let decision = TimelineReloadPolicyRule.decision(
             hasSnapshot: entry.snapshot != nil,
             membershipIsEmpty: entry.resolvedConfiguration.orderedMembership.isEmpty,
-            automaticRefreshPolicy: (try? FXWidgetServices.dependencies())?
+            automaticRefreshPolicy: (try? FXServices.dependencies())?
                 .automaticRefreshPolicy ?? .fixedInterval(86_400),
             refreshFailureCode: entry.refreshFailure?.code,
             nextAutoRefreshEligibleAt: entry.nextAutoRefreshEligibleAt,
@@ -215,9 +239,9 @@ struct FXBoardTimelineProvider: AppIntentTimelineProvider {
             resolved: resolvedConfiguration
         )
 
-        let dependencies: FXWidgetServices.Dependencies
+        let dependencies: FXServices.Dependencies
         do {
-            dependencies = try FXWidgetServices.dependencies()
+            dependencies = try FXServices.dependencies()
         } catch {
             return unavailableEntry(
                 configuration: configuration,

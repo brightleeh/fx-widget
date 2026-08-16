@@ -39,7 +39,6 @@
 		010000000000000000000020 /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000020 /* CurrencyEntity.swift */; };
 		010000000000000000000920 /* CurrencySelectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000920 /* CurrencySelectionOptions.swift */; };
 		010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000021 /* FXBoardTimelineProvider.swift */; };
-		010000000000000000000022 /* FXBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000022 /* FXBoardView.swift */; };
 		010000000000000000000023 /* FXBoardWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000023 /* FXBoardWidget.swift */; };
 		010000000000000000000024 /* FXWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000024 /* FXWidgetBundle.swift */; };
 		010000000000000000000025 /* FXWidgetConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000025 /* FXWidgetConfigurationIntent.swift */; };
@@ -74,6 +73,19 @@
 		010000000000000000000060 /* CurrencyMetadataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000060 /* CurrencyMetadataStoreTests.swift */; };
 		010000000000000000000061 /* CurrencyPresentationMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000061 /* CurrencyPresentationMetadataTests.swift */; };
 		010000000000000000000062 /* WidgetConfigurationPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000062 /* WidgetConfigurationPolicyTests.swift */; };
+		010000000000000000000A01 /* WidgetLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A02 /* WidgetLanguage.swift */; };
+		010000000000000000000A02 /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A03 /* LocalizedText.swift */; };
+		010000000000000000000A03 /* libFXUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A01 /* libFXUI.a */; };
+		010000000000000000000A04 /* libFXUI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A01 /* libFXUI.a */; };
+		010000000000000000000A05 /* FXBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A04 /* FXBoardPresentation.swift */; };
+		010000000000000000000A06 /* FXBoardPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A05 /* FXBoardPreviews.swift */; };
+		010000000000000000000A07 /* FXBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000022 /* FXBoardView.swift */; };
+		010000000000000000000A08 /* FXServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A06 /* FXServices.swift */; };
+		010000000000000000000A09 /* FXBoardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A07 /* FXBoardModel.swift */; };
+		010000000000000000000A0A /* AppSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000A08 /* AppSections.swift */; };
+		010000000000000000000A0B /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000020 /* CurrencyEntity.swift */; };
+		010000000000000000000A0C /* CurrencySelectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000920 /* CurrencySelectionOptions.swift */; };
+		010000000000000000000A0D /* FXWidgetConfigurationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020000000000000000000025 /* FXWidgetConfigurationIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +116,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 070000000000000000000001;
 			remoteInfo = FXCore;
+		};
+		030000000000000000000A01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000001;
+			remoteInfo = FXCore;
+		};
+		030000000000000000000A02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000A01;
+			remoteInfo = FXUI;
+		};
+		030000000000000000000A03 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070000000000000000000A01;
+			remoteInfo = FXUI;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -193,6 +226,14 @@
 		020000000000000000000060 /* CurrencyMetadataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyMetadataStoreTests.swift; sourceTree = "<group>"; };
 		020000000000000000000061 /* CurrencyPresentationMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPresentationMetadataTests.swift; sourceTree = "<group>"; };
 		020000000000000000000062 /* WidgetConfigurationPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationPolicyTests.swift; sourceTree = "<group>"; };
+		020000000000000000000A01 /* libFXUI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFXUI.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		020000000000000000000A02 /* WidgetLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLanguage.swift; sourceTree = "<group>"; };
+		020000000000000000000A03 /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
+		020000000000000000000A04 /* FXBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardPresentation.swift; sourceTree = "<group>"; };
+		020000000000000000000A05 /* FXBoardPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardPreviews.swift; sourceTree = "<group>"; };
+		020000000000000000000A06 /* FXServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXServices.swift; sourceTree = "<group>"; };
+		020000000000000000000A07 /* FXBoardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FXBoardModel.swift; sourceTree = "<group>"; };
+		020000000000000000000A08 /* AppSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSections.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				010000000000000000000050 /* libFXCore.a in Frameworks */,
+				010000000000000000000A03 /* libFXUI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				010000000000000000000051 /* libFXCore.a in Frameworks */,
+				010000000000000000000A04 /* libFXUI.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,6 +267,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				010000000000000000000052 /* libFXCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		050000000000000000000A01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +296,7 @@
 			isa = PBXGroup;
 			children = (
 				060000000000000000000003 /* FXCore */,
+				060000000000000000000A01 /* FXUI */,
 				060000000000000000000004 /* FXWidgetApp */,
 				060000000000000000000005 /* FXWidgetExtension */,
 			);
@@ -291,10 +342,24 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000010 /* ContentView.swift */,
+				020000000000000000000A07 /* FXBoardModel.swift */,
+				020000000000000000000A08 /* AppSections.swift */,
 				020000000000000000000011 /* FXWidgetApp.swift */,
 				020000000000000000000012 /* Info.plist */,
 			);
 			path = FXWidgetApp;
+			sourceTree = "<group>";
+		};
+		060000000000000000000A01 /* FXUI */ = {
+			isa = PBXGroup;
+			children = (
+				020000000000000000000A02 /* WidgetLanguage.swift */,
+				020000000000000000000A03 /* LocalizedText.swift */,
+				020000000000000000000A04 /* FXBoardPresentation.swift */,
+				020000000000000000000022 /* FXBoardView.swift */,
+				020000000000000000000A06 /* FXServices.swift */,
+			);
+			path = FXUI;
 			sourceTree = "<group>";
 		};
 		060000000000000000000005 /* FXWidgetExtension */ = {
@@ -303,7 +368,7 @@
 				020000000000000000000020 /* CurrencyEntity.swift */,
 				020000000000000000000920 /* CurrencySelectionOptions.swift */,
 				020000000000000000000021 /* FXBoardTimelineProvider.swift */,
-				020000000000000000000022 /* FXBoardView.swift */,
+				020000000000000000000A05 /* FXBoardPreviews.swift */,
 				020000000000000000000023 /* FXBoardWidget.swift */,
 				020000000000000000000024 /* FXWidgetBundle.swift */,
 				020000000000000000000025 /* FXWidgetConfigurationIntent.swift */,
@@ -380,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				020000000000000000000050 /* libFXCore.a */,
+				020000000000000000000A01 /* libFXUI.a */,
 				020000000000000000000051 /* FXWidget.app */,
 				020000000000000000000052 /* FXWidgetExtension.appex */,
 				020000000000000000000053 /* FXCoreTests.xctest */,
@@ -427,6 +493,7 @@
 			);
 			dependencies = (
 				090000000000000000000001 /* PBXTargetDependency */,
+				090000000000000000000A02 /* PBXTargetDependency */,
 				090000000000000000000002 /* PBXTargetDependency */,
 			);
 			name = FXWidgetApp;
@@ -446,6 +513,7 @@
 			);
 			dependencies = (
 				090000000000000000000003 /* PBXTargetDependency */,
+				090000000000000000000A03 /* PBXTargetDependency */,
 			);
 			name = FXWidgetExtension;
 			productName = FXWidgetExtension;
@@ -469,6 +537,23 @@
 			productName = FXCoreTests;
 			productReference = 020000000000000000000053 /* FXCoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		070000000000000000000A01 /* FXUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0000000000000000000A01 /* Build configuration list for PBXNativeTarget "FXUI" */;
+			buildPhases = (
+				0A0000000000000000000A01 /* Sources */,
+				050000000000000000000A01 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				090000000000000000000A01 /* PBXTargetDependency */,
+			);
+			name = FXUI;
+			productName = FXUI;
+			productReference = 020000000000000000000A01 /* libFXUI.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
@@ -517,6 +602,7 @@
 			projectRoot = "";
 			targets = (
 				070000000000000000000001 /* FXCore */,
+				070000000000000000000A01 /* FXUI */,
 				070000000000000000000002 /* FXWidgetApp */,
 				070000000000000000000003 /* FXWidgetExtension */,
 				070000000000000000000004 /* FXCoreTests */,
@@ -592,6 +678,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				010000000000000000000A0B /* CurrencyEntity.swift in Sources */,
+				010000000000000000000A0C /* CurrencySelectionOptions.swift in Sources */,
+				010000000000000000000A0D /* FXWidgetConfigurationIntent.swift in Sources */,
+				010000000000000000000A09 /* FXBoardModel.swift in Sources */,
+				010000000000000000000A0A /* AppSections.swift in Sources */,
 				010000000000000000000010 /* ContentView.swift in Sources */,
 				010000000000000000000011 /* FXWidgetApp.swift in Sources */,
 			);
@@ -604,7 +695,7 @@
 				010000000000000000000020 /* CurrencyEntity.swift in Sources */,
 				010000000000000000000920 /* CurrencySelectionOptions.swift in Sources */,
 				010000000000000000000021 /* FXBoardTimelineProvider.swift in Sources */,
-				010000000000000000000022 /* FXBoardView.swift in Sources */,
+				010000000000000000000A06 /* FXBoardPreviews.swift in Sources */,
 				010000000000000000000023 /* FXBoardWidget.swift in Sources */,
 				010000000000000000000024 /* FXWidgetBundle.swift in Sources */,
 				010000000000000000000025 /* FXWidgetConfigurationIntent.swift in Sources */,
@@ -640,6 +731,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A0000000000000000000A01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010000000000000000000A01 /* WidgetLanguage.swift in Sources */,
+				010000000000000000000A02 /* LocalizedText.swift in Sources */,
+				010000000000000000000A05 /* FXBoardPresentation.swift in Sources */,
+				010000000000000000000A07 /* FXBoardView.swift in Sources */,
+				010000000000000000000A08 /* FXServices.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -662,6 +765,21 @@
 			isa = PBXTargetDependency;
 			target = 070000000000000000000001 /* FXCore */;
 			targetProxy = 030000000000000000000004 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000A01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000001 /* FXCore */;
+			targetProxy = 030000000000000000000A01 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000A02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000A01 /* FXUI */;
+			targetProxy = 030000000000000000000A02 /* PBXContainerItemProxy */;
+		};
+		090000000000000000000A03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 070000000000000000000A01 /* FXUI */;
+			targetProxy = 030000000000000000000A03 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -810,6 +928,28 @@
 			};
 			name = Release;
 		};
+		0D0000000000000000000A01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000041 /* Debug.xcconfig */;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_MODULE_NAME = FXUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0D0000000000000000000A02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 020000000000000000000042 /* Release.xcconfig */;
+			buildSettings = {
+				DEFINES_MODULE = YES;
+				PRODUCT_MODULE_NAME = FXUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -854,6 +994,15 @@
 			buildConfigurations = (
 				0D0000000000000000000040 /* Debug */,
 				0D0000000000000000000041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0C0000000000000000000A01 /* Build configuration list for PBXNativeTarget "FXUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0000000000000000000A01 /* Debug */,
+				0D0000000000000000000A02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

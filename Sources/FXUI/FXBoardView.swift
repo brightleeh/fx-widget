@@ -1,19 +1,24 @@
 import FXCore
 import SwiftUI
-import WidgetKit
 
-struct FXBoardView: View {
-    @Environment(\.widgetFamily) private var family
+/// The FX board, drawn from `FXBoardPresentation` alone.
+///
+/// The refresh control is supplied by the caller: the widget needs an App
+/// Intent-backed button so WidgetKit can request a new timeline, while the app
+/// just calls its own model. Everything else is identical, which is the point.
+public struct FXBoardView<Refresh: View>: View {
+    private let presentation: FXBoardPresentation
+    private let refresh: Refresh
 
-    let entry: FXBoardEntry
-    private let familyOverride: WidgetFamilyCategory?
-
-    init(entry: FXBoardEntry, familyOverride: WidgetFamilyCategory? = nil) {
-        self.entry = entry
-        self.familyOverride = familyOverride
+    public init(
+        _ presentation: FXBoardPresentation,
+        @ViewBuilder refresh: () -> Refresh
+    ) {
+        self.presentation = presentation
+        self.refresh = refresh()
     }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             let layout = layout(availableContentHeight: geometry.size.height)
             content(layout: layout)
@@ -63,20 +68,18 @@ struct FXBoardView: View {
                 // KRW" / "為替レート · KRW". The word is longer in some languages
                 // than the original "FX", so it yields space before the ISO code
                 // and the reference label do.
-                Text(localized("FX · %@", entry.referenceCurrency.id))
+                Text(localized("FX · %@", presentation.referenceCurrency.rawValue))
                     .font(headerFont.weight(.semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                     .allowsTightening(true)
 
-                if entry.resolvedConfiguration.showsCurrencyName,
-                   let reference = try? CurrencyCode(
-                       validating: entry.referenceCurrency.id
-                   ) {
+                if presentation.showsCurrencyName {
+                    let reference = presentation.referenceCurrency
                     Text(
                         CurrencyPresentationMetadata.localizedCurrencyName(
                             for: reference,
-                            locale: entry.displayLocale
+                            locale: presentation.displayLocale
                         )
                     )
                         .font(supportingFont)
@@ -89,22 +92,7 @@ struct FXBoardView: View {
 
             Spacer()
 
-            Button(
-                intent: RefreshRatesIntent(
-                    providerID: entry.requestKey?.providerID.rawValue ?? "",
-                    referenceCurrency: entry.referenceCurrency.id,
-                    selectedCurrencies: refreshSelectedCurrencyIDs
-                )
-            ) {
-                // No `invalidatableContent()`: on macOS the system applies its
-                // pending treatment to the whole widget, desaturating every row
-                // and blanking the flag emoji. A widget cannot run a continuous
-                // spin either, so the refresh gives no in-flight indicator; the
-                // reloaded timeline is the feedback.
-                Image(systemName: "arrow.clockwise")
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(localized("Refresh")))
+            refresh
         }
     }
 
@@ -115,7 +103,7 @@ struct FXBoardView: View {
                     .lineLimit(1)
             }
 
-            if entry.refreshFailure != nil {
+            if presentation.refreshFailed {
                 Image(systemName: "exclamationmark.triangle")
                     .accessibilityLabel(Text(localized("Refresh failed. Showing last successful rates.")))
             }
@@ -140,42 +128,29 @@ struct FXBoardView: View {
         .foregroundStyle(.secondary)
     }
 
-    private var refreshSelectedCurrencyIDs: [String] {
-        if let requestKey = entry.requestKey {
-            return requestKey.selectedCurrencyCodes.map(\.rawValue)
-        }
-        let reference = entry.referenceCurrency.id
-        return entry.selectedCurrencies.map(\.id).filter { $0 != reference }
-    }
-
-    /// Localizes UI copy in the widget's Language rather than the system's.
+    /// Copy follows the chosen Language, not the process locale. See
+    /// `FXUI.localized(_:language:)` for why a bare `Text("…")` will not do.
     private func localized(_ key: String.LocalizationValue) -> String {
-        String(
-            localized: key,
-            bundle: WidgetLanguage.parsed(entry.configuration.languageCode).localizationBundle,
-            locale: entry.displayLocale
-        )
+        FXUI.localized(key, language: presentation.language)
     }
 
     private func localized(_ key: String.LocalizationValue, _ arguments: CVarArg...) -> String {
-        // `localizedStringWithFormat` takes CVarArg..., so forwarding the packed
-        // array would substitute the array itself as a single argument.
-        String(format: localized(key), locale: entry.displayLocale, arguments: arguments)
+        String(format: localized(key), locale: presentation.displayLocale, arguments: arguments)
     }
 
     private var basisText: String? {
-        guard let basis = entry.snapshot?.providerDataBasis else { return nil }
+        guard let basis = presentation.snapshot?.providerDataBasis else { return nil }
 
         let formatted: String
         switch basis {
         case let .timestamp(timestamp):
             formatted = timestamp.formatted(
-                .dateTime.year().month().day().hour().minute().locale(entry.displayLocale)
+                .dateTime.year().month().day().hour().minute().locale(presentation.displayLocale)
             )
         case let .dateOnly(date):
             guard let displayDate = displayDate(for: date) else { return nil }
             formatted = displayDate.formatted(
-                .dateTime.year().month().day().locale(entry.displayLocale)
+                .dateTime.year().month().day().locale(presentation.displayLocale)
             )
         }
         return localized("As of %@", formatted)
@@ -191,11 +166,11 @@ struct FXBoardView: View {
     /// timeline entry, so a relative "5 minutes ago" keeps claiming five minutes
     /// long after it stops being true.
     private var refreshedText: String? {
-        guard let refreshedAt = entry.snapshot?.lastSuccessfulRefreshAt else { return nil }
+        guard let refreshedAt = presentation.snapshot?.lastSuccessfulRefreshAt else { return nil }
         // Full date and time, not just a clock time: a widget can sit untouched
         // for days, and "04:30" alone does not say which day it refers to.
         let formatted = refreshedAt.formatted(
-            .dateTime.year().month().day().hour().minute().locale(entry.displayLocale)
+            .dateTime.year().month().day().hour().minute().locale(presentation.displayLocale)
         )
         return localized("Updated %@", formatted)
     }
@@ -203,16 +178,11 @@ struct FXBoardView: View {
     /// Currencies the board will render, in configured order. A currency the
     /// provider no longer publishes stays in the list and renders as a dash
     /// rather than disappearing (D-013).
-    private var orderedCurrencies: [CurrencyCode] {
-        guard let snapshot = entry.snapshot else { return [] }
-        return entry.selectedCurrencies
-            .compactMap { try? CurrencyCode(validating: $0.id) }
-            .filter { snapshot[$0] != nil || snapshot.isUnavailable($0) }
-    }
+    private var orderedCurrencies: [CurrencyCode] { presentation.renderableCurrencies }
 
     private func layout(availableContentHeight: Double) -> WidgetLayoutResult {
         WidgetLayoutPolicy.resolve(
-            family: familyOverride ?? family.layoutCategory,
+            family: presentation.family,
             selectedCurrencies: orderedCurrencies,
             availableContentHeight: availableContentHeight
         )
@@ -240,7 +210,7 @@ struct FXBoardView: View {
 
     @ViewBuilder
     private func rateRow(_ currency: CurrencyCode) -> some View {
-        if let quote = entry.snapshot?[currency] {
+        if let quote = presentation.snapshot?[currency] {
             fullRateRow(currency, display: rowDisplay(for: quote), quote: quote)
         } else {
             // The provider does not publish this currency at all; the rest of
@@ -295,11 +265,11 @@ struct FXBoardView: View {
             Text(currency.rawValue)
                 .font(.system(.body, design: .monospaced).weight(.semibold))
 
-            if entry.resolvedConfiguration.showsCurrencyName {
+            if presentation.showsCurrencyName {
                 Text(
                     CurrencyPresentationMetadata.localizedCurrencyName(
                         for: currency,
-                        locale: entry.displayLocale
+                        locale: presentation.displayLocale
                     )
                 )
                     .font(supportingFont)
@@ -339,7 +309,7 @@ struct FXBoardView: View {
         quote: RateQuote?,
         display: RateRowDisplay?
     ) -> String {
-        let reference = entry.referenceCurrency.id
+        let reference = presentation.referenceCurrency.rawValue
         guard let quote, let display else {
             return localized("%@ rate unavailable", currency.rawValue)
         }
@@ -489,123 +459,3 @@ private extension RateChange.Direction {
         }
     }
 }
-
-#if DEBUG
-#Preview("Extra Large · Default", as: .systemExtraLarge) {
-    FXBoardWidget()
-} timeline: {
-    let configuration = FXBoardConfigurationIntent()
-    let resolved = configuration.resolvedConfiguration(for: .extraLarge)
-    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
-    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
-    FXBoardEntry(
-        date: .now,
-        configuration: configuration,
-        referenceCurrency: reference,
-        selectedCurrencies: selected,
-        requestKey: FXBoardTimelineProvider.fixtureSnapshot(
-            for: configuration,
-            selectedCurrencies: selected
-        )?.requestKey,
-        resolvedConfiguration: configuration.resolvedConfiguration(for: .extraLarge),
-        snapshot: FXBoardTimelineProvider.fixtureSnapshot(
-            for: configuration,
-            selectedCurrencies: selected
-        ),
-        refreshFailure: nil,
-        timelineFailure: nil,
-        nextAutoRefreshEligibleAt: nil
-    )
-}
-
-#Preview("Large · Default", as: .systemLarge) {
-    FXBoardWidget()
-} timeline: {
-    let configuration = FXBoardConfigurationIntent()
-    let resolved = configuration.resolvedConfiguration(for: .large)
-    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
-    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
-    let snapshot = FXBoardTimelineProvider.fixtureSnapshot(
-        for: configuration,
-        selectedCurrencies: selected
-    )
-    FXBoardEntry(
-        date: .now,
-        configuration: configuration,
-        referenceCurrency: reference,
-        selectedCurrencies: selected,
-        requestKey: snapshot?.requestKey,
-        resolvedConfiguration: configuration.resolvedConfiguration(for: .large),
-        snapshot: snapshot,
-        refreshFailure: nil,
-        timelineFailure: nil,
-        nextAutoRefreshEligibleAt: nil
-    )
-}
-
-#Preview("Medium · Default", as: .systemMedium) {
-    FXBoardWidget()
-} timeline: {
-    let configuration = FXBoardConfigurationIntent()
-    let resolved = configuration.resolvedConfiguration(for: .medium)
-    let reference = CurrencyEntity(id: resolved.referenceCurrency.rawValue)
-    let selected = resolved.orderedMembership.map { CurrencyEntity(id: $0.rawValue) }
-    let snapshot = FXBoardTimelineProvider.fixtureSnapshot(
-        for: configuration,
-        selectedCurrencies: selected
-    )
-    FXBoardEntry(
-        date: .now,
-        configuration: configuration,
-        referenceCurrency: reference,
-        selectedCurrencies: selected,
-        requestKey: snapshot?.requestKey,
-        resolvedConfiguration: configuration.resolvedConfiguration(for: .medium),
-        snapshot: snapshot,
-        refreshFailure: nil,
-        timelineFailure: nil,
-        nextAutoRefreshEligibleAt: nil
-    )
-}
-
-#Preview("Extra Large · Currency Names", as: .systemExtraLarge) {
-    FXBoardWidget()
-} timeline: {
-    let reference = CurrencyEntity(id: "KRW")
-    let selected = previewCurrencies(excluding: reference, count: 20)
-    let configuration = FXBoardConfigurationIntent(
-        referenceCurrency: reference,
-        currencies: selected,
-        showsCurrencyName: true
-    )
-    let snapshot = FXBoardTimelineProvider.fixtureSnapshot(
-        for: configuration,
-        selectedCurrencies: selected
-    )
-    FXBoardEntry(
-        date: .now,
-        configuration: configuration,
-        referenceCurrency: reference,
-        selectedCurrencies: selected,
-        requestKey: snapshot?.requestKey,
-        resolvedConfiguration: configuration.resolvedConfiguration(for: .extraLarge),
-        snapshot: snapshot,
-        refreshFailure: nil,
-        timelineFailure: nil,
-        nextAutoRefreshEligibleAt: nil
-    )
-}
-
-private func previewCurrencies(
-    excluding reference: CurrencyEntity,
-    count: Int
-) -> [CurrencyEntity] {
-    guard let ranking = try? BISCurrencyRankingSource.bundled().validatedSnapshot else {
-        return []
-    }
-    return ranking.rankedCurrencyCodes
-        .filter { $0.rawValue != reference.id }
-        .prefix(count)
-        .map { CurrencyEntity(id: $0.rawValue) }
-}
-#endif

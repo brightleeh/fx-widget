@@ -11,6 +11,7 @@ Do not attempt the entire product in one pass.
 - Milestone 4 is complete as a development/reference integration: the widget runtime now uses a keyless, configurable Frankfurter v2 adapter; provider DTO/client code is isolated from the domain and UI; supported currencies are discovered dynamically; and D-030's current/previous common-date search, explicit common-date fetch, identity leg, cross-rate normalization, date-only basis, atomic failure, and provider-specific daily/24-hour automatic eligibility are implemented. Recorded HTTP fixtures and coordinator/cache tests bring the full Xcode suite to 67 passing tests.
 - Milestone 5 is complete: the App Intent catalog is the active Frankfurter capability set intersected with modern Foundation ISO currencies; safe representative regions and neutral no-flag fallback are centralized; an official BIS SDMX D11.3 source validates the exact final-table dimension slice; and a separate versioned extension-owned metadata store caches provider catalogs plus final ranking/check metadata. Membership derivation takes the reference currency, BIS ranking, and fixed family capacity. Fixture-only BIS tests and cache-corruption validation brought the full Xcode suite to 87 passing tests.
 - Milestone 6 is complete. Widget configuration is scalar-only: `Bool` and `String` + `DynamicOptionsProvider`. Installed-macOS measurement established that `AppEntity`, `[AppEntity]`, and `AppEnum` parameters render and accept edits but are never committed, and that parameter visibility can follow the widget family but not a parameter value (D-039). Configuration is Language, Currency Name, Reference Currency, Quote Currency Count, and one quote slot per row; slot N pins row N while empty slots follow Default Order for the active reference. The editor exposes 3 slots for Medium and 20 otherwise, because it reports `.systemLarge` for an Extra Large widget (D-039). D-010's in-place swap was removed as unimplementable, and the cold-start reload policy is D-040. Columns, Text Size, and separate Country Names remain removed; `Currency Name` defaults to On.
+- Milestone 8.5 (host app) is delivered: a sidebar shell with Overview, My Widgets, Supported Currencies, and About, a working board on real rates with its own cache, and an in-app language picker.
 - Milestone 7 (localization) is delivered for ten languages, plus a per-widget UI language covering names, labels, and dates while numeric separators follow the system region. All ten are machine-produced and unverified by a speaker; `LOCALIZATION.md` records why that is not tracked as pending work.
 - No production provider has been selected. Frankfurter remains a development/reference daily-rate adapter under D-025; production-provider freshness and acceptance remain Milestone 9 work.
 
@@ -238,6 +239,48 @@ Exit criteria:
 - tested capacity matrix/policy exists,
 - default membership for each configuration can be derived from BIS priority up to capacity,
 - no speculative fixed Top-N requirement remains.
+
+## Milestone 8.5 — Host App
+
+**Delivered.** D-042: a live demo on real data, and the place to look a currency up. Not a control
+panel for the widgets, which it cannot be.
+
+`FXUI` now holds the shared presentation — `FXBoardView`, `FXBoardPresentation`, `WidgetLanguage`,
+the localization helper, and the `FXServices` composition root. `FXBoardView` takes a presentation
+and a caller-supplied refresh control, so the widget passes an App Intent button and the app passes
+an ordinary one. The two caches separate without coordination: the Application Support path resolves
+inside each process's own sandbox container.
+
+Order of work, each step leaving the build green:
+
+1. **`FXUI` target.** Move `FXBoardView`, `WidgetLanguage`, and the localization helper out of the
+   widget extension; link it from both the extension and the app. `FXCore` stays free of SwiftUI and
+   the App Intent stays in the extension so its metadata registers once (D-037).
+2. **App entitlement.** Add `com.apple.security.network.client`; already proven under ad-hoc signing
+   by the extension.
+3. **The board.** Real rates through the same provider, its own cache in the app's container, keyed
+   the same way. Manual refresh, stale/error handling, and last-good retention follow the widget's
+   rules. Its reference currency, membership, and count default to BIS Default Order with ten
+   entries and exist to drive the demo.
+4. **Sidebar shell.** Overview, My Widgets, Supported Currencies, About. Version reads
+   `버전 0.1.0 (52)` from the bundle, localized.
+5. **Supported Currencies.** The provider's real catalog, searchable, showing the ISO code
+   prominently: the code is what the user types into a quote slot, since the editor's menus match
+   type-ahead on it and have no search of their own (D-039).
+6. **Widget Help.** Lists installed instances with the reference currency and membership each one
+   resolves to. That needs the typed intent in the app target as well, since `WidgetInfo.configuration`
+   is `nil` for App Intents widgets (D-039). Presenting widgets as separate objects is also what makes
+   the separation legible.
+7. **Widget guidance.** Its own section, sending the user to the editor. Family capacities are
+   3 / 10 / 20, and the Large editor shows twenty slots while rendering ten.
+
+Exit criteria:
+
+- no bare `Text("…")` in the app; every user-visible string goes through the shared helper,
+- the board renders from the app's own cache and survives a failed refresh with the last good data,
+- a reader of the UI would not expect changing a currency here to change a placed widget, and this
+  is achieved by keeping the sections separate rather than by warning about it,
+- looking up an unfamiliar currency in the app yields the ISO code needed to set it in the editor.
 
 ## Milestone 9 — Production Provider Evaluation
 

@@ -837,6 +837,23 @@ An earlier revision of this decision claimed slot counts could be 3 / 10 / 20 pe
 family. That was generalized from Medium and Large without ever confirming twenty
 on Extra Large, and it was wrong.
 
+### Reading a placed widget's configuration from outside
+
+`WidgetCenter.getCurrentConfigurations` returns `WidgetInfo`, whose `family` and `kind` are readable
+with nothing extra. The values a user committed need `widgetConfigurationIntent(of:)`, which needs
+the intent type compiled into the reading target.
+
+`WidgetInfo.configuration`, the legacy `INIntent` bridge, looks like a way around that and is not.
+Measured on macOS 26.6.1 against three placed widgets — Medium, Large, and Extra Large, all with
+committed values — it returned `nil` every time. An App Intents widget populates the typed accessor
+only.
+
+Compiling `FXBoardConfigurationIntent` into the host app as well therefore registers it in both
+`Metadata.appintents` bundles. Verified after doing so: the widget editor still opens, still lists
+its slots, and still commits edits. That is the shape Apple's own guidance assumes, but D-037 makes
+identifier stability a standing constraint, so re-check the editor after any change that alters
+which targets declare the intent.
+
 ### Defaults, and the absence of a reset
 
 There is no way to clear a parameter once it holds a value, and no API can write
@@ -942,3 +959,34 @@ Consequences:
 - `compactLocalizedCurrencyName`, its head-initial language table, the Korean `화` suffix rule, and `localizedRegionName` are removed;
 - a label is now language-independent in cost, so no memoization is required to keep the editor within the watchdog budget;
 - the label follows the OS. A macOS update that revises CLDR wording changes it, so tests assert against `Locale.localizedString(forCurrencyCode:)` rather than literal strings.
+
+## D-042 — The host app is a live demo and a lookup surface
+
+**Status: DECIDED**
+
+`ContentView` stops being a placeholder that points at the widget editor. The app renders a working FX board on real provider data, and it is the place to look a currency up.
+
+It exists for two reasons, and neither is "configure your widgets":
+
+1. **A live demo.** Real rates, not a fixture with plausible numbers, so launching the app shows what the product actually does before anything is placed on the desktop.
+2. **A lookup surface for what the editor cannot do.** D-039 leaves the widget editor without free-text search, but its menus match type-ahead on the leading characters of a title, and those titles start with the ISO code. So the app answers "what is the Czech currency" with `CZK`, and the user then types `C-Z-K` into a quote slot. The app helps decide; the editor still does.
+
+### Configuration does not propagate, and the UI must not suggest it does
+
+Nothing done in the app reaches a placed widget. WidgetKit owns each widget's configuration and exposes no write API, and D-031 keeps the widget's cache private to the extension. The app's own reference currency, membership, and count exist to drive the demo, not as product settings that a widget will pick up.
+
+An app that looks like a control panel for the widgets will be read as one, and the first time a change fails to appear on the desktop it reads as a bug. Keep the two visibly separate rather than warning about it: currency controls belong to the board section, widget guidance belongs to its own section and sends the user to the editor, and the installed-widget list presents widgets as separate objects with their own settings. One quiet line where the two meet is enough; a banner is not.
+
+### Defaults
+
+Default membership is BIS Default Order, ten entries, derived exactly as a widget's is. Ten is a window default, not a capacity: the app has no widget family and no layout limit, so the fixed 3 / 10 / 20 belongs to the widget guidance section rather than to the app's own board.
+
+The app is not otherwise subject to D-039. Those limits are properties of the standard widget editor, not of the platform, so search, reordering, and an arbitrary count are all available here.
+
+### Consequences
+
+A shared presentation target, `FXUI`, holds what both surfaces draw: the board view, the language type, and the formatting entry points. They live in the widget extension today, which is the only reason the app cannot use them. `FXCore` stays free of SwiftUI, and the App Intent stays in the extension so its metadata is registered exactly once (D-037).
+
+The app gains `com.apple.security.network.client`. Verified: the extension already ships that entitlement under ad-hoc signing and fetches successfully, so this adds no signing or provisioning requirement. Entitlements that would — App Groups, iCloud, Push, Keychain sharing — remain out (D-032).
+
+Per-widget language uses a language-specific bundle because `String(localized:)` resolves against the process locale. The app needs the same indirection, and the failure is silent: a plain `Text("…")` compiles, renders, and quietly ignores the setting for anyone whose system language differs from their chosen one. Every user-visible string in the app goes through the shared helper.

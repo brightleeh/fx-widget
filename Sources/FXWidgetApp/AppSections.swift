@@ -33,7 +33,7 @@ struct OverviewSection: View {
     let model: FXBoardModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(verbatim: FXBoardModel.appName)
                     .font(.title2.weight(.semibold))
@@ -75,16 +75,19 @@ struct OverviewSection: View {
             // Four loose sentences read as scattered notes; aligned labels read
             // as a spec sheet, which is what this actually is.
             Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 20, verticalSpacing: 8) {
-                // D-026 keeps provider identity out of the widget and allows it here.
+                // D-026 keeps provider identity out of the widget and allows it
+                // here. Both sources require being cited: the ECB asks to be
+                // named and for any modification to be stated, and BIS asks the
+                // same for its statistics.
                 infoRow("Data source", "Frankfurter · European Central Bank")
+                infoRow("Default Order", "Bank for International Settlements")
+                infoRow("Conversion", model.text("Euro reference rates converted to the reference currency you chose."))
                 infoRow("Update frequency", model.text("Once per working day. Intraday movement is not reflected."))
                 // D-042: the one place the app/widget separation is stated outright.
                 infoRow("App and widgets", model.text("Configured and refreshed independently of each other."))
                 infoRow("Version", "\(Self.shortVersion) (\(Self.buildVersion))")
             }
             .font(.footnote)
-
-            Spacer(minLength: 0)
         }
     }
 

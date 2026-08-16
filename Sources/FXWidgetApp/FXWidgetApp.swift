@@ -14,10 +14,10 @@ struct FXWidgetApp: App {
         WindowGroup {
             ContentView()
         }
-        // `.contentSize` pins the window to the content's ideal size, which left
-        // it too short to show a section without scrolling and refused to be
-        // dragged larger. `.contentMinSize` keeps a floor and lets it grow.
-        .windowResizability(.contentMinSize)
-        .defaultSize(width: 900, height: 800)
+        // `.contentSize` pinned the window to the content's ideal size, which
+        // left it too short to show a section and refused to be dragged larger.
+        // `.contentMinSize` keeps a floor and lets it grow; the floor is the
+        // `minWidth`/`minHeight` on `ContentView`, and `.defaultSize` is ignored
+        // under this mode, so sizing lives there rather than here.
     }
 }

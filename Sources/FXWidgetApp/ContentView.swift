@@ -8,51 +8,62 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            VStack(spacing: 0) {
-                List(AppSection.allCases, selection: $section) { item in
-                    NavigationLink(value: item) {
-                        Label {
-                            Text(verbatim: model.text(item.titleKey))
-                        } icon: {
-                            Image(systemName: item.symbol)
+            List(AppSection.allCases, selection: $section) { item in
+                NavigationLink(value: item) {
+                    Label {
+                        Text(verbatim: model.text(item.titleKey))
+                    } icon: {
+                        Image(systemName: item.symbol)
+                    }
+                }
+            }
+            // An inset rather than a VStack around the List: wrapping the List
+            // made the split view report a much taller ideal height, so the
+            // window opened with dead space under the content.
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 0) {
+                    Divider()
+                    Picker(selection: $model.language) {
+                        ForEach(WidgetLanguage.allCases, id: \.self) { language in
+                            // Every entry is its own endonym so a reader can find
+                            // their language without already reading the current
+                            // one. `System` is a mode, not a language, so it is
+                            // the one entry that follows the chosen language.
+                            Text(verbatim: language == .system ? model.text("System") : language.title)
+                                .tag(language)
                         }
+                    } label: {
+                        Text(verbatim: model.text("Language"))
                     }
+                    .pickerStyle(.menu)
+                    .padding(12)
                 }
-
-                Divider()
-
-                // App-wide, not section-specific, so it stays put while the
-                // toolbar carries whatever the current section needs.
-                Picker(selection: $model.language) {
-                    ForEach(WidgetLanguage.allCases, id: \.self) { language in
-                        // Every entry is its own endonym so a reader can find
-                        // their language without already reading the current one.
-                        // `System` is a mode rather than a language, so it is the
-                        // one entry that should follow the chosen language.
-                        Text(verbatim: language == .system ? model.text("System") : language.title)
-                            .tag(language)
-                    }
-                } label: {
-                    Text(verbatim: model.text("Language"))
-                }
-                .pickerStyle(.menu)
-                .padding(12)
             }
             .navigationSplitViewColumnWidth(min: 190, ideal: 210)
         } detail: {
             detail
-                .frame(maxWidth: .infinity, alignment: .leading)
+                // Top-aligned without a Spacer: a greedy Spacer made the section
+                // report a flexible height, and the window opened taller than the
+                // content with dead space under it.
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .padding(24)
                 .navigationTitle(Text(verbatim: section.map { model.text($0.titleKey) } ?? FXBoardModel.appName))
         }
-        .frame(minWidth: 760, minHeight: 560)
+        // `idealHeight` is what the split view actually sizes to here; dropping
+        // it left the window with nothing laid out at all. The floor only stops
+        // the window being dragged uselessly small.
+        .frame(minWidth: 820, minHeight: 520, idealHeight: 640)
         .task { await model.load() }
     }
 
     @ViewBuilder
     private var detail: some View {
         switch section ?? .overview {
-        case .overview: ScrollView { OverviewSection(model: model) }
+        // Deliberately not `.fixedSize(vertical:)`. It made the window hug the
+        // content, but it also forced the section to its ideal height — and the
+        // reference-currency Picker's ideal counts all 165 menu items, so the
+        // split view laid out at 2702pt and nothing landed on screen.
+        case .overview: OverviewSection(model: model)
         case .widgets: ScrollView { WidgetsSection(model: model) }
         // Not wrapped: a List cannot scroll inside a ScrollView.
         case .currencies: CurrenciesSection(model: model)

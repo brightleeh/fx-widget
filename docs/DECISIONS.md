@@ -1004,6 +1004,26 @@ The app gains `com.apple.security.network.client`. Verified: the extension alrea
 
 Per-widget language uses a language-specific bundle because `String(localized:)` resolves against the process locale. The app needs the same indirection, and the failure is silent: a plain `Text("…")` compiles, renders, and quietly ignores the setting for anyone whose system language differs from their chosen one. Every user-visible string in the app goes through the shared helper.
 
+## D-044 — Data source attribution
+
+**Status: DECIDED**
+
+Both data sources require being cited, and the host app cites them. D-026 keeps provider identity out of the widget and allows it here, so Introduction carries the rows.
+
+```text
+Data source     Frankfurter · European Central Bank
+Default Order   Bank for International Settlements
+Conversion      euro reference rates converted to the chosen reference currency
+```
+
+Checked 2026-08-17:
+
+- **ECB.** Free use provided the information appears accurately and the ECB is cited as the source, and any modification must be stated explicitly. This product does modify: the ECB publishes against the euro and the board converts to whichever reference currency is configured, so the conversion is named rather than left implicit.
+- **BIS.** Data Portal statistics are governed by their own terms, not by the general "non-commercial" clause on BIS material: use is unrestricted provided the BIS is cited as the source, a translation is marked as unofficial, and nothing implies endorsement or affiliation. A commercial product may include them as long as they add no charge for the user.
+- **Frankfurter.** Commercial use permitted, no daily or monthly caps, and it defers licensing to the underlying source — which is why the ECB terms above are the ones that bind.
+
+None of this is affected by the repository's own code licence; the attribution is required either way.
+
 ## D-043 — Product naming
 
 **Status: DECIDED**

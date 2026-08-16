@@ -13,7 +13,7 @@ enum AppSection: String, CaseIterable, Identifiable {
     var titleKey: String.LocalizationValue {
         switch self {
         case .overview: "Introduction"
-        case .widgets: "Widget Help"
+        case .widgets: "Widget Status"
         case .currencies: "Supported Currencies"
         }
     }
@@ -21,7 +21,7 @@ enum AppSection: String, CaseIterable, Identifiable {
     var symbol: String {
         switch self {
         case .overview: "info.circle"
-        case .widgets: "questionmark.circle"
+        case .widgets: "square.grid.2x2"
         case .currencies: "list.bullet"
         }
     }
@@ -132,9 +132,19 @@ struct WidgetsSection: View {
             if !loaded {
                 ProgressView()
             } else if installed.isEmpty {
-                Text(verbatim: model.text("No fx-widget widgets are on the desktop yet."))
+                Text(verbatim: model.text("No widgets are on the desktop yet."))
                     .foregroundStyle(.secondary)
             } else {
+                Text(verbatim: model.text("%lld widgets registered", installed.count))
+                    .font(.headline)
+                // Measured: WidgetCenter keeps returning a widget after it is
+                // removed from the desktop, in this app and in the extension
+                // alike, and the entry does not clear with time. Nothing tells a
+                // stale one from a live one, so the count is labelled as what the
+                // system registered rather than as what is on screen.
+                Text(verbatim: model.text("This is what the system reports. It can include a widget you already removed from the desktop, and that entry does not go away on its own."))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 ForEach(installed) { widget in
                     row(widget)
                     Divider()
@@ -155,11 +165,21 @@ struct WidgetsSection: View {
                         .foregroundStyle(.secondary)
                     Text(verbatim: model.text("Right-click the widget itself and choose Edit fx-widget."))
                 }
+                GridRow {
+                    Text(verbatim: model.text("Remove a widget"))
+                        .foregroundStyle(.secondary)
+                    Text(verbatim: model.text("Right-click the widget and choose Remove Widget."))
+                }
             }
             .font(.footnote)
 
         }
         .task { await reload() }
+        .onReceive(NotificationCenter.default.publisher(
+            for: NSApplication.didBecomeActiveNotification
+        )) { _ in
+            Task { await reload() }
+        }
     }
 
     private func row(_ widget: InstalledWidget) -> some View {
@@ -220,6 +240,7 @@ struct WidgetsSection: View {
     private func reload() async {
         let infos = (try? await WidgetCenter.shared.currentConfigurations())?
             .filter { $0.kind == FXServices.widgetKind } ?? []
+
         installed = infos.compactMap { info in
             guard let intent = info.widgetConfigurationIntent(
                 of: FXBoardConfigurationIntent.self

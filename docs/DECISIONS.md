@@ -854,6 +854,19 @@ its slots, and still commits edits. That is the shape Apple's own guidance assum
 identifier stability a standing constraint, so re-check the editor after any change that alters
 which targets declare the intent.
 
+### `getCurrentConfigurations` outlives the widget
+
+A widget removed from the desktop keeps being returned. Measured on macOS 26.6.1: with three widgets
+on screen, both the host app and the extension — separate processes, seconds apart — reported four,
+and the extra entry did not clear with time or across app launches.
+
+Nothing in `WidgetInfo` distinguishes a stale entry from a live one, so a list built from this call
+cannot be made accurate. Present the count as what the system has registered rather than as what is
+on the desktop, and say that a removed widget can remain. Do not try to filter by guesswork.
+
+The stale entry is complete and well-formed: its typed configuration decodes normally, which is why
+edits to surviving widgets appear correctly while removals do not.
+
 ### Defaults, and the absence of a reset
 
 There is no way to clear a parameter once it holds a value, and no API can write

@@ -26,6 +26,8 @@ Before making implementation changes, read these documents in order:
 
 The verified persistence and visibility rules for widget configuration are D-039; the reload policy after a failed cold start is D-040.
 
+D-039 records what was measured; the `widget-editor-measurement` skill records how to measure it. Follow that protocol before claiming any new editor behaviour — after a macOS upgrade, after changing the App Intents configuration surface, or before freezing a requirement that assumes the editor can do something.
+
 ## Product Invariants
 
 Do not change these without an explicit product decision:
@@ -363,4 +365,5 @@ These are cheap to honour and prevent expensive stalls:
 - Delete wrong code; do not annotate it. A comment saying "this does not work" is a defect that compiles.
 - Suspect the fallback. When the system looks healthy but behaves wrong, find what is masking the real state before theorising.
 - Diagnostics only count once read. Building an instrument and never basing a conclusion on its output is not measurement.
+- Report each claim at its evidence tier: unit-test verified, xcodebuild verified, measured on an installed build, or not runtime-verified. A build that compiles is not evidence about editor or WidgetKit behaviour.
 - Change one variable at a time when isolating a cause. Several at once yields no rule.

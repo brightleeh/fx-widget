@@ -52,18 +52,27 @@ struct ContentView: View {
         // `idealHeight` is what the split view actually sizes to here; dropping
         // it left the window with nothing laid out at all. The floor only stops
         // the window being dragged uselessly small.
-        .frame(minWidth: 820, minHeight: 520, idealHeight: 640)
+        //
+        // It has to clear the tallest section — the board alone is 302pt — or the
+        // window opens shorter than its content. That went unnoticed on a large
+        // display because macOS restores a window frame that was resized by hand;
+        // a machine installing for the first time gets this value instead.
+        .frame(minWidth: 820, minHeight: 520, idealHeight: 720)
         .task { await model.load() }
     }
 
     @ViewBuilder
     private var detail: some View {
         switch section ?? .overview {
+        // Scrolls for the same reason `.widgets` does: the window can legally be
+        // shorter than this section, and without somewhere to scroll the content
+        // is simply clipped at both ends.
+        //
         // Deliberately not `.fixedSize(vertical:)`. It made the window hug the
         // content, but it also forced the section to its ideal height — and the
         // reference-currency Picker's ideal counts all 165 menu items, so the
         // split view laid out at 2702pt and nothing landed on screen.
-        case .overview: OverviewSection(model: model)
+        case .overview: ScrollView { OverviewSection(model: model) }
         case .widgets: ScrollView { WidgetsSection(model: model) }
         // Not wrapped: a List cannot scroll inside a ScrollView.
         case .currencies: CurrenciesSection(model: model)
